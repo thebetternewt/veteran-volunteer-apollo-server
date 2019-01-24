@@ -34,6 +34,10 @@ module.exports = mongoose.model(
         type: Boolean,
         default: false,
       },
+      active: {
+        type: Boolean,
+        default: true,
+      },
     },
     {
       timestamps: true,

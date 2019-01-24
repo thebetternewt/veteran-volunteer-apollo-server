@@ -103,14 +103,14 @@ module.exports = {
         }
 
         // Generate new gravatar url from email
-        const avatar = gravatar.url(email, {
-          s: '200', // Size
-          r: 'pg', // Rating
-          d: 'mm', // Default
-        })
+        // const avatar = gravatar.url(email, {
+        //   s: '200', // Size
+        //   r: 'pg', // Rating
+        //   d: 'mm', // Default
+        // })
 
         updatedProperties.email = email
-        updatedProperties.avatar = avatar
+        // updatedProperties.avatar = avatar
       }
 
       if (password) {

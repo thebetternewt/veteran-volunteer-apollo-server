@@ -10,6 +10,7 @@ module.exports = gql`
     email: String!
     avatar: String
     admin: Boolean
+    active: Boolean!
     createdAt: String
     updatedAt: String
   }
@@ -37,6 +38,7 @@ module.exports = gql`
       email: String
       password: String
       admin: Boolean
+      active: Boolean
     ): User!
     deleteUser(id: ID!): String!
   }
