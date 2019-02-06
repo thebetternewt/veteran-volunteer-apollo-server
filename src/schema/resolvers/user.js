@@ -1,11 +1,13 @@
-const jwt = require('jsonwebtoken')
-const bcrypt = require('bcryptjs')
-// const gravatar = require('gravatar');
-const { User } = require('../../models')
-// const verifyUser = require('../../util/verifyUser');
+import jwt from 'jsonwebtoken'
+import bcrypt from 'bcryptjs'
+// import gravatar from 'gravatar'
+import { User, RecipientProfile } from '../../models'
+// import verifyUser from '../../util/verifyUser'
 
-module.exports = {
-  User: {},
+export default {
+  User: {
+    recipientProfile: async parent => parent.recipientProfile,
+  },
   Query: {
     me: async (parent, args, { user }) => {
       // verifyUser({ user });

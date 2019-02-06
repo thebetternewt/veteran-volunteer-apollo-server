@@ -1,12 +1,12 @@
-const mongoose = require('mongoose')
-const pointSchema = require('./helperSchemas/pointSchema')
+import 'mongoose-geojson-schema'
+import mongoose from 'mongoose'
 
 const {
   Schema,
-  Types: { ObjectId },
+  Types: { ObjectId, Point },
 } = mongoose
 
-module.exports = mongoose.model(
+export default mongoose.model(
   'RecipientProfile',
   new Schema(
     {
@@ -28,7 +28,7 @@ module.exports = mongoose.model(
         },
       ],
       location: {
-        type: pointSchema,
+        type: Point,
         required: true,
       },
     },

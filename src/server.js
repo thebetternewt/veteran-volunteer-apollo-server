@@ -1,19 +1,19 @@
-require('dotenv').config()
-const express = require('express')
-const mongoose = require('mongoose')
-const jwt = require('jsonwebtoken')
-const { ApolloServer } = require('apollo-server-express')
-const { typeDefs, resolvers } = require('./schema')
-const { User } = require('./models')
+import dotenv from 'dotenv'
+import express from 'express'
+import mongoose from 'mongoose'
+import jwt from 'jsonwebtoken'
+import { ApolloServer } from 'apollo-server-express'
+import { typeDefs, resolvers } from './schema'
+import AuthDirective from './schema/directives/auth'
+import { User } from './models'
+
+dotenv.config()
 
 const PORT = process.env.PORT || 4000
 const IN_PROD = process.env.NODE_ENV === 'production'
 
 mongoose
-  .connect(
-    process.env.MONGO_URI,
-    { useNewUrlParser: true }
-  )
+  .connect(process.env.MONGO_URI, { useNewUrlParser: true })
   .then(() => {
     const playground = IN_PROD
       ? false
@@ -31,6 +31,9 @@ mongoose
     const server = new ApolloServer({
       typeDefs,
       resolvers,
+      schemaDirectives: {
+        auth: AuthDirective,
+      },
       playground,
       cors: IN_PROD ? corsOptions : true,
       context: async ({ req }) => {

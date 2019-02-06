@@ -1,11 +1,11 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
 const {
   Schema,
   Types: { ObjectId },
 } = mongoose
 
-module.exports = mongoose.model(
+export default mongoose.model(
   'Service',
   new Schema(
     {
@@ -21,6 +21,18 @@ module.exports = mongoose.model(
       volunteer: {
         type: ObjectId,
         ref: 'VolunteerProfile',
+      },
+      serviceDetails: {
+        type: ObjectId,
+        required: true,
+        // Instead of a hardcoded model name in `ref`, `refPath` means Mongoose
+        // will look at the `serviceType` property to find the right model.
+        refPath: 'serviceType',
+      },
+      serviceType: {
+        type: String,
+        required: true,
+        enum: ['TravelService'],
       },
       notes: String,
     },

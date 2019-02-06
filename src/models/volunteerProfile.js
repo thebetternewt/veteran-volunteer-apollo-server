@@ -1,12 +1,12 @@
-const mongoose = require('mongoose')
-const pointSchema = require('./helperSchemas/pointSchema')
+import mongoose from 'mongoose'
+import pointSchema from './helperSchemas/pointSchema'
 
 const {
   Schema,
   Types: { ObjectId },
 } = mongoose
 
-module.exports = mongoose.model(
+export default mongoose.model(
   'VolunteerProfile',
   new Schema(
     {

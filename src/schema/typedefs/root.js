@@ -1,6 +1,8 @@
-const { gql } = require('apollo-server-express')
+import { gql } from 'apollo-server-express'
 
-const root = gql`
+export default gql`
+  # directive @auth on FIELD_DEFINITION
+
   type Query {
     _: String
   }
@@ -8,5 +10,3 @@ const root = gql`
     _: String
   }
 `
-
-module.exports = root

@@ -1,8 +1,11 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
-const { Schema } = mongoose
+const {
+  Schema,
+  Types: { ObjectId },
+} = mongoose
 
-module.exports = mongoose.model(
+export default mongoose.model(
   'User',
   new Schema(
     {
@@ -22,6 +25,10 @@ module.exports = mongoose.model(
         required: true,
         unique: true,
       },
+      phone: {
+        type: String,
+        required: true,
+      },
       password: {
         type: String,
         required: true,
@@ -37,6 +44,10 @@ module.exports = mongoose.model(
       active: {
         type: Boolean,
         default: true,
+      },
+      recipientProfile: {
+        type: ObjectId,
+        ref: 'RecipientProfile',
       },
     },
     {

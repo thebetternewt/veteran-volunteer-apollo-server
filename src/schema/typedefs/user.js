@@ -1,6 +1,6 @@
-const { gql } = require('apollo-server-express')
+import { gql } from 'apollo-server-express'
 
-module.exports = gql`
+export default gql`
   type User {
     id: ID!
     firstName: String!
@@ -13,12 +13,15 @@ module.exports = gql`
     active: Boolean!
     createdAt: String
     updatedAt: String
+    recipientProfile: RecipientProfile
   }
+
   extend type Query {
     me: User
     user(id: ID!): User
     users(limit: Int): [User!]!
   }
+
   extend type Mutation {
     signup(
       firstName: String!
