@@ -1,9 +1,9 @@
+import 'mongoose-geojson-schema'
 import mongoose from 'mongoose'
-import pointSchema from './helperSchemas/pointSchema'
 
 const {
   Schema,
-  Types: { ObjectId },
+  Types: { ObjectId, Point },
 } = mongoose
 
 export default mongoose.model(
@@ -16,7 +16,7 @@ export default mongoose.model(
         required: true,
       },
       serviceLocation: {
-        type: pointSchema,
+        type: Point,
         required: true,
       },
       serviceRadius: {

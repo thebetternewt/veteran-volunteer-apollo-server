@@ -7,14 +7,14 @@ export default {
     toLocation: parent => parent.toLocation.coordinates,
   },
   Query: {
-    travelService: async () => {},
-    travelServices: async () => TravelService.find({}),
+    // travelService: async () => {},
+    // travelServices: async () => TravelService.find({}),
   },
   Mutation: {
     createTravelService: async (parent, args, { user }) => {
       // TODO: Check if profile already exists for user
 
-      const { fromName, fromLocation, toName, toLocation } = args
+      const { fromName, fromLocation, toName, toLocation, serviceId } = args
 
       try {
         const travelService = await TravelService.create({
@@ -28,10 +28,8 @@ export default {
             type: 'Point',
             coordinates: toLocation,
           },
+          service: serviceId,
         })
-
-        // Transform locations from point objects to arrays of coordinates
-        const transformedTravelService = transformTravelService(travelService)
 
         return travelService
       } catch (err) {
@@ -40,11 +38,3 @@ export default {
     },
   },
 }
-
-const transformTravelService = travelService => ({
-  id: travelService.id,
-  fromName: travelService.fromName,
-  fromLocation: travelService.fromLocation.coordinates,
-  toName: travelService.toName,
-  toLocation: travelService.toLocation.coordinates,
-})

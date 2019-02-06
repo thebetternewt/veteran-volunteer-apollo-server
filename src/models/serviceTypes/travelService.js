@@ -3,11 +3,15 @@ import mongoose from 'mongoose'
 
 const {
   Schema,
-  Types: { Point },
+  Types: { ObjectId, Point },
 } = mongoose
 
 const schema = new Schema(
   {
+    serviceType: {
+      type: String,
+      default: 'TRAVEL',
+    },
     fromName: {
       type: String,
       required: true,
@@ -24,12 +28,15 @@ const schema = new Schema(
       type: Point,
       required: true,
     },
+    service: {
+      type: ObjectId,
+      ref: 'Service',
+      required: true,
+    },
   },
   {
     timestamps: true,
   }
 )
-
-schema.index({ fromLocation: '2dsphere' })
 
 export default mongoose.model('TravelService', schema)

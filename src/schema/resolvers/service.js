@@ -1,4 +1,4 @@
-import { Service, TravelService } from '../../models'
+import { Service, TravelService, LawncareService } from '../../models'
 
 const METERS_PER_MILE = 1609.34
 
@@ -11,40 +11,62 @@ const transformTravelService = travelService => ({
 })
 
 export default {
+  ServiceDetails: {
+    __resolveType: (parent, ctx, info) => {
+      switch (parent.serviceType) {
+        case 'TRAVEL':
+          return 'TravelService'
+        case 'LAWNCARE':
+          return 'LawncareService'
+        default:
+          return null
+      }
+    },
+  },
   Service: {
-    travelServiceDetails: async (parent, args, { user }) => {
-      const serviceWithDetails = await parent
-        .populate('serviceDetails')
-        .execPopulate()
+    serviceDetails: async (parent, args, { user }) => {
+      switch (parent.serviceType) {
+        case 'TRAVEL':
+          return TravelService.findOne({ service: parent })
+        case 'LAWNCARE':
+          return LawncareService.findOne({ service: parent })
+        default:
+          return null
+      }
+    },
+    location: parent => {
+      if (parent.location) {
+        return parent.location.coordinates
+      }
 
-      return parent.serviceDetails
+      return null
     },
   },
   Query: {
     service: async () => {},
     services: async (parent, args) => {
-      const { serviceType, startPoint, range } = args
+      const { serviceType, location, range } = args
 
-      let fromLocationQuery = {}
+      let queryParams = {}
 
-      if (serviceType === 'TravelService' && startPoint && range) {
-        console.log(startPoint, range)
-
-        fromLocationQuery = {
-          fromLocation: {
-            $geoWithin: {
-              $centerSphere: [[...startPoint], range / 3963.2],
-            },
-          },
-        }
-
-        const travelServices = await TravelService.find(
-          fromLocationQuery
-        ).exec()
-        console.log('travelservices:', travelServices)
+      if (serviceType) {
+        queryParams.serviceType = serviceType
       }
 
-      return Service.find({}).exec()
+      if (location && range) {
+        queryParams.location = {
+          $near: {
+            $geometry: {
+              type: 'Point',
+              coordinates: location,
+            },
+            $maxDistance: range * METERS_PER_MILE,
+            // $minDistance: 5 * METERS_PER_MILE,
+          },
+        }
+      }
+
+      return Service.find(queryParams).exec()
     },
   },
   Mutation: {
@@ -52,7 +74,7 @@ export default {
       // TODO: Check if profile already exists for user
       console.log('service args', args)
 
-      const { title, serviceType, serviceDetailsId, notes } = args
+      const { title, serviceType, serviceDetailsId, notes, location } = args
 
       try {
         const service = await Service.create({
@@ -61,6 +83,10 @@ export default {
           serviceDetails: serviceDetailsId,
           notes,
           recipient: user.id,
+          location: {
+            type: 'Point',
+            coordinates: location,
+          },
         })
 
         return service

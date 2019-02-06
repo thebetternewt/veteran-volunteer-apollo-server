@@ -1,29 +1,44 @@
 import { gql } from 'apollo-server-express'
 
 export default gql`
+  union ServiceDetails = TravelService | LawncareService
+
+  enum ServiceType {
+    TRAVEL
+    LAWNCARE
+  }
+
   type Service {
     id: ID!
     title: String!
     serviceType: String!
-    travelServiceDetails: TravelService
+    serviceDetails: ServiceDetails
     notes: String
     recipient: User!
     volunteer: User
+    location: [Float!]
     createdAt: String!
     updatedAt: String!
   }
 
   extend type Query {
     service(id: ID!): Service
-    services(serviceType: String, startPoint: [Float!], range: Int): [Service!]!
+    services(
+      serviceType: ServiceType
+      location: [Float!]
+      """
+      Radius in miles
+      """
+      range: Int
+    ): [Service!]!
   }
 
   extend type Mutation {
     createService(
+      serviceType: ServiceType!
       title: String!
-      serviceType: String!
-      serviceDetailsId: String!
       notes: String
+      location: [Float!]!
     ): Service
   }
 `

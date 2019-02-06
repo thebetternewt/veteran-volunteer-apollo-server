@@ -2,7 +2,7 @@ import dotenv from 'dotenv'
 import express from 'express'
 import mongoose from 'mongoose'
 import jwt from 'jsonwebtoken'
-import { ApolloServer } from 'apollo-server-express'
+import { ApolloServer, makeExecutableSchema } from 'apollo-server-express'
 import { typeDefs, resolvers } from './schema'
 import AuthDirective from './schema/directives/auth'
 import { User } from './models'
@@ -28,9 +28,16 @@ mongoose
       optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
     }
 
-    const server = new ApolloServer({
+    const schema = makeExecutableSchema({
       typeDefs,
       resolvers,
+      resolverValidationOptions: {
+        requireResolversForResolveType: false,
+      },
+    })
+
+    const server = new ApolloServer({
+      schema,
       schemaDirectives: {
         auth: AuthDirective,
       },

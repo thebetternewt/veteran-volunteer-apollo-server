@@ -7,14 +7,15 @@ export default gql`
     fromLocation: [Float]
     toName: String!
     toLocation: [Float]
+    service: Service!
     createdAt: String!
     updatedAt: String!
   }
 
-  extend type Query {
-    travelService(id: ID!): TravelService
-    travelServices(point: [Float!]): [TravelService!]!
-  }
+  # extend type Query {
+  # travelService(id: ID!): TravelService
+  # travelServices(point: [Float!]): [TravelService!]!
+  # }
 
   extend type Mutation {
     createTravelService(
@@ -22,6 +23,7 @@ export default gql`
       fromLocation: [Float!]!
       toName: String!
       toLocation: [Float!]!
+      serviceId: String!
     ): TravelService
   }
 `
