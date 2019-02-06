@@ -7,7 +7,6 @@ export default gql`
     fromLocation: [Float]
     toName: String!
     toLocation: [Float]
-    service: Service!
     createdAt: String!
     updatedAt: String!
   }
