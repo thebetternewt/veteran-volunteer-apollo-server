@@ -1,5 +1,6 @@
 import dotenv from 'dotenv'
 import express from 'express'
+import cors from 'cors'
 import mongoose from 'mongoose'
 import jwt from 'jsonwebtoken'
 import { ApolloServer, makeExecutableSchema } from 'apollo-server-express'
@@ -58,6 +59,11 @@ mongoose
     })
 
     const app = express()
+    app.use(
+      cors({
+        origin: IN_PROD ? process.env.FRONTEND_URL : '*',
+      })
+    )
     server.applyMiddleware({ app })
 
     app.listen({ port: PORT }, () =>
