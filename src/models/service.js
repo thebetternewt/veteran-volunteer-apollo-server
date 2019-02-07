@@ -1,5 +1,6 @@
 import 'mongoose-geojson-schema'
 import mongoose from 'mongoose'
+import serviceTypes from './serviceTypes/types'
 
 const {
   Schema,
@@ -26,17 +27,11 @@ const serviceSchema = new Schema(
       required: true,
     },
     notes: String,
-    // serviceDetails: {
-    //   type: ObjectId,
-    //   required: true,
-    //   // Instead of a hardcoded model name in `ref`, `refPath` means Mongoose
-    //   // will look at the `serviceType` property to find the right model.
-    //   refPath: 'serviceType',
-    // },
+
     serviceType: {
       type: String,
       required: true,
-      enum: ['TRAVEL', 'LAWNCARE'],
+      enum: serviceTypes,
     },
   },
   {

@@ -1,0 +1,35 @@
+mutation {
+  signup(
+    firstName: "John"
+    lastName: "Smith"
+    age: 26
+    email: "john@test.com"
+    phone: "123-456-7890"
+    password: "123456"
+    address: {
+      street1: "123 Test Street"
+      city: "Jackson"
+      state: "MS"
+      zipcode: "39203"
+    }
+  ) {
+    id
+    firstName
+    lastName
+    age
+    email
+    phone
+    age
+    address {
+      street1
+      street2
+      city
+      state
+      zipcode
+    }
+  }
+}
+
+mutation {
+  login(email: "john@test.com", password: "123456")
+}

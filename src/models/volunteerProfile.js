@@ -1,5 +1,6 @@
 import 'mongoose-geojson-schema'
 import mongoose from 'mongoose'
+import serviceTypes from './serviceTypes/types'
 
 const {
   Schema,
@@ -15,6 +16,24 @@ export default mongoose.model(
         ref: 'User',
         required: true,
       },
+      bio: String,
+      availability: {
+        weekdays: {
+          type: Boolean,
+          default: false,
+        },
+        weekends: {
+          type: Boolean,
+          default: false,
+        },
+        description: String,
+      },
+      servicesProvided: [
+        {
+          type: String,
+          enum: serviceTypes,
+        },
+      ],
       serviceLocation: {
         type: Point,
         required: true,

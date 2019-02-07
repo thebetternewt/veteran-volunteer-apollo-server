@@ -15,18 +15,11 @@ export default mongoose.model(
         ref: 'User',
         required: true,
       },
-      branch: String,
-      deployed: {
-        type: Boolean,
-        default: false,
+      preferredContact: {
+        type: String,
+        required: true,
+        enum: ['phone', 'email'],
       },
-      household: [
-        {
-          name: { type: String, required: true },
-          relationship: { type: String, required: true },
-          userId: { type: ObjectId, ref: 'User' },
-        },
-      ],
       location: {
         type: Point,
         required: true,

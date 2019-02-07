@@ -5,6 +5,8 @@ const {
   Types: { ObjectId },
 } = mongoose
 
+// const addressSchema = new Schema()
+
 export default mongoose.model(
   'User',
   new Schema(
@@ -25,18 +27,22 @@ export default mongoose.model(
         required: true,
         unique: true,
       },
-      phone: {
-        type: String,
-        required: true,
-      },
       password: {
         type: String,
         required: true,
       },
-      avatar: {
+      phone: {
         type: String,
-        default: null,
+        required: true,
       },
+      address: {
+        street1: String,
+        street2: String,
+        city: String,
+        state: String,
+        zipcode: String,
+      },
+      avatar: String,
       admin: {
         type: Boolean,
         default: false,
@@ -44,10 +50,6 @@ export default mongoose.model(
       active: {
         type: Boolean,
         default: true,
-      },
-      recipientProfile: {
-        type: ObjectId,
-        ref: 'RecipientProfile',
       },
     },
     {

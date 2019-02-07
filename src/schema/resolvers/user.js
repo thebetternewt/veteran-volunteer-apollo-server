@@ -1,8 +1,6 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
-// import gravatar from 'gravatar'
 import { User, RecipientProfile } from '../../models'
-// import verifyUser from '../../util/verifyUser'
 
 export default {
   User: {
@@ -33,23 +31,19 @@ export default {
   },
 
   Mutation: {
-    signup: async (parent, { email, password, ...name }) => {
+    signup: async (parent, { email, password, ...args }) => {
       // Check for user with given email address.
       const user = await User.findOne({ email }).exec()
       if (user) {
-        throw new Error('User already exists.')
+        throw new Error('User with this email already exists.')
       }
 
-      // const avatar = gravatar.url(email, {
-      //   s: '200', // Size
-      //   r: 'pg', // Rating
-      //   d: 'mm', // Default
-      // });
+      // TODO: Sanitize args input
 
       const hashedPass = await bcrypt.hash(password, 10)
 
       const newUser = new User({
-        ...name,
+        ...args,
         email: email,
         password: hashedPass,
       })
@@ -81,7 +75,8 @@ export default {
       return jwt.sign(
         { id: user.id, name: fullName, email: user.email },
         process.env.JWT_SECRET,
-        { expiresIn: '1h' }
+        // TODO: update to lower time limit before launch
+        { expiresIn: '1d' }
       )
     },
     updateUser: async (parent, args, { user }) => {
