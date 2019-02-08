@@ -25,7 +25,7 @@ mongoose
         }
 
     const corsOptions = {
-      origin: process.env.CORS_ALLOWED_ORIGIN,
+      origin: IN_PROD ? process.env.FRONTEND_URL : '*',
       optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
     }
 
@@ -59,11 +59,7 @@ mongoose
     })
 
     const app = express()
-    app.use(
-      cors({
-        origin: IN_PROD ? process.env.FRONTEND_URL : '*',
-      })
-    )
+    app.use(cors(corsOptions))
     server.applyMiddleware({ app })
 
     app.listen({ port: PORT }, () =>
