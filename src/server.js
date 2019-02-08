@@ -43,7 +43,7 @@ mongoose
         auth: AuthDirective,
       },
       playground,
-      cors: IN_PROD ? corsOptions : true,
+      cors: true,
       context: async ({ req }) => {
         // get the user token from the headers
         const authorization = req.headers.authorization || ''
