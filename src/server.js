@@ -43,7 +43,6 @@ mongoose
         auth: AuthDirective,
       },
       playground,
-      cors: true,
       context: async ({ req }) => {
         // get the user token from the headers
         const authorization = req.headers.authorization || ''
@@ -59,7 +58,7 @@ mongoose
     })
 
     const app = express()
-    app.use(cors(corsOptions))
+    app.use(cors())
     server.applyMiddleware({ app })
 
     app.listen({ port: PORT }, () =>
