@@ -69,11 +69,10 @@ export default {
         throw new Error('Invalid login credentials')
       }
 
-      const { firstName, middleName, lastName } = user
-      const fullName = `${firstName} ${middleName} ${lastName}`
+      const { id, firstName, lastName } = user
 
       return jwt.sign(
-        { id: user.id, name: fullName, email: user.email },
+        { id, firstName, lastName, email },
         process.env.JWT_SECRET,
         // TODO: update to lower time limit before launch
         { expiresIn: '1d' }
