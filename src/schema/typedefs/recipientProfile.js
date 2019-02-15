@@ -4,8 +4,8 @@ export default gql`
   type RecipientProfile {
     id: ID!
     user: User!
-    branch: String
-    deployed: Boolean!
+    allowPhoneContact: Boolean!
+    allowEmailContact: Boolean!
     location: [Float]
     createdAt: String!
     updatedAt: String!
@@ -18,10 +18,10 @@ export default gql`
 
   extend type Mutation {
     createRecipientProfile(
-      branch: String
-      deployed: Boolean
-      lat: Float
-      long: Float
+      allowPhoneContact: Boolean
+      allowEmailContact: Boolean
+      lat: Float!
+      lng: Float!
     ): RecipientProfile
   }
 `

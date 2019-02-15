@@ -15,10 +15,13 @@ export default mongoose.model(
         ref: 'User',
         required: true,
       },
-      preferredContact: {
-        type: String,
-        required: true,
-        enum: ['phone', 'email'],
+      allowPhoneContact: {
+        type: Boolean,
+        default: false,
+      },
+      allowEmailContact: {
+        type: Boolean,
+        default: false,
       },
       location: {
         type: Point,
