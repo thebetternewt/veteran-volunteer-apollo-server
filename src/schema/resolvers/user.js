@@ -1,10 +1,14 @@
-import jwt from 'jsonwebtoken'
+import { AuthenticationError } from 'apollo-server-core'
 import bcrypt from 'bcryptjs'
-import { User, RecipientProfile } from '../../models'
+import jwt from 'jsonwebtoken'
+import { RecipientProfile, User } from '../../models'
 
 export default {
   User: {
-    recipientProfile: async parent => parent.recipientProfile,
+    fullName: async parent => `${parent.firstName} ${parent.lastName}`,
+    recipientProfile: async parent => {
+      return RecipientProfile.findOne({ user: parent })
+    },
   },
   Query: {
     me: async (parent, args, { user }) => {
@@ -57,22 +61,21 @@ export default {
         email: email.toLowerCase(),
       }).exec()
 
-      // TODO: Apollo AuthenticationError
-
       if (!user) {
-        throw new Error('No user with that email')
+        throw new AuthenticationError('Invalid email or password')
       }
 
       const valid = await bcrypt.compare(password, user.password)
 
       if (!valid) {
-        throw new Error('Invalid login credentials')
+        throw new AuthenticationError('Invalid email or password')
       }
 
-      const { id, firstName, lastName } = user
+      const { id, firstName, lastName, avatar = null } = user
+      const fullName = `${firstName} ${lastName}`
 
       return jwt.sign(
-        { id, firstName, lastName, email },
+        { id, firstName, lastName, fullName, email, avatar },
         process.env.JWT_SECRET,
         // TODO: update to lower time limit before launch
         { expiresIn: '1d' }

@@ -5,11 +5,14 @@
   "license": "MIT",
   "scripts": {
     "start": "node -r esm .",
-    "dev": "nodemon -r esm"
+    "server": "nodemon -r esm",
+    "client": "cd frontend; gatsby develop",
+    "dev": "concurrently \"yarn server\" \"yarn client\""
   },
   "dependencies": {
     "apollo-server-express": "^2.3.1",
     "bcryptjs": "^2.4.3",
+    "concurrently": "^4.1.0",
     "cors": "^2.8.5",
     "dotenv": "^6.2.0",
     "esm": "^3.2.1",

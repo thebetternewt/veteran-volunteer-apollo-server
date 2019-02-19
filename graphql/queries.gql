@@ -1,0 +1,11 @@
+query {
+  me {
+    id
+    recipientProfile {
+      id
+      allowPhoneContact
+      allowEmailContact
+      location
+    }
+  }
+}

@@ -22,6 +22,7 @@ export default gql`
     firstName: String
     middleName: String
     lastName: String
+    fullName: String
     age: Int!
     email: String
     phone: String

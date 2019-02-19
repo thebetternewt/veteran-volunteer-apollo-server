@@ -31,5 +31,29 @@ export default {
 
       return newProfile
     },
+
+    updateRecipientProfile: async (parent, args, { user }) => {
+      const { lat, lng } = args
+
+      const updatedAttributes = {}
+
+      if (lat && lng) {
+        updatedAttributes.location = {
+          type: 'Point',
+          coordinates: [lng, lat],
+        }
+      }
+
+      const profile = await RecipientProfile.findOne({ user })
+
+      profile.set({
+        ...updatedAttributes,
+        ...args,
+      })
+
+      await profile.save()
+
+      return profile
+    },
   },
 }

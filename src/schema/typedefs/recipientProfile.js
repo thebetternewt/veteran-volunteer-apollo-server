@@ -23,5 +23,11 @@ export default gql`
       lat: Float!
       lng: Float!
     ): RecipientProfile
+    updateRecipientProfile(
+      allowPhoneContact: Boolean
+      allowEmailContact: Boolean
+      lat: Float
+      lng: Float
+    ): RecipientProfile
   }
 `
