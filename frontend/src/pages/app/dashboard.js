@@ -16,7 +16,11 @@ const defaultContent = (
   </div>
 )
 
-const initSidebarCollapsed = window.innerWidth <= 756
+const initSidebarCollapsed = () => {
+  if (typeof window === 'undefined') return false
+
+  return window.innerWidth <= 756
+}
 
 const Dashboard = ({ children = defaultContent }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(initSidebarCollapsed)
