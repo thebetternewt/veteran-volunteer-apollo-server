@@ -7,7 +7,7 @@
     "start": "node -r esm .",
     "server": "nodemon -r esm",
     "client": "cd frontend; gatsby develop",
-    "client-build": "cd frontend; gatsby build",
+    "client-build": "cd frontend; yarn install; gatsby build",
     "dev": "concurrently \"yarn server\" \"yarn client\""
   },
   "dependencies": {
