@@ -29,5 +29,5 @@ ID = "veteran-volunteer-apollo-server"
 # A basic redirect rule
 [[redirects]]
   from = "/app/*"
-  to = "/app/"
-  force = true
+  to = "/app"
+  status = 200
