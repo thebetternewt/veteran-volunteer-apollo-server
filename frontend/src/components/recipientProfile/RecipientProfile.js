@@ -1,5 +1,7 @@
+import { Map } from '@esri/react-arcgis'
 import { Avatar, Button, Divider, Icon } from 'antd'
 import React from 'react'
+import { Helmet } from 'react-helmet'
 import styled from 'styled-components'
 
 const Identity = styled.div`
@@ -33,6 +35,12 @@ const ContactSettings = styled.ul`
 const RecipientProfile = ({ profile, editProfile }) => {
   return (
     <div>
+      <Helmet>
+        <link
+          rel="stylesheet"
+          href="https://js.arcgis.com/4.10/esri/css/main.css"
+        />
+      </Helmet>
       <h3 style={{ color: '#777', marginBottom: '2rem' }}>Recipient Profile</h3>
       <Identity>
         <Avatar
@@ -70,6 +78,14 @@ const RecipientProfile = ({ profile, editProfile }) => {
         <br />
         longitude: {profile.location.lng}
       </p>
+      <Map
+        style={{ width: 400, height: 400 }}
+        // mapProperties={{ basemap: 'satellite' }}
+        viewProperties={{
+          center: [profile.location.lng, profile.location.lat],
+          zoom: 6,
+        }}
+      />
 
       <Button
         type="primary"
