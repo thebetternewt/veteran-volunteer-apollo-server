@@ -1,14 +1,15 @@
-import { Service, TravelService, LawncareService } from '../../models'
+import { LawncareService, Service, TravelService } from '../../models'
+import { geoArrayToObj, geoObjToArray } from '../../utils/convertCoordinates'
 
 const METERS_PER_MILE = 1609.34
 
-const transformTravelService = travelService => ({
-  id: travelService.id,
-  fromName: travelService.fromName,
-  fromLocation: travelService.fromLocation.coordinates,
-  toName: travelService.toName,
-  toLocation: travelService.toLocation.coordinates,
-})
+// const transformTravelService = travelService => ({
+//   id: travelService.id,
+//   fromName: travelService.fromName,
+//   fromLocation: travelService.fromLocation.coordinates,
+//   toName: travelService.toName,
+//   toLocation: travelService.toLocation.coordinates,
+// })
 
 export default {
   ServiceDetails: {
@@ -36,7 +37,7 @@ export default {
     },
     location: parent => {
       if (parent.location) {
-        return parent.location.coordinates
+        return geoArrayToObj(parent.location.coordinates)
       }
 
       return null
@@ -58,7 +59,7 @@ export default {
           $near: {
             $geometry: {
               type: 'Point',
-              coordinates: location,
+              coordinates: geoObjToArray(location),
             },
             $maxDistance: range * METERS_PER_MILE,
             // $minDistance: 5 * METERS_PER_MILE,
@@ -85,7 +86,7 @@ export default {
           recipient: user.id,
           location: {
             type: 'Point',
-            coordinates: location,
+            coordinates: geoObjToArray(location),
           },
         })
 

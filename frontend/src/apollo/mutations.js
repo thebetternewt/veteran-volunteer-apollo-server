@@ -62,13 +62,15 @@ export const CREATE_RECIPIENT_PROFILE = gql`
     createRecipientProfile(
       allowPhoneContact: $allowPhoneContact
       allowEmailContact: $allowEmailContact
-      lat: $lat
-      lng: $lng
+      location: { lat: $lat, lng: $lng }
     ) {
       id
       allowPhoneContact
       allowEmailContact
-      location
+      location {
+        lat
+        lng
+      }
     }
   }
 `
@@ -82,13 +84,15 @@ export const UPDATE_RECIPIENT_PROFILE = gql`
     updateRecipientProfile(
       allowPhoneContact: $allowPhoneContact
       allowEmailContact: $allowEmailContact
-      lat: $lat
-      lng: $lng
+      location: { lat: $lat, lng: $lng }
     ) {
       id
       allowPhoneContact
       allowEmailContact
-      location
+      location {
+        lat
+        lng
+      }
     }
   }
 `

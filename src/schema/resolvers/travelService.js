@@ -1,10 +1,10 @@
-import GeoJSON from 'mongoose-geojson-schema'
 import { TravelService } from '../../models'
+import { geoArrayToObj, geoObjToArray } from '../../utils/convertCoordinates'
 
 export default {
   TravelService: {
-    fromLocation: parent => parent.fromLocation.coordinates,
-    toLocation: parent => parent.toLocation.coordinates,
+    fromLocation: parent => geoArrayToObj(parent.fromLocation.coordinates),
+    toLocation: parent => geoArrayToObj(parent.toLocation.coordinates),
   },
   Query: {
     // travelService: async () => {},
@@ -16,25 +16,21 @@ export default {
 
       const { fromName, fromLocation, toName, toLocation, serviceId } = args
 
-      try {
-        const travelService = await TravelService.create({
-          fromName,
-          fromLocation: {
-            type: 'Point',
-            coordinates: fromLocation,
-          },
-          toName,
-          toLocation: {
-            type: 'Point',
-            coordinates: toLocation,
-          },
-          service: serviceId,
-        })
+      const travelService = await TravelService.create({
+        fromName,
+        fromLocation: {
+          type: 'Point',
+          coordinates: geoObjToArray(fromLocation),
+        },
+        toName,
+        toLocation: {
+          type: 'Point',
+          coordinates: geoObjToArray(toLocation),
+        },
+        service: serviceId,
+      })
 
-        return travelService
-      } catch (err) {
-        return error
-      }
+      return travelService
     },
   },
 }

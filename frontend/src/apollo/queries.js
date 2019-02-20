@@ -34,7 +34,10 @@ export const ME_QUERY = gql`
         id
         allowPhoneContact
         allowEmailContact
-        location
+        location {
+          lat
+          lng
+        }
       }
     }
   }

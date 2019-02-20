@@ -33,3 +33,15 @@ mutation {
 mutation {
   login(email: "john@test.com", password: "123456")
 }
+
+mutation {
+  updateRecipientProfile(allowPhoneContact: false) {
+    id
+    allowPhoneContact
+    allowEmailContact
+    location {
+      lat
+      lng
+    }
+  }
+}

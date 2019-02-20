@@ -5,7 +5,10 @@ query {
       id
       allowPhoneContact
       allowEmailContact
-      location
+      location {
+        lat
+        lng
+      }
     }
   }
 }

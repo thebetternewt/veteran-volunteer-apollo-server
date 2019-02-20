@@ -1,7 +1,9 @@
 import {
-  SchemaDirectiveVisitor,
   AuthenticationError,
+  SchemaDirectiveVisitor,
 } from 'apollo-server-express'
+
+// TODO: Auth Directive and protect queries/mutation
 
 class AuthDirective extends SchemaDirectiveVisitor {
   visitFieldDefinition(field) {

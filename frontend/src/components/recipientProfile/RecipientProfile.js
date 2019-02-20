@@ -66,9 +66,9 @@ const RecipientProfile = ({ profile, editProfile }) => {
       <p>
         <strong>Location:</strong>
         <br />
-        latitude: {profile.location[1]}
+        latitude: {profile.location.lat}
         <br />
-        longitude: {profile.location[0]}
+        longitude: {profile.location.lng}
       </p>
 
       <Button

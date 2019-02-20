@@ -1,12 +1,17 @@
 import { gql } from 'apollo-server-express'
 
 export default gql`
+  type Location {
+    lat: Float!
+    lng: Float!
+  }
+
   type TravelService {
     id: ID!
     fromName: String!
-    fromLocation: [Float]
+    fromLocation: Location!
     toName: String!
-    toLocation: [Float]
+    toLocation: Location!
     createdAt: String!
     updatedAt: String!
   }
@@ -16,12 +21,17 @@ export default gql`
   # travelServices(point: [Float!]): [TravelService!]!
   # }
 
+  input LocationInput {
+    lat: Float!
+    lng: Float!
+  }
+
   extend type Mutation {
     createTravelService(
       fromName: String!
-      fromLocation: [Float!]!
+      fromLocation: LocationInput!
       toName: String!
-      toLocation: [Float!]!
+      toLocation: LocationInput!
       serviceId: String!
     ): TravelService
   }

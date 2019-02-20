@@ -16,7 +16,7 @@ export default gql`
     notes: String
     recipient: User!
     volunteer: User
-    location: [Float!]
+    location: Location
     createdAt: String!
     updatedAt: String!
   }
@@ -25,7 +25,7 @@ export default gql`
     service(id: ID!): Service
     services(
       serviceType: ServiceType
-      location: [Float!]
+      location: LocationInput
       """
       Radius in miles
       """
@@ -38,7 +38,7 @@ export default gql`
       serviceType: ServiceType!
       title: String!
       notes: String
-      location: [Float!]!
+      location: LocationInput!
     ): Service
   }
 `

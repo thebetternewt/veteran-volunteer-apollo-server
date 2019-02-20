@@ -6,7 +6,7 @@ export default gql`
     user: User!
     allowPhoneContact: Boolean!
     allowEmailContact: Boolean!
-    location: [Float]
+    location: Location
     createdAt: String!
     updatedAt: String!
   }
@@ -20,14 +20,12 @@ export default gql`
     createRecipientProfile(
       allowPhoneContact: Boolean
       allowEmailContact: Boolean
-      lat: Float!
-      lng: Float!
+      location: LocationInput
     ): RecipientProfile
     updateRecipientProfile(
       allowPhoneContact: Boolean
       allowEmailContact: Boolean
-      lat: Float
-      lng: Float
+      location: LocationInput
     ): RecipientProfile
   }
 `
