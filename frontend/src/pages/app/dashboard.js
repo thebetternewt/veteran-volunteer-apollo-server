@@ -23,7 +23,9 @@ const initSidebarCollapsed = () => {
 }
 
 const Dashboard = ({ children = defaultContent }) => {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(initSidebarCollapsed)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(
+    initSidebarCollapsed()
+  )
   const user = getAuthenticatedUser()
 
   // TODO: set inital sidebarCollapse state based on window size
@@ -57,7 +59,7 @@ const Dashboard = ({ children = defaultContent }) => {
             }}
           >
             <Icon type="setting" style={{ fontSize: 20, marginRight: 15 }} />
-            <Avatar size={40} icon="user" src={user.avatar} />
+            <Avatar size={40} icon="user" src={user && user.avatar} />
           </div>
         </Header>
         <Content
