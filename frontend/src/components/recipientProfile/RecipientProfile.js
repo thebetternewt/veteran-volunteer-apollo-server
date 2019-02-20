@@ -1,8 +1,8 @@
-import { Map } from '@esri/react-arcgis'
 import { Avatar, Button, Divider, Icon } from 'antd'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import styled from 'styled-components'
+import Map from '../common/map/Map'
 
 const Identity = styled.div`
   display: flex;
@@ -78,14 +78,7 @@ const RecipientProfile = ({ profile, editProfile }) => {
         <br />
         longitude: {profile.location.lng}
       </p>
-      <Map
-        style={{ width: 400, height: 400 }}
-        // mapProperties={{ basemap: 'satellite' }}
-        viewProperties={{
-          center: [profile.location.lng, profile.location.lat],
-          zoom: 6,
-        }}
-      />
+      <Map location={profile.location} />
 
       <Button
         type="primary"
