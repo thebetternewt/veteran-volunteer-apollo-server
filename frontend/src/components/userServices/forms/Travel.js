@@ -11,6 +11,7 @@ const TravelForm = ({ form }) => {
         form={form}
         fieldname="details.toLocation"
         label="Where are you going?"
+        setLocationState={location => console.log(location)}
       />
     </>
   )

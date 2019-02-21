@@ -2,8 +2,10 @@ import { Button, Form, Radio, Select } from 'antd'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import BaseServiceForm from './forms/BaseServiceForm'
-import TravelForm from './forms/travel'
+import TravelForm from './forms/Travel'
 import { navigate } from 'gatsby'
+import ServiceDetailsForm from './forms/ServiceDetailsForm'
+import Summary from './forms/Summary'
 
 const serviceTypes = [
   {
@@ -31,7 +33,12 @@ const ServiceTypeOptionsWrapper = styled.div`
 
 const CreateService = ({ form }) => {
   const [step, setStep] = useState(1)
-  const [serviceType, setServiceType] = useState()
+  const [serviceType, setServiceType] = useState(null)
+
+  const [baseLocation, setBaseLocation] = useState(null)
+
+  // TODO: Handle clearing state for fields associated with a specific service
+  // when service type changes
 
   const { getFieldDecorator, setFieldsValue, getFieldsValue } = form
 
@@ -60,19 +67,35 @@ const CreateService = ({ form }) => {
 
   // TODO: Tie into browser routing
   const goToNextStep = () => {
-    console.log(getFieldsValue())
+    console.log('FORM VALUES:', getFieldsValue())
+    console.log('STATE [baseLocation]:', baseLocation)
     setStep(step + 1)
   }
+
   const goToPrevStep = () => setStep(step - 1)
 
-  let serviceDetailsStepContent = null
-  switch (serviceType) {
-    case 'Travel':
-      serviceDetailsStepContent = <TravelForm form={form} />
-      break
-    default:
-      break
+  const setButtonType = selection => {
+    if (!serviceType || selection === serviceType) {
+      return 'primary'
+    }
+
+    // if (!serviceType) return 'primary'
+
+    // if (selection === serviceType) {
+    //   return 'primary'
+    // }
+
+    return 'default'
   }
+
+  // let serviceDetailsStepContent = null
+  // switch (serviceType) {
+  //   case 'Travel':
+  //     serviceDetailsStepContent = <TravelForm form={form} />
+  //     break
+  //   default:
+  //     break
+  // }
 
   let content
   switch (step) {
@@ -80,15 +103,15 @@ const CreateService = ({ form }) => {
       content = (
         <>
           <h2>Select Service Type</h2>
-          {getFieldDecorator('serviceType')(
+          {getFieldDecorator('serviceType', { preserve: true })(
             <ServiceTypeOptionsWrapper>
               {serviceTypes.map(type => (
                 <Button
                   key={type.name}
-                  type="primary"
+                  type={setButtonType(type.name)}
                   icon={type.icon}
                   size="large"
-                  ghost
+                  // ghost={setButtonType(type.name) === 'primary'}
                   onClick={() => {
                     setFieldsValue({ serviceType: type.name })
                     setServiceType(type.name)
@@ -104,10 +127,19 @@ const CreateService = ({ form }) => {
       )
       break
     case 2:
-      content = <BaseServiceForm form={form} nextStep={goToNextStep} />
+      content = (
+        <BaseServiceForm
+          form={form}
+          nextStep={goToNextStep}
+          setBaseLocation={setBaseLocation}
+        />
+      )
       break
     case 3:
-      content = serviceDetailsStepContent
+      content = <ServiceDetailsForm form={form} nextStep={goToNextStep} />
+      break
+    case 4:
+      content = <Summary form={form} />
       break
 
     default:
@@ -119,7 +151,7 @@ const CreateService = ({ form }) => {
   return (
     <>
       <h3>Request Service</h3>
-      <Form>
+      <Form onSubmit={handleSubmit}>
         {content}
         <Form.Item>
           {step > 1 && (
@@ -127,7 +159,7 @@ const CreateService = ({ form }) => {
               Back
             </Button>
           )}
-          {step === 3 && (
+          {step === 4 && (
             <Button
               type="primary"
               htmlType="submit"

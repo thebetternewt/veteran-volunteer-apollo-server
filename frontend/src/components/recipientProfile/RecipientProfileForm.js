@@ -1,5 +1,4 @@
-import { AutoComplete, Button, Checkbox, Form } from 'antd'
-import axios from 'axios'
+import { Button, Checkbox, Form } from 'antd'
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
 import {
@@ -7,6 +6,7 @@ import {
   UPDATE_RECIPIENT_PROFILE,
 } from '../../apollo/mutations'
 import { hasErrors } from '../common/forms/helpers'
+import PlaceSearchField from '../common/forms/PlaceSearchField'
 import graphQlErrors from '../graphqlErrors'
 
 const ARCGIS_SUGGEST_BASE_URL =
@@ -85,13 +85,15 @@ class RecipientProfileForm extends Component {
     })
   }
 
+  handleLocationSelect = location =>
+    this.setState({ selectedLocation: location })
+
   handleSubmit = async (e, submit) => {
     e.preventDefault()
     const { validateFields } = this.props.form
 
     await validateFields(async (errors, values) => {
       console.log('errors:', errors)
-      // console.log('values:', values)
       const { selectedLocation } = this.state
       if (!errors) {
         const variables = {
@@ -106,10 +108,16 @@ class RecipientProfileForm extends Component {
           }
         }
 
-        console.log(variables)
         try {
           await submit({ variables, refetchQueries: ['Me'] })
-          this.props.toggleForm()
+          /**
+           * Check if toggleForm exists before executing. In the case that
+           * createProfile (not updateProfile) succeeds, the "Me" query
+           * is refetched, causing the root component to re-render. At this
+           * point, the toggleForm function no longer exists and throws an
+           * error in the console. There may be a better way to handle this.
+           */
+          this.props.toggleForm && this.props.toggleForm()
         } catch (err) {
           console.error(err)
         }
@@ -118,51 +126,11 @@ class RecipientProfileForm extends Component {
     })
   }
 
-  searchForLocation = async searchText => {
-    // Fetch suggest results from ArcGIS
-    const searchResults = await axios.get(ARCGIS_SUGGEST_BASE_URL, {
-      params: { f: 'json', text: searchText },
-    })
-
-    const { suggestions } = searchResults.data
-
-    this.setState({ searchResults: suggestions || [] })
-  }
-
-  onLocationSearchChange = async searchText => {
-    this.setState({ searchText })
-    await this.searchForLocation(searchText)
-  }
-
-  handleLocationSearchSelect = async magicKey => {
-    console.log('magicKey', magicKey)
-
-    // Fetch address candidate results from ArcGIS
-    const searchResults = await axios.get(
-      ARCGIS_FIND_ADDRESS_CANDIDATES_BASE_URL,
-      {
-        params: { f: 'json', magicKey },
-      }
-    )
-
-    const { data } = searchResults
-    console.log('selected data', data)
-
-    if (data.candidates) {
-      this.setState({ selectedLocation: data.candidates[0] })
-    }
-  }
-
   render() {
-    const { profile, toggleForm } = this.props
-    const { getFieldDecorator, getFieldsError } = this.props.form
+    const { profile, toggleForm, form } = this.props
+    const { getFieldDecorator, getFieldsError } = form
 
-    const { searchResults } = this.state
-
-    const dataSource = searchResults.map(item => ({
-      text: item.text,
-      value: item.magicKey,
-    }))
+    console.log(toggleForm)
 
     const profileForm = ({ error, loading, submit }) => (
       <Form onSubmit={e => this.handleSubmit(e, submit)}>
@@ -195,23 +163,12 @@ class RecipientProfileForm extends Component {
         </Form.Item>
 
         {!profile && (
-          <Form.Item label="Where are you located?">
-            {getFieldDecorator('location', {
-              rules: [
-                {
-                  required: true,
-                  message: 'Please select a location.',
-                },
-              ],
-            })(
-              <AutoComplete
-                dataSource={dataSource}
-                onChange={this.onLocationSearchChange}
-                placeholder="Autocorrect find a place"
-                onSelect={magicKey => this.handleLocationSearchSelect(magicKey)}
-              />
-            )}
-          </Form.Item>
+          <PlaceSearchField
+            fieldname="location"
+            label="Where are you located?"
+            form={form}
+            setLocationState={this.handleLocationSelect}
+          />
         )}
 
         <Form.Item>

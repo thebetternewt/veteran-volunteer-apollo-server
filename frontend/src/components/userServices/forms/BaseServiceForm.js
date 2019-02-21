@@ -1,15 +1,12 @@
 import { Button, Form, Input } from 'antd'
-import React, { Component } from 'react'
+import React from 'react'
 import PlaceSearchField from '../../common/forms/PlaceSearchField'
 
-class BaseServiceForm extends Component {
-  state = {
-    disableNext: true,
-  }
+const BaseServiceForm = props => {
+  const { nextStep, form, setBaseLocation } = props
+  const { getFieldDecorator, getFieldsError, validateFields } = form
 
-  checkForErrors = async () => {
-    const { validateFields } = this.props.form
-
+  const checkForErrors = async () => {
     const err = await validateFields(errors => {
       console.log('errors:', errors)
       return errors
@@ -18,51 +15,49 @@ class BaseServiceForm extends Component {
     return !!err
   }
 
-  render() {
-    const { nextStep, form } = this.props
-    const { getFieldDecorator, getFieldsError, validateFields } = form
-    const { disableNext } = this.state
+  return (
+    <>
+      {/* <Form.Item>{error && graphQlErrors(error)}</Form.Item> */}
 
-    return (
-      <>
-        {/* <Form.Item>{error && graphQlErrors(error)}</Form.Item> */}
+      <Form.Item
+        label="Title"
+        help="Enter a descriptive title for your request."
+      >
+        {getFieldDecorator('title', {
+          preserve: true,
+          rules: [
+            {
+              required: true,
+              message: 'Please enter a title.',
+            },
+          ],
+        })(<Input />)}
+      </Form.Item>
 
-        <Form.Item
-          label="Title"
-          help="Enter a descriptive title for your request."
+      {/* TODO: ADD DATE!!! */}
+
+      {/* TODO: Set selected location in parent form */}
+      <PlaceSearchField
+        form={form}
+        fieldname="baseLocation"
+        label="Where are you located?"
+        setLocationState={location => setBaseLocation(location)}
+      />
+
+      <Form.Item>
+        <Button
+          type="primary"
+          style={{ marginRight: '2rem' }}
+          onClick={() => {
+            // if (!this.checkForErrors())
+            nextStep()
+          }}
         >
-          {getFieldDecorator('title', {
-            rules: [
-              {
-                required: true,
-                message: 'Please enter a title.',
-              },
-            ],
-          })(<Input />)}
-        </Form.Item>
-
-        {/* TODO: Set selected location in parent form */}
-        <PlaceSearchField
-          form={form}
-          fieldname="baseLocation"
-          label="Where are you located?"
-        />
-
-        <Form.Item>
-          <Button
-            type="primary"
-            style={{ marginRight: '2rem' }}
-            onClick={() => {
-              // if (!this.checkForErrors())
-              nextStep()
-            }}
-          >
-            Next
-          </Button>
-        </Form.Item>
-      </>
-    )
-  }
+          Next
+        </Button>
+      </Form.Item>
+    </>
+  )
 }
 
 export default BaseServiceForm

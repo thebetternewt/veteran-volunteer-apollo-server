@@ -7,9 +7,10 @@ const ARCGIS_SUGGEST_BASE_URL =
 const ARCGIS_FIND_ADDRESS_CANDIDATES_BASE_URL =
   'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates'
 
-const PlaceSearchField = ({ form, fieldname, label }) => {
+const PlaceSearchField = ({ form, fieldname, label, setLocationState }) => {
   const [searchResults, setSearchResults] = useState([])
   const [selectedLocation, setSelectedLocation] = useState(null)
+  const [error, setError] = useState(null)
 
   const searchForLocation = async searchText => {
     // Fetch suggest results from ArcGIS
@@ -37,8 +38,15 @@ const PlaceSearchField = ({ form, fieldname, label }) => {
     console.log('selected data', data)
 
     if (data.candidates) {
-      setSelectedLocation(data.candidates[0])
+      const location = data.candidates[0]
+      setSelectedLocation(location)
+      setLocationState(location)
+      setError(null)
+      return
     }
+
+    // TODO: Pass this error to parent form component.
+    setError('Unable to find matching location.')
   }
 
   const dataSource = searchResults.map(item => ({
@@ -47,11 +55,11 @@ const PlaceSearchField = ({ form, fieldname, label }) => {
   }))
 
   const { getFieldDecorator, getFieldError } = form
-  console.log(form)
 
   return (
     <Form.Item label={label || 'Location'} colon={false}>
       {getFieldDecorator(fieldname, {
+        preserve: true,
         rules: [
           {
             required: true,
