@@ -4,7 +4,6 @@ import { getAuthenticatedUser } from '../../apollo/client'
 import PrivateRoute from '../../components/privateRoute'
 import RecipientProfile from '../../components/recipientProfile'
 import CreateService from '../../components/userServices/CreateService'
-import UserServices from '../../components/userServices/index'
 import VolunteerProfileForm from '../../components/VolunteerProfileForm'
 import Dashboard from './dashboard'
 
