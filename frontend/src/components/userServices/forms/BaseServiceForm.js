@@ -1,89 +1,68 @@
-import { AutoComplete, Button, Form } from 'antd'
+import { Button, Form, Input } from 'antd'
 import React, { Component } from 'react'
-import graphQlErrors from '../../graphqlErrors'
-
-const serviceTypes = ['TRAVEL', 'LAWNCARE']
+import PlaceSearchField from '../../common/forms/PlaceSearchField'
 
 class BaseServiceForm extends Component {
   state = {
-    selectedLocation: null,
+    disableNext: true,
   }
-  handleSubmit = async e => {
-    e.preventDefault()
 
+  checkForErrors = async () => {
     const { validateFields } = this.props.form
 
-    await validateFields(async (errors, values) => {
+    const err = await validateFields(errors => {
       console.log('errors:', errors)
-      console.log('values:', values)
-      const { selectedLocation } = this.state
-      // if (!errors) {
-
-      //   console.log(variables)
-      //   try {
-      //     await submit({ variables, refetchQueries: ['Me'] })
-      //     this.props.toggleForm()
-      //   } catch (err) {
-      //     console.error(err)
-      //   }
-      // }
-      window.scrollTo(0, 0)
+      return errors
     })
+
+    return !!err
   }
 
   render() {
-    const loading = false
-    const error = null
-    const profile = null
-    const dataSource = []
-    const { getFieldDecorator, getFieldsError } = this.props.form
+    const { nextStep, form } = this.props
+    const { getFieldDecorator, getFieldsError, validateFields } = form
+    const { disableNext } = this.state
 
     return (
       <>
-        <h2>Request a Service</h2>
-        <Form onSubmit={this.handleSubmit}>
-          <Form.Item>{error && graphQlErrors(error)}</Form.Item>
-          <Form.Item label="Where are you located?">
-            {getFieldDecorator('location', {
-              rules: [
-                {
-                  required: true,
-                  message: 'Please select a location.',
-                },
-              ],
-            })(
-              <AutoComplete
-                dataSource={dataSource}
-                // onChange={this.onLocationSearchChange}
-                placeholder="Autocorrect find a place"
-                onSelect={magicKey => this.handleLocationSearchSelect(magicKey)}
-              />
-            )}
-          </Form.Item>
+        {/* <Form.Item>{error && graphQlErrors(error)}</Form.Item> */}
 
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              // disabled={hasErrors(getFieldsError())}
-              loading={loading}
-              style={{ marginRight: '2rem' }}
-            >
-              {profile ? 'Update Profile' : 'Create Profile'}
-            </Button>
-            {profile && !loading && (
-              <Button
-                type="secondary"
-                // onClick={toggleForm}
-              >
-                Cancel
-              </Button>
-            )}
-          </Form.Item>
-        </Form>
+        <Form.Item
+          label="Title"
+          help="Enter a descriptive title for your request."
+        >
+          {getFieldDecorator('title', {
+            rules: [
+              {
+                required: true,
+                message: 'Please enter a title.',
+              },
+            ],
+          })(<Input />)}
+        </Form.Item>
+
+        {/* TODO: Set selected location in parent form */}
+        <PlaceSearchField
+          form={form}
+          fieldname="baseLocation"
+          label="Where are you located?"
+        />
+
+        <Form.Item>
+          <Button
+            type="primary"
+            style={{ marginRight: '2rem' }}
+            onClick={() => {
+              // if (!this.checkForErrors())
+              nextStep()
+            }}
+          >
+            Next
+          </Button>
+        </Form.Item>
       </>
     )
   }
 }
 
-export default Form.create({ name: 'recipientProfile' })(BaseServiceForm)
+export default BaseServiceForm

@@ -1,10 +1,18 @@
 import React from 'react'
+import { Form, AutoComplete } from 'antd'
+import PlaceSearchField from '../../common/forms/PlaceSearchField'
 
-const TravelForm = () => {
+const TravelForm = ({ form }) => {
+  const dataSource = []
+  const { getFieldDecorator, getFieldsError } = form
   return (
-    <div>
-      <h2>New Travel Service</h2>
-    </div>
+    <>
+      <PlaceSearchField
+        form={form}
+        fieldname="details.toLocation"
+        label="Where are you going?"
+      />
+    </>
   )
 }
 

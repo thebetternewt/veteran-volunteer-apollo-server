@@ -6,6 +6,7 @@ import {
   CREATE_RECIPIENT_PROFILE,
   UPDATE_RECIPIENT_PROFILE,
 } from '../../apollo/mutations'
+import { hasErrors } from '../common/forms/helpers'
 import graphQlErrors from '../graphqlErrors'
 
 const ARCGIS_SUGGEST_BASE_URL =
@@ -17,9 +18,9 @@ const CheckboxGroup = Checkbox.Group
 
 const contactOptions = ['Phone', 'Email']
 
-function hasErrors(fieldsErrors) {
-  return Object.keys(fieldsErrors).some(field => fieldsErrors[field])
-}
+// function hasErrors(fieldsErrors) {
+//   return Object.keys(fieldsErrors).some(field => fieldsErrors[field])
+// }
 
 class RecipientProfileForm extends Component {
   state = {
@@ -193,7 +194,6 @@ class RecipientProfileForm extends Component {
           )}
         </Form.Item>
 
-        {/* TODO: Move location to user account */}
         {!profile && (
           <Form.Item label="Where are you located?">
             {getFieldDecorator('location', {
