@@ -31,14 +31,15 @@ export default {
       return newProfile
     },
 
-    updateRecipientProfile: async (parent, { location, ...args }, { user }) => {
-      console.log(location, args)
-      const updatedAttributes = { ...args }
+    updateRecipientProfile: async (parent, args, { user }) => {
+      const { lat, lng } = args
 
-      if (location) {
+      const updatedAttributes = {}
+
+      if (lat && lng) {
         updatedAttributes.location = {
           type: 'Point',
-          coordinates: geoObjToArray(location),
+          coordinates: [lng, lat],
         }
       }
 

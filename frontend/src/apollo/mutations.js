@@ -56,12 +56,13 @@ export const CREATE_RECIPIENT_PROFILE = gql`
   mutation CreateRecipientProfile(
     $allowPhoneContact: Boolean
     $allowEmailContact: Boolean
-    $location: LocationInput
+    $lat: Float!
+    $lng: Float!
   ) {
     createRecipientProfile(
       allowPhoneContact: $allowPhoneContact
       allowEmailContact: $allowEmailContact
-      location: $location
+      location: { lat: $lat, lng: $lng }
     ) {
       id
       allowPhoneContact
@@ -77,12 +78,13 @@ export const UPDATE_RECIPIENT_PROFILE = gql`
   mutation updateRecipientProfile(
     $allowPhoneContact: Boolean
     $allowEmailContact: Boolean
-    $location: LocationInput
+    $lat: Float
+    $lng: Float
   ) {
     updateRecipientProfile(
       allowPhoneContact: $allowPhoneContact
       allowEmailContact: $allowEmailContact
-      location: $location
+      location: { lat: $lat, lng: $lng }
     ) {
       id
       allowPhoneContact

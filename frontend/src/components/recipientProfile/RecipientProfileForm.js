@@ -96,15 +96,9 @@ class RecipientProfileForm extends Component {
         const variables = {
           allowPhoneContact: values.preferredContact.includes('Phone'),
           allowEmailContact: values.preferredContact.includes('Email'),
+          lat: selectedLocation && selectedLocation.location.y,
+          lng: selectedLocation && selectedLocation.location.x,
         }
-
-        if (selectedLocation) {
-          variables.location = {
-            lat: selectedLocation.location.y,
-            lng: selectedLocation.location.x,
-          }
-        }
-
         console.log(variables)
         try {
           await submit({ variables, refetchQueries: ['Me'] })
