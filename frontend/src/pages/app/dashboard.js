@@ -39,10 +39,15 @@ const Dashboard = ({ children = defaultContent }) => {
             backgroundColor: '#326ba0',
             color: '#fff',
             padding: '0 1rem',
+            width: '100%',
             minWidth: 320,
+            maxWidth: sidebarCollapsed ? '100vw' : 'calc(100vw - 200px)',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
+            position: 'fixed',
+            transition: 'all 200ms linear',
+            zIndex: 200,
           }}
         >
           <Icon

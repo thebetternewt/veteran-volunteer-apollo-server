@@ -39,6 +39,47 @@ export const ME_QUERY = gql`
           lng
         }
       }
+      requestedServices {
+        id
+        title
+        serviceType
+      }
+    }
+  }
+`
+const SERVICES_QUERY = gql`
+  query ServicesQuery {
+    services {
+      id
+      title
+      location {
+        lat
+        lng
+      }
+      serviceType
+      serviceDetails {
+        ... on LawncareService {
+          description
+          id
+          equipmentNeeded
+        }
+        ... on TravelService {
+          id
+          fromName
+          fromLocation {
+            lat
+            lng
+          }
+          toName
+          toLocation {
+            lat
+            lng
+          }
+        }
+      }
+    }
+    recipient {
+      id
     }
   }
 `

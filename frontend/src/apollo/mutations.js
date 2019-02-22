@@ -94,3 +94,23 @@ export const UPDATE_RECIPIENT_PROFILE = gql`
     }
   }
 `
+
+export const CREATE_TRAVEL_SERVICE = gql`
+  mutation createTravelService(
+    $title: String!
+    $serviceType: ServiceType!
+    $notes: String
+    $location: LocationInput!
+    $details: TravelServiceInput
+  ) {
+    createService(
+      title: $title
+      serviceType: $serviceType
+      notes: $notes
+      location: $location
+      travelServiceDetails: $details
+    ) {
+      id
+    }
+  }
+`

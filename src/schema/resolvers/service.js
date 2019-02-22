@@ -1,4 +1,4 @@
-import { LawncareService, Service, TravelService } from '../../models'
+import { LawncareService, Service, TravelService, User } from '../../models'
 import { mongoose as db } from '../../server'
 import { geoArrayToObj, geoObjToArray } from '../../utils/convertCoordinates'
 
@@ -43,6 +43,7 @@ export default {
 
       return null
     },
+    recipient: parent => User.findById(parent.recipient),
   },
   Query: {
     service: async () => {},

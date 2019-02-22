@@ -1,7 +1,9 @@
 import { Avatar, Button, Card, Divider, Icon, Row } from 'antd'
 import { Link } from 'gatsby'
 import React from 'react'
+import { Query } from 'react-apollo'
 import styled from 'styled-components'
+import { ME_QUERY } from '../../apollo/queries'
 
 const { Meta } = Card
 
@@ -19,6 +21,10 @@ const ServiceCard = styled(Card)`
   width: 400px;
   max-width: 100%;
   margin: 0 1rem 1rem 0;
+
+  .service-type {
+    text-transform: capitalize;
+  }
 
   @media screen and (max-width: 756px) {
     width: 380px;
@@ -40,77 +46,51 @@ const UserServices = () => {
           </Link>
         </ServiceSectionHeader>
         <Row type="flex">
-          <ServiceCard
-            style={{ maxWidth: 400, marginBottom: 20 }}
-            actions={[<Icon type="info-circle" />, <Icon type="message" />]}
-          >
-            <Meta
-              avatar={
-                <Avatar
-                  size={64}
-                  src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairStraight&accessoriesType=Wayfarers&hairColor=Platinum&facialHairType=Blank&clotheType=Overall&clotheColor=PastelBlue&eyeType=Cry&eyebrowType=UpDownNatural&mouthType=Twinkle&skinColor=Yellow"
-                />
-              }
-              title="Travel to Columbus"
-              description={
-                <div style={{ marginBottom: '1rem' }}>
-                  <div>Type: Travel</div>
-                  <div>When: Friday, February 23rd</div>
-                </div>
-              }
-            />
-            <div>
-              <p>Lorem ipsum dolor sit amet.</p>
-            </div>
-          </ServiceCard>
+          <Query query={ME_QUERY}>
+            {({ data, loading }) => {
+              if (loading) return <Icon type="loading" size={64} />
 
-          <ServiceCard
-            style={{ maxWidth: 400, marginBottom: 20 }}
-            actions={[<Icon type="info-circle" />, <Icon type="message" />]}
-          >
-            <Meta
-              avatar={
-                <Avatar
-                  size={64}
-                  src="https://avataaars.io/?avatarStyle=Circle&topType=NoHair&accessoriesType=Round&facialHairType=MoustacheMagnum&facialHairColor=Blonde&clotheType=CollarSweater&clotheColor=Gray02&eyeType=Happy&eyebrowType=SadConcerned&mouthType=Smile&skinColor=Tanned"
-                />
-              }
-              title="Lawncare needed"
-              description={
-                <div style={{ marginBottom: '1rem' }}>
-                  <div>Type: Lawncare</div>
-                  <div>When: Saturday, February 24th</div>
-                </div>
-              }
-            />
-            <div>
-              <p>Lorem ipsum dolor sit amet.</p>
-            </div>
-          </ServiceCard>
+              if (data && data.me) {
+                const { me } = data
+                const { requestedServices } = me
 
-          <ServiceCard
-            style={{ maxWidth: 400, marginBottom: 20 }}
-            actions={[<Icon type="info-circle" />, <Icon type="message" />]}
-          >
-            <Meta
-              avatar={
-                <Avatar
-                  size={64}
-                  src="https://avataaars.io/?avatarStyle=Circle&topType=ShortHairDreads01&accessoriesType=Prescription01&hairColor=PastelPink&facialHairType=BeardLight&facialHairColor=BrownDark&clotheType=ShirtCrewNeck&clotheColor=Gray01&eyeType=Happy&eyebrowType=UnibrowNatural&mouthType=Twinkle&skinColor=Pale"
-                />
+                const serviceCards = requestedServices.map(req => (
+                  <ServiceCard
+                    key={req.id}
+                    style={{ maxWidth: 400, marginBottom: 20 }}
+                    actions={[
+                      <Icon type="info-circle" />,
+                      <Icon type="message" />,
+                    ]}
+                  >
+                    <Meta
+                      avatar={
+                        <Avatar icon="avatar" size={64} src={me.avatar} />
+                      }
+                      title={req.title}
+                      description={
+                        <div style={{ marginBottom: '1rem' }}>
+                          <div>
+                            <span className="service-type">
+                              Type: {req.serviceType.toLowerCase()}
+                            </span>
+                          </div>
+                          <div>When: Friday, February 23rd</div>
+                        </div>
+                      }
+                    />
+                    <div>
+                      <p>Lorem ipsum dolor sit amet.</p>
+                    </div>
+                  </ServiceCard>
+                ))
+
+                return serviceCards
               }
-              title="Childcare in Starkville"
-              description={
-                <div style={{ marginBottom: '1rem' }}>
-                  <div>Type: Childcare</div>
-                  <div>When: Saturday, February 24th</div>
-                </div>
-              }
-            />
-            <div>
-              <p>Lorem ipsum dolor sit amet.</p>
-            </div>
-          </ServiceCard>
+
+              return null
+            }}
+          </Query>
         </Row>
       </div>
       <Divider />
