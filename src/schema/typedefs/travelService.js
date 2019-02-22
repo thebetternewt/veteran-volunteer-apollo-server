@@ -22,8 +22,8 @@ export default gql`
   # }
 
   input LocationInput {
-    lat: Float!
-    lng: Float!
+    lat: Float
+    lng: Float
   }
 
   extend type Mutation {
