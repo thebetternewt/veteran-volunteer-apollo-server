@@ -34,9 +34,9 @@ const Sidebar = ({ collapsed = false }) => {
           </Link>
         </Menu.Item>
         <Menu.Item key="2">
-          <Link to="/app/volunteer-profile">
+          <Link to="/app/volunteer-signup">
             <Icon type="user" />
-            <span className="nav-text">Volunteer Profile</span>
+            <span className="nav-text">Profile</span>
           </Link>
         </Menu.Item>
         <Menu.Item key="3">
