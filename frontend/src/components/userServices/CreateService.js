@@ -1,56 +1,29 @@
-import { Button, Form, Radio, Select } from 'antd'
-import React, { useState } from 'react'
-import styled from 'styled-components'
-import BaseServiceForm from './forms/BaseServiceForm'
-import TravelForm from './forms/Travel'
+import { Button, Form } from 'antd'
 import { navigate } from 'gatsby'
-import ServiceDetailsForm from './forms/ServiceDetailsForm'
+import React, { useState } from 'react'
+import StepOne from './forms/StepOne'
+import StepThree from './forms/StepThree'
+import StepTwo from './forms/StepTwo'
 import Summary from './forms/Summary'
 
-const serviceTypes = [
-  {
-    name: 'Travel',
-    icon: 'car',
-  },
-  {
-    name: 'Childcare',
-    icon: 'smile',
-  },
-  {
-    name: 'Lawncare',
-    icon: 'home',
-  },
-]
-
-const ServiceTypeOptionsWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-
-  button {
-    margin: 0 15px 15px 0;
-  }
-`
-
 const CreateService = ({ form }) => {
-  const [step, setStep] = useState(1)
-  const [serviceType, setServiceType] = useState(null)
-
-  const [baseLocation, setBaseLocation] = useState(null)
+  const [currentStep, setCurrentStep] = useState(0)
+  const [serviceType, setServiceType] = useState()
+  const [baseLocation, setBaseLocation] = useState()
+  const [serviceDetails, setServiceDetails] = useState({})
 
   // TODO: Handle clearing state for fields associated with a specific service
   // when service type changes
 
-  const { getFieldDecorator, setFieldsValue, getFieldsValue } = form
+  const { validateFields } = form
 
   const handleSubmit = async e => {
     e.preventDefault()
 
-    const { validateFields } = this.props.form
-
     await validateFields(async (errors, values) => {
       console.log('errors:', errors)
       console.log('values:', values)
-      const { selectedLocation } = this.state
+
       // if (!errors) {
 
       //   console.log(variables)
@@ -67,99 +40,70 @@ const CreateService = ({ form }) => {
 
   // TODO: Tie into browser routing
   const goToNextStep = () => {
-    console.log('FORM VALUES:', getFieldsValue())
+    console.log('')
+    console.log('')
+    console.log('FORM VALUES:', form.getFieldsValue())
     console.log('STATE [baseLocation]:', baseLocation)
-    setStep(step + 1)
+    console.log('STATE [serviceType]:', serviceType)
+    console.log('STATE [serviceDetails]:', serviceDetails)
+    setCurrentStep(currentStep + 1)
   }
 
-  const goToPrevStep = () => setStep(step - 1)
+  const goToPrevStep = () => setCurrentStep(currentStep - 1)
 
-  const setButtonType = selection => {
-    if (!serviceType || selection === serviceType) {
-      return 'primary'
-    }
-
-    // if (!serviceType) return 'primary'
-
-    // if (selection === serviceType) {
-    //   return 'primary'
-    // }
-
-    return 'default'
-  }
-
-  // let serviceDetailsStepContent = null
-  // switch (serviceType) {
-  //   case 'Travel':
-  //     serviceDetailsStepContent = <TravelForm form={form} />
-  //     break
-  //   default:
-  //     break
-  // }
-
-  let content
-  switch (step) {
-    case 1:
-      content = (
-        <>
-          <h2>Select Service Type</h2>
-          {getFieldDecorator('serviceType', { preserve: true })(
-            <ServiceTypeOptionsWrapper>
-              {serviceTypes.map(type => (
-                <Button
-                  key={type.name}
-                  type={setButtonType(type.name)}
-                  icon={type.icon}
-                  size="large"
-                  // ghost={setButtonType(type.name) === 'primary'}
-                  onClick={() => {
-                    setFieldsValue({ serviceType: type.name })
-                    setServiceType(type.name)
-                    goToNextStep()
-                  }}
-                >
-                  {type.name}
-                </Button>
-              ))}
-            </ServiceTypeOptionsWrapper>
-          )}
-        </>
-      )
-      break
-    case 2:
-      content = (
-        <BaseServiceForm
+  const steps = [
+    {
+      title: 'Select Service Type',
+      component: (
+        <StepOne
+          form={form}
+          setServiceType={setServiceType}
+          selectedServiceType={serviceType}
+          nextStep={goToNextStep}
+        />
+      ),
+    },
+    {
+      title: 'Service Details',
+      component: (
+        <StepTwo
           form={form}
           nextStep={goToNextStep}
+          baseLocation={baseLocation}
           setBaseLocation={setBaseLocation}
         />
-      )
-      break
-    case 3:
-      content = <ServiceDetailsForm form={form} nextStep={goToNextStep} />
-      break
-    case 4:
-      content = <Summary form={form} />
-      break
-
-    default:
-      break
-  }
-
-  console.log(step, serviceType)
+      ),
+    },
+    {
+      title: 'Service Type Details',
+      component: (
+        <StepThree
+          form={form}
+          nextStep={goToNextStep}
+          serviceType={serviceType}
+          serviceDetails={serviceDetails}
+          setServiceDetails={setServiceDetails}
+        />
+      ),
+    },
+    {
+      title: 'Summary',
+      component: <Summary form={form} nextStep={goToNextStep} />,
+    },
+  ]
 
   return (
     <>
       <h3>Request Service</h3>
       <Form onSubmit={handleSubmit}>
-        {content}
+        {steps[currentStep].component}
         <Form.Item>
-          {step > 1 && (
+          {currentStep > 1 && (
             <Button type="primary" icon="left-circle" onClick={goToPrevStep}>
-              Back
+              Prev
             </Button>
           )}
-          {step === 4 && (
+          {currentStep === steps.length - 1 && (
             <Button
               type="primary"
               htmlType="submit"

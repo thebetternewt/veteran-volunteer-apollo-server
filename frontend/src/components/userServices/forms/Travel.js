@@ -1,8 +1,7 @@
 import React from 'react'
-import { Form, AutoComplete } from 'antd'
 import PlaceSearchField from '../../common/forms/PlaceSearchField'
 
-const TravelForm = ({ form }) => {
+const TravelForm = ({ form, serviceDetails, setServiceDetails }) => {
   const dataSource = []
   const { getFieldDecorator, getFieldsError } = form
   return (
@@ -11,7 +10,9 @@ const TravelForm = ({ form }) => {
         form={form}
         fieldname="details.toLocation"
         label="Where are you going?"
-        setLocationState={location => console.log(location)}
+        setLocationState={location =>
+          setServiceDetails({ ...serviceDetails, toLocation: location })
+        }
       />
     </>
   )

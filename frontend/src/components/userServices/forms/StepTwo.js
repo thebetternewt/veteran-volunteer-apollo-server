@@ -3,16 +3,29 @@ import React from 'react'
 import PlaceSearchField from '../../common/forms/PlaceSearchField'
 
 const BaseServiceForm = props => {
-  const { nextStep, form, setBaseLocation } = props
-  const { getFieldDecorator, getFieldsError, validateFields } = form
+  const { nextStep, form, baseLocation, setBaseLocation } = props
+  const {
+    getFieldDecorator,
+    getFieldsError,
+    validateFields,
+    setFieldsValue,
+  } = form
 
-  const checkForErrors = async () => {
-    const err = await validateFields(errors => {
+  // Check specified field for errors and reset state for any absent
+  // location values.
+  const checkFieldsForErrors = fieldnames => {
+    let errorExists = false
+
+    if (!baseLocation) {
+      setFieldsValue({ baseLocation: null })
+    }
+
+    validateFields(fieldnames, {}, errors => {
       console.log('errors:', errors)
-      return errors
+      errorExists = !!errors
     })
 
-    return !!err
+    return errorExists
   }
 
   return (
@@ -49,8 +62,7 @@ const BaseServiceForm = props => {
           type="primary"
           style={{ marginRight: '2rem' }}
           onClick={() => {
-            // if (!this.checkForErrors())
-            nextStep()
+            if (!checkFieldsForErrors(['title', 'baseLocation'])) nextStep()
           }}
         >
           Next

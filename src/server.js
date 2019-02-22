@@ -1,21 +1,24 @@
+import { ApolloServer, makeExecutableSchema } from 'apollo-server-express'
+import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
-import cors from 'cors'
-import mongoose from 'mongoose'
 import jwt from 'jsonwebtoken'
-import { ApolloServer, makeExecutableSchema } from 'apollo-server-express'
-import { typeDefs, resolvers } from './schema'
-import AuthDirective from './schema/directives/auth'
+import mongoose from 'mongoose'
 import { User } from './models'
+import { resolvers, typeDefs } from './schema'
+import AuthDirective from './schema/directives/auth'
 
 dotenv.config()
 
 const PORT = process.env.PORT || 4000
 const IN_PROD = process.env.NODE_ENV === 'production'
 
-mongoose
-  .connect(process.env.MONGO_URI, { useNewUrlParser: true })
-  .then(() => {
+const main = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+    })
+
     const playground = IN_PROD
       ? false
       : {
@@ -66,8 +69,10 @@ mongoose
         `🚀 Server ready at http://localhost:4000${server.graphqlPath}`
       )
     )
-  })
-  .catch(err => console.error(err))
+  } catch (err) {
+    console.error(err)
+  }
+}
 
 const getUser = async token => {
   const { ok, result } = await new Promise(resolve =>
@@ -92,3 +97,7 @@ const getUser = async token => {
   }
   return null
 }
+
+main()
+
+export { mongoose }

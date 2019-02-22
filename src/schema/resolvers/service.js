@@ -1,4 +1,5 @@
 import { LawncareService, Service, TravelService } from '../../models'
+import { mongoose as db } from '../../server'
 import { geoArrayToObj, geoObjToArray } from '../../utils/convertCoordinates'
 
 const METERS_PER_MILE = 1609.34
@@ -75,27 +76,74 @@ export default {
       // TODO: Check if profile already exists for user
       console.log('service args', args)
 
-      const { title, serviceType, serviceDetailsId, notes, location } = args
+      const {
+        title,
+        serviceType,
+        serviceDetailsId,
+        notes,
+        location,
+        travelServiceDetails,
+      } = args
 
-      try {
-        const service = await Service.create({
-          title,
-          serviceType,
-          serviceDetails: serviceDetailsId,
-          notes,
-          recipient: user.id,
-          location: {
-            type: 'Point',
-            coordinates: geoObjToArray(location),
+      const session = await db.startSession()
+
+      console.log('starting transaction...')
+      session.startTransaction()
+      console.log('serviceType', typeof serviceType)
+
+      // Create service
+      const [newService] = await Service.create(
+        [
+          {
+            title,
+            serviceType,
+            serviceDetails: serviceDetailsId,
+            notes,
+            recipient: user.id,
+            location: {
+              type: 'Point',
+              coordinates: geoObjToArray(location),
+            },
           },
-        })
+        ],
+        { session }
+      )
 
-        return service
-      } catch (err) {
-        throw new Error(err)
+      console.log('newService', newService)
+      // Verify created service
+      // await assert.ok(newService)
+
+      // Check for serviceType and Details
+
+      if (serviceType === 'TRAVEL') {
+        const [newServiceDetails] = await TravelService.create(
+          [
+            {
+              ...travelServiceDetails,
+              fromLocation: {
+                type: 'Point',
+                coordinates: geoObjToArray(travelServiceDetails.fromLocation),
+              },
+              toLocation: {
+                type: 'Point',
+                coordinates: geoObjToArray(travelServiceDetails.toLocation),
+              },
+              service: newService.id,
+            },
+          ],
+          { session }
+        )
+
+        console.log('newServiceDetails', newServiceDetails)
+        // await assert.ok(newServiceDetails)
+      } else {
+        // Abort transaction if no service details created.
+        session.abortTransaction()
       }
 
-      return null
+      await session.commitTransaction()
+
+      return newService
     },
   },
 }
