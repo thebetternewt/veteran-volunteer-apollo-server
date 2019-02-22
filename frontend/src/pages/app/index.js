@@ -3,7 +3,8 @@ import React from 'react'
 import { getAuthenticatedUser } from '../../apollo/client'
 import PrivateRoute from '../../components/privateRoute'
 import RecipientProfile from '../../components/recipientProfile'
-import UserServices from '../../components/userServices/index'
+import UserServices from '../../components/userServices'
+import CreateService from '../../components/userServices/CreateService'
 import VolunteerProfileForm from '../../components/VolunteerProfileForm'
 import Dashboard from './dashboard'
 
@@ -19,6 +20,7 @@ const AppIndex = props => {
         <UserServices default path="app/services" />
         <VolunteerProfileForm path="app/volunteer-signup" />
         <RecipientProfile path="app/recipient-profile" />
+        <CreateService path="app/request-service" />
       </Router>
     </Dashboard>
   )

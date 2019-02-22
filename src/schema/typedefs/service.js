@@ -33,12 +33,17 @@ export default gql`
     ): [Service!]!
   }
 
+  input TestInput {
+    testString: String
+  }
+
   extend type Mutation {
     createService(
       serviceType: ServiceType!
       title: String!
       notes: String
       location: LocationInput!
+      travelServiceDetails: TravelServiceInput
     ): Service
   }
 `

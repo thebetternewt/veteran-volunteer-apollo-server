@@ -32,7 +32,7 @@ const ContactSettings = styled.ul`
   }
 `
 
-const RecipientProfile = ({ profile, editProfile }) => {
+const RecipientProfile = ({ profile, toggleForm }) => {
   return (
     <div>
       <Helmet>
@@ -80,11 +80,7 @@ const RecipientProfile = ({ profile, editProfile }) => {
       </p>
       <Map location={profile.location} />
 
-      <Button
-        type="primary"
-        onClick={editProfile}
-        style={{ marginTop: '2rem' }}
-      >
+      <Button type="primary" onClick={toggleForm} style={{ marginTop: '2rem' }}>
         Edit Recipient Profile
       </Button>
     </div>

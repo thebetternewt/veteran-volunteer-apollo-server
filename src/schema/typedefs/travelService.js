@@ -26,13 +26,20 @@ export default gql`
     lng: Float
   }
 
-  extend type Mutation {
-    createTravelService(
-      fromName: String!
-      fromLocation: LocationInput!
-      toName: String!
-      toLocation: LocationInput!
-      serviceId: String!
-    ): TravelService
+  input TravelServiceInput {
+    fromName: String!
+    fromLocation: LocationInput!
+    toName: String!
+    toLocation: LocationInput!
   }
+
+  # extend type Mutation {
+  #   createTravelService(
+  #     fromName: String!
+  #     fromLocation: LocationInput!
+  #     toName: String!
+  #     toLocation: LocationInput!
+  #     serviceId: String!
+  #   ): TravelService
+  # }
 `

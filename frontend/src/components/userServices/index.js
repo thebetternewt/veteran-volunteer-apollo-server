@@ -1,4 +1,5 @@
 import { Avatar, Button, Card, Divider, Icon, Row } from 'antd'
+import { Link } from 'gatsby'
 import React from 'react'
 import styled from 'styled-components'
 
@@ -32,9 +33,11 @@ const UserServices = () => {
       <div>
         <ServiceSectionHeader>
           <h2>Requested</h2>
-          <Button type="primary" icon="plus-circle">
-            Request New Service
-          </Button>
+          <Link to="/app/request-service">
+            <Button type="primary" icon="plus-circle">
+              Request New Service
+            </Button>
+          </Link>
         </ServiceSectionHeader>
         <Row type="flex">
           <ServiceCard

@@ -13,8 +13,6 @@ export default () => {
   return (
     <Query query={ME_QUERY}>
       {({ data, loading }) => {
-        // console.log(data, loading)
-
         if (loading) {
           return <Icon type="loading" />
         }
@@ -39,7 +37,7 @@ export default () => {
             return (
               <RecipientProfile
                 profile={recipientProfile}
-                editProfile={toggleShowForm}
+                toggleForm={toggleShowForm}
               />
             )
           }
