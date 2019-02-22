@@ -1,35 +1,35 @@
-import "mongoose-geojson-schema";
-import mongoose from "mongoose";
+import 'mongoose-geojson-schema'
+import mongoose from 'mongoose'
 
 const {
   Schema,
-  Types: { ObjectId, Point }
-} = mongoose;
+  Types: { ObjectId, Point },
+} = mongoose
 
 export default mongoose.model(
-  "RecipientProfile",
+  'RecipientProfile',
   new Schema(
     {
       user: {
         type: ObjectId,
-        ref: "User",
-        required: true
+        ref: 'User',
+        required: true,
       },
       allowPhoneContact: {
         type: Boolean,
-        default: false
+        default: false,
       },
       allowEmailContact: {
         type: Boolean,
-        default: false
+        default: false,
       },
       location: {
         type: Point,
-        required: true
-      }
+        required: true,
+      },
     },
     {
-      timestamps: true
+      timestamps: true,
     }
   )
-);
+)
