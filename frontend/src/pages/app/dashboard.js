@@ -1,8 +1,23 @@
 import { Avatar, Icon, Layout } from 'antd'
 import React, { useState } from 'react'
+import styled from 'styled-components'
 import { getAuthenticatedUser } from '../../apollo/client'
 import Sidebar from './sidebar'
+
 const { Header, Content, Footer, Sider } = Layout
+
+const StickyHeader = styled(Header)`
+  position: sticky;
+  top: 0;
+  background-color: #326ba0;
+  color: #fff;
+  padding: 0 1rem;
+  min-width: 320px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 200;
+`
 
 const defaultContent = (
   <div
@@ -31,32 +46,16 @@ const Dashboard = ({ children = defaultContent }) => {
   // TODO: set inital sidebarCollapse state based on window size
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout style={{ minHeight: '100vh', overflowX: 'visible' }}>
       <Sidebar collapsed={sidebarCollapsed} />
       <Layout>
-        <Header
-          style={{
-            backgroundColor: '#326ba0',
-            color: '#fff',
-            padding: '0 1rem',
-            width: '100%',
-            minWidth: 320,
-            maxWidth: sidebarCollapsed ? '100vw' : 'calc(100vw - 200px)',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            position: 'fixed',
-            transition: 'all 200ms linear',
-            zIndex: 200,
-          }}
-        >
+        <StickyHeader>
           <Icon
             className="trigger"
             type={sidebarCollapsed ? 'menu-unfold' : 'menu-fold'}
             onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
             style={{ fontSize: 20 }}
           />
-          {/* <h2 style={{ margin: 0 }}>Dashboard</h2> */}
           <div
             style={{
               display: 'flex',
@@ -66,7 +65,7 @@ const Dashboard = ({ children = defaultContent }) => {
             <Icon type="setting" style={{ fontSize: 20, marginRight: 15 }} />
             <Avatar size={40} icon="user" src={user && user.avatar} />
           </div>
-        </Header>
+        </StickyHeader>
         <Content
           style={{
             background: '#fff',
@@ -74,9 +73,7 @@ const Dashboard = ({ children = defaultContent }) => {
             minWidth: 288,
           }}
         >
-          {/* <div style={{ padding: 24, background: '#fff', minHeight: 360 }}> */}
           {children}
-          {/* </div> */}
         </Content>
         <Footer style={{ textAlign: 'center' }}>
           Veterans Center © {new Date().getFullYear()}
