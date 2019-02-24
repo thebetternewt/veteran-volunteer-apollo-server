@@ -7,7 +7,7 @@ import Sidebar from './sidebar'
 const { Header, Content, Footer, Sider } = Layout
 
 const StickyHeader = styled(Header)`
-  position: fixed;
+  position: sticky;
   top: 0;
   background-color: #326ba0;
   color: #fff;
@@ -18,6 +18,7 @@ const StickyHeader = styled(Header)`
   justify-content: space-between;
   align-items: center;
   z-index: 200;
+  transition: all 200ms ease;
 `
 
 const defaultContent = (
@@ -25,7 +26,7 @@ const defaultContent = (
     style={{
       padding: 24,
       background: '#fff',
-      minHeight: 360,
+      minHeight: '100vh',
     }}
   >
     content
@@ -49,7 +50,13 @@ const Dashboard = ({ children = defaultContent }) => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sidebar collapsed={sidebarCollapsed} />
-      <Layout>
+      <Layout
+        style={{
+          overflowX: 'visible',
+          marginLeft: sidebarCollapsed ? 0 : 200,
+          transition: 'all 200ms ease',
+        }}
+      >
         <StickyHeader>
           <Icon
             className="trigger"
@@ -70,9 +77,9 @@ const Dashboard = ({ children = defaultContent }) => {
         <Content
           style={{
             background: '#fff',
-            marginTop: 64,
             padding: '2rem 1rem',
-            minWidth: '100vw',
+            maxWidth: '100vw',
+            overflow: 'initial',
           }}
         >
           {children}
