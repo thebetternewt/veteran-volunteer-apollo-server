@@ -33,6 +33,7 @@ const CreateService = ({ form }) => {
         const variables = {
           serviceType: serviceType && serviceType.toUpperCase(),
           title: getFieldValue('title'),
+          date: getFieldValue('date').format(),
           notes: getFieldValue('notes'),
           details: {
             ...serviceDetails,

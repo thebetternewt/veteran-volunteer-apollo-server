@@ -1,4 +1,4 @@
-import { Button, Form, Input } from 'antd'
+import { Button, DatePicker, Form, Input } from 'antd'
 import React from 'react'
 import PlaceSearchField from '../../common/forms/PlaceSearchField'
 
@@ -28,6 +28,15 @@ const BaseServiceForm = props => {
     return errorExists
   }
 
+  const onChange = (value, dateString) => {
+    console.log('Selected Time: ', value)
+    console.log('Formatted Selected Time: ', dateString)
+  }
+
+  const onOk = value => {
+    console.log('onOk: ', value)
+  }
+
   return (
     <>
       {/* <Form.Item>{error && graphQlErrors(error)}</Form.Item> */}
@@ -45,6 +54,24 @@ const BaseServiceForm = props => {
             },
           ],
         })(<Input />)}
+      </Form.Item>
+
+      <Form.Item label="When do you need help?" help="Select a date and time.">
+        {getFieldDecorator('date', {
+          preserve: true,
+          rules: [
+            { required: true, message: 'Please choose a date and time.' },
+          ],
+        })(
+          <DatePicker
+            showTime={{ use12Hours: true, format: 'h:mm a', minuteStep: 15 }}
+            placeholder="Select Date & Time"
+            format="LLL"
+            onChange={onChange}
+            onOk={onOk}
+            style={{ width: '100%' }}
+          />
+        )}
       </Form.Item>
 
       {/* TODO: ADD DATE!!! */}

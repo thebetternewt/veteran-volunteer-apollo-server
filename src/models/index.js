@@ -1,9 +1,10 @@
-import User from './user'
 import RecipientProfile from './recipientProfile'
-import VolunteerProfile from './volunteerProfile'
 import Service from './service'
-import TravelService from './serviceTypes/travelService'
+import ChildcareService from './serviceTypes/childcareService'
 import LawncareService from './serviceTypes/lawncareService'
+import TravelService from './serviceTypes/travelService'
+import User from './user'
+import VolunteerProfile from './volunteerProfile'
 
 export {
   User,
@@ -12,4 +13,5 @@ export {
   Service,
   TravelService,
   LawncareService,
+  ChildcareService,
 }

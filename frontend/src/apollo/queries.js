@@ -42,6 +42,7 @@ export const ME_QUERY = gql`
       requestedServices {
         id
         title
+        date
         serviceType
       }
     }
@@ -52,6 +53,7 @@ const SERVICES_QUERY = gql`
     services {
       id
       title
+      date
       location {
         lat
         lng

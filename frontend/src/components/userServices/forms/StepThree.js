@@ -20,7 +20,7 @@ const ServiceDetailsForm = props => {
   } = form
 
   const checkFieldsForErrors = fieldnames => {
-    // clg
+    console.log(fieldnames)
     let errorExists = false
 
     if (!serviceDetails.toLocation) {
@@ -58,7 +58,7 @@ const ServiceDetailsForm = props => {
           type="primary"
           style={{ marginRight: '2rem' }}
           onClick={() => {
-            if (!checkFieldsForErrors(['toLocation'])) nextStep()
+            if (!checkFieldsForErrors(['details.toLocation'])) nextStep()
           }}
         >
           Next

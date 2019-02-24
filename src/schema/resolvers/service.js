@@ -1,16 +1,14 @@
-import { LawncareService, Service, TravelService, User } from '../../models'
+import {
+  ChildcareService,
+  LawncareService,
+  Service,
+  TravelService,
+  User,
+} from '../../models'
 import { mongoose as db } from '../../server'
 import { geoArrayToObj, geoObjToArray } from '../../utils/convertCoordinates'
 
 const METERS_PER_MILE = 1609.34
-
-// const transformTravelService = travelService => ({
-//   id: travelService.id,
-//   fromName: travelService.fromName,
-//   fromLocation: travelService.fromLocation.coordinates,
-//   toName: travelService.toName,
-//   toLocation: travelService.toLocation.coordinates,
-// })
 
 export default {
   ServiceDetails: {
@@ -20,6 +18,8 @@ export default {
           return 'TravelService'
         case 'LAWNCARE':
           return 'LawncareService'
+        case 'CHILDCARE':
+          return 'ChildcareService'
         default:
           return null
       }
@@ -32,6 +32,8 @@ export default {
           return TravelService.findOne({ service: parent })
         case 'LAWNCARE':
           return LawncareService.findOne({ service: parent })
+        case 'CHILDCARE':
+          return ChildcareService.findOne({ service: parent })
         default:
           return null
       }
@@ -46,7 +48,7 @@ export default {
     recipient: parent => User.findById(parent.recipient),
   },
   Query: {
-    service: async () => {},
+    service: async (_, { id }) => Service.findById(id),
     services: async (parent, args) => {
       const { serviceType, location, range } = args
 
@@ -79,11 +81,13 @@ export default {
 
       const {
         title,
+        date,
         serviceType,
         serviceDetailsId,
         notes,
         location,
         travelServiceDetails,
+        childcareServiceDetails,
       } = args
 
       const session = await db.startSession()
@@ -97,6 +101,7 @@ export default {
         [
           {
             title,
+            date: new Date(date),
             serviceType,
             serviceDetails: serviceDetailsId,
             notes,
@@ -116,8 +121,9 @@ export default {
 
       // Check for serviceType and Details
 
+      let newServiceDetails
       if (serviceType === 'TRAVEL') {
-        const [newServiceDetails] = await TravelService.create(
+        ;[newServiceDetails] = await TravelService.create(
           [
             {
               ...travelServiceDetails,
@@ -137,6 +143,11 @@ export default {
 
         console.log('newServiceDetails', newServiceDetails)
         // await assert.ok(newServiceDetails)
+      } else if (serviceType === 'CHILDCARE') {
+        ;[newServiceDetails] = await ChildcareService.create(
+          [{ ...childcareServiceDetails, service: newService }],
+          { session }
+        )
       } else {
         // Abort transaction if no service details created.
         session.abortTransaction()

@@ -98,6 +98,7 @@ export const UPDATE_RECIPIENT_PROFILE = gql`
 export const CREATE_TRAVEL_SERVICE = gql`
   mutation createTravelService(
     $title: String!
+    $date: String!
     $serviceType: ServiceType!
     $notes: String
     $location: LocationInput!
@@ -105,6 +106,7 @@ export const CREATE_TRAVEL_SERVICE = gql`
   ) {
     createService(
       title: $title
+      date: $date
       serviceType: $serviceType
       notes: $notes
       location: $location

@@ -1,5 +1,5 @@
-import 'mongoose-geojson-schema'
 import mongoose from 'mongoose'
+import 'mongoose-geojson-schema'
 import serviceTypes from './serviceTypes/types'
 
 const {
@@ -27,7 +27,10 @@ const serviceSchema = new Schema(
       required: true,
     },
     notes: String,
-
+    date: {
+      type: Date,
+      required: true,
+    },
     serviceType: {
       type: String,
       required: true,

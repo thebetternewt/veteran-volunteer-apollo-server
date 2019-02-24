@@ -1,5 +1,6 @@
 import { Avatar, Button, Card, Divider, Icon, Row } from 'antd'
 import { Link } from 'gatsby'
+import moment from 'moment'
 import React from 'react'
 import { Query } from 'react-apollo'
 import styled from 'styled-components'
@@ -52,6 +53,7 @@ const UserServices = () => {
               if (loading) return <Icon type="loading" size={64} />
 
               if (data && data.me) {
+                console.log(data)
                 const { me } = data
                 const { requestedServices } = me
 
@@ -77,9 +79,11 @@ const UserServices = () => {
                           <div className="service-details">
                             Type: {req.serviceType.toLowerCase()}
                           </div>
-                          <div className="service-details">
-                            When: Friday, February 23rd
-                          </div>
+                          {req.date && (
+                            <div className="service-details">
+                              When: {moment(req.date, 'x').format('LLL')}
+                            </div>
+                          )}
                         </div>
                       }
                     />
