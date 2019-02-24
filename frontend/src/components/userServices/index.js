@@ -22,8 +22,9 @@ const ServiceCard = styled(Card)`
   max-width: 100%;
   margin: 0 1rem 1rem 0;
 
-  .service-type {
+  .service-details {
     text-transform: capitalize;
+    word-wrap: none;
   }
 
   @media screen and (max-width: 756px) {
@@ -57,7 +58,10 @@ const UserServices = () => {
                 const serviceCards = requestedServices.map(req => (
                   <ServiceCard
                     key={req.id}
-                    style={{ maxWidth: 400, marginBottom: 20 }}
+                    style={{
+                      maxWidth: 400,
+                      marginBottom: 20,
+                    }}
                     actions={[
                       <Icon type="info-circle" />,
                       <Icon type="message" />,
@@ -70,12 +74,12 @@ const UserServices = () => {
                       title={req.title}
                       description={
                         <div style={{ marginBottom: '1rem' }}>
-                          <div>
-                            <span className="service-type">
-                              Type: {req.serviceType.toLowerCase()}
-                            </span>
+                          <div className="service-details">
+                            Type: {req.serviceType.toLowerCase()}
                           </div>
-                          <div>When: Friday, February 23rd</div>
+                          <div className="service-details">
+                            When: Friday, February 23rd
+                          </div>
                         </div>
                       }
                     />

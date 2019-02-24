@@ -20,6 +20,7 @@ const ServiceDetailsForm = props => {
   } = form
 
   const checkFieldsForErrors = fieldnames => {
+    // clg
     let errorExists = false
 
     if (!serviceDetails.toLocation) {

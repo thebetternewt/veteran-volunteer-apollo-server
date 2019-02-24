@@ -7,11 +7,12 @@ import Sidebar from './sidebar'
 const { Header, Content, Footer, Sider } = Layout
 
 const StickyHeader = styled(Header)`
-  position: sticky;
+  position: fixed;
   top: 0;
   background-color: #326ba0;
   color: #fff;
   padding: 0 1rem;
+  width: 100%;
   min-width: 320px;
   display: flex;
   justify-content: space-between;
@@ -46,7 +47,7 @@ const Dashboard = ({ children = defaultContent }) => {
   // TODO: set inital sidebarCollapse state based on window size
 
   return (
-    <Layout style={{ minHeight: '100vh', overflowX: 'visible' }}>
+    <Layout style={{ minHeight: '100vh' }}>
       <Sidebar collapsed={sidebarCollapsed} />
       <Layout>
         <StickyHeader>
@@ -69,8 +70,9 @@ const Dashboard = ({ children = defaultContent }) => {
         <Content
           style={{
             background: '#fff',
+            marginTop: 64,
             padding: '2rem 1rem',
-            minWidth: 288,
+            minWidth: '100vw',
           }}
         >
           {children}

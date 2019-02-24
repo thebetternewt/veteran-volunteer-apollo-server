@@ -13,7 +13,7 @@ export default {
       const services = await Service.find({ recipient: parent })
 
       await services.forEach(
-        async service => await populate('serviceDetails').execPopulate()
+        async service => await service.populate('serviceDetails').execPopulate()
       )
 
       return services
