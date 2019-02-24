@@ -5,9 +5,9 @@ import {
   CREATE_RECIPIENT_PROFILE,
   UPDATE_RECIPIENT_PROFILE,
 } from '../../apollo/mutations'
+import graphQlErrors from '../../util/graphqlErrors'
 import { hasErrors } from '../common/forms/helpers'
 import PlaceSearchField from '../common/forms/PlaceSearchField'
-import graphQlErrors from '../graphqlErrors'
 
 const ARCGIS_SUGGEST_BASE_URL =
   'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest'

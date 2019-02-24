@@ -1,8 +1,8 @@
 import { Avatar, Icon, Layout } from 'antd'
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { getAuthenticatedUser } from '../../apollo/client'
-import Sidebar from './sidebar'
+import { getAuthenticatedUser } from '../../../apollo/client'
+import Sidebar from './Sidebar'
 
 const { Header, Content, Footer, Sider } = Layout
 

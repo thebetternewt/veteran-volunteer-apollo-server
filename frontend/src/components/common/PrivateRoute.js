@@ -1,6 +1,6 @@
 import React from 'react'
 import { navigate } from 'gatsby'
-import { getAuthenticatedUser } from '../apollo/client'
+import { getAuthenticatedUser } from '../../apollo/client'
 
 const PrivateRoute = ({ component: Component, location, ...rest }) => {
   if (!getAuthenticatedUser() && location.pathname !== `/login`) {

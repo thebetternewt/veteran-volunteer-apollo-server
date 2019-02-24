@@ -3,8 +3,8 @@ import { navigate } from 'gatsby'
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
 import { UsaStates } from 'usa-states'
-import { SIGNUP } from '../apollo/mutations'
-import graphQlErrors from './graphqlErrors'
+import { SIGNUP } from '../../apollo/mutations'
+import graphQlErrors from '../../util/graphqlErrors'
 
 function hasErrors(fieldsError) {
   const errors = {
