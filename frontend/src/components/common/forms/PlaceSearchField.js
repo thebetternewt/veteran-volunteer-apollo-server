@@ -54,25 +54,49 @@ const PlaceSearchField = ({ form, fieldname, label, setLocationState }) => {
     value: item.magicKey,
   }))
 
-  const { getFieldDecorator, getFieldError } = form
+  const {
+    getFieldDecorator,
+    getFieldError,
+    getFieldValue,
+    setFieldsValue,
+  } = form
+
+  const SelectedLocationComponent = () => (
+    <div>
+      {selectedLocation.address}
+      <br />
+      <button
+        onClick={() => {
+          setSelectedLocation(null)
+          setFieldsValue({ [fieldname]: null })
+        }}
+      >
+        Change location
+      </button>
+    </div>
+  )
 
   return (
     <Form.Item label={label || 'Location'} colon={false}>
-      {getFieldDecorator(fieldname, {
-        preserve: true,
-        rules: [
-          {
-            required: true,
-            message: 'Please select a location.',
-          },
-        ],
-      })(
-        <AutoComplete
-          dataSource={dataSource}
-          onChange={searchForLocation}
-          placeholder="Search for a location..."
-          onSelect={magicKey => handleLocationSearchSelect(magicKey)}
-        />
+      {selectedLocation ? (
+        <SelectedLocationComponent />
+      ) : (
+        getFieldDecorator(fieldname, {
+          preserve: true,
+          rules: [
+            {
+              required: true,
+              message: 'Please select a location.',
+            },
+          ],
+        })(
+          <AutoComplete
+            dataSource={dataSource}
+            onChange={searchForLocation}
+            placeholder="Search for a location..."
+            onSelect={magicKey => handleLocationSearchSelect(magicKey)}
+          />
+        )
       )}
     </Form.Item>
   )
