@@ -1,15 +1,16 @@
 import { Button, DatePicker, Form, Input } from 'antd'
+import moment from 'moment'
 import React from 'react'
 import PlaceSearchField from '../../common/forms/PlaceSearchField'
 
 const BaseServiceForm = props => {
   const { nextStep, form, baseLocation, setBaseLocation } = props
-  const {
-    getFieldDecorator,
-    getFieldsError,
-    validateFields,
-    setFieldsValue,
-  } = form
+  const { getFieldDecorator, validateFields, setFieldsValue } = form
+
+  const disabledDate = current => {
+    // Can not select days before today
+    return current < moment().endOf('day')
+  }
 
   // Check specified field for errors and reset state for any absent
   // location values.
@@ -28,19 +29,8 @@ const BaseServiceForm = props => {
     return errorExists
   }
 
-  const onChange = (value, dateString) => {
-    console.log('Selected Time: ', value)
-    console.log('Formatted Selected Time: ', dateString)
-  }
-
-  const onOk = value => {
-    console.log('onOk: ', value)
-  }
-
   return (
     <>
-      {/* <Form.Item>{error && graphQlErrors(error)}</Form.Item> */}
-
       <Form.Item
         label="Title"
         help="Enter a descriptive title for your request."
@@ -67,10 +57,9 @@ const BaseServiceForm = props => {
             showTime={{ use12Hours: true, format: 'h:mm a', minuteStep: 15 }}
             placeholder="Select Date & Time"
             format="LLL"
-            onChange={onChange}
-            onOk={onOk}
             style={{ width: '100%' }}
             showToday={false}
+            disabledDate={disabledDate}
           />
         )}
       </Form.Item>

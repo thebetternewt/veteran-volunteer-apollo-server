@@ -1,6 +1,6 @@
 import { AutoComplete, Button, Form, Icon } from 'antd'
 import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 const ARCGIS_SUGGEST_BASE_URL =
@@ -10,25 +10,38 @@ const ARCGIS_FIND_ADDRESS_CANDIDATES_BASE_URL =
 
 const SelectedLocationContainer = styled.div`
   display: flex;
-  align-items: center;
 
-  svg {
-    font-size: 1.5rem;
+  .icon-wrapper {
     margin-right: 10px;
-  }
-
-  .change-location-btn {
-    margin-left: 1rem;
+    .icon {
+      font-size: 1.5rem;
+    }
   }
 `
 
 const PlaceSearchField = ({ form, fieldname, label, setLocationState }) => {
   const [searchResults, setSearchResults] = useState([])
-  const [selectedLocation, setSelectedLocation] = useState(null)
-  const [error, setError] = useState(null)
+  const [selectedLocation, setSelectedLocation] = useState()
 
+  const { getFieldDecorator, getFieldValue, setFieldsValue } = form
+
+  /**
+   * Update selectedLocation state from form field value on component mount
+   */
+  useEffect(() => {
+    const magicKey = getFieldValue(fieldname)
+    if (magicKey && !selectedLocation) {
+      const location = handleLocationSearchSelect(magicKey)
+      setSelectedLocation(location)
+    }
+  }, [])
+
+  /**
+   * Query ArcGIS API for matching address candidates
+   * @param {string} searchText
+   * @returns {Object[]} Search suggestion Objects with names and magicKeys
+   */
   const searchForLocation = async searchText => {
-    // Fetch suggest results from ArcGIS
     const searchResults = await axios.get(ARCGIS_SUGGEST_BASE_URL, {
       params: { f: 'json', text: searchText },
     })
@@ -38,9 +51,11 @@ const PlaceSearchField = ({ form, fieldname, label, setLocationState }) => {
     setSearchResults(suggestions || [])
   }
 
+  /**
+   * Fetch location details from ArcGIS API and set state
+   * @param {string} magicKey
+   */
   const handleLocationSearchSelect = async magicKey => {
-    console.log('magicKey', magicKey)
-
     // Fetch address candidate results from ArcGIS
     const searchResults = await axios.get(
       ARCGIS_FIND_ADDRESS_CANDIDATES_BASE_URL,
@@ -50,18 +65,13 @@ const PlaceSearchField = ({ form, fieldname, label, setLocationState }) => {
     )
 
     const { data } = searchResults
-    console.log('selected data', data)
 
     if (data.candidates) {
       const location = data.candidates[0]
       setSelectedLocation(location)
       setLocationState(location)
-      setError(null)
       return
     }
-
-    // TODO: Pass this error to parent form component.
-    setError('Unable to find matching location.')
   }
 
   const dataSource = searchResults.map(item => ({
@@ -69,29 +79,31 @@ const PlaceSearchField = ({ form, fieldname, label, setLocationState }) => {
     value: item.magicKey,
   }))
 
-  const {
-    getFieldDecorator,
-    getFieldError,
-    getFieldValue,
-    setFieldsValue,
-  } = form
-
   const SelectedLocationComponent = () => (
     <SelectedLocationContainer>
-      <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" />
-      {selectedLocation.address}
-      <Button
-        size="small"
-        type="danger"
-        ghost
-        className="change-location-btn"
-        onClick={() => {
-          setSelectedLocation(null)
-          setFieldsValue({ [fieldname]: null })
-        }}
-      >
-        change
-      </Button>
+      <div className="icon-wrapper">
+        <Icon
+          className="icon"
+          type="check-circle"
+          theme="twoTone"
+          twoToneColor="#52c41a"
+        />
+      </div>
+      <div>
+        <p>{selectedLocation.address}</p>
+        <Button
+          size="small"
+          type="danger"
+          ghost
+          className="change-location-btn"
+          onClick={() => {
+            setSelectedLocation(null)
+            setFieldsValue({ [fieldname]: null })
+          }}
+        >
+          change
+        </Button>
+      </div>
     </SelectedLocationContainer>
   )
 

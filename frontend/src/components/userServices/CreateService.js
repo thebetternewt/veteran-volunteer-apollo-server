@@ -141,7 +141,10 @@ const CreateService = ({ form }) => {
       <Mutation mutation={CREATE_SERVICE}>
         {(createService, { loading, error }) => {
           return (
-            <Form onSubmit={e => handleSubmit(e, createService)}>
+            <Form
+              onSubmit={e => handleSubmit(e, createService)}
+              style={{ maxWidth: 500 }}
+            >
               {steps[currentStep].component}
               <Form.Item>{error && graphQlErrors(error)}</Form.Item>
               <Form.Item>
