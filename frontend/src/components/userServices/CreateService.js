@@ -2,7 +2,7 @@ import { Button, Form } from 'antd'
 import { navigate } from 'gatsby'
 import React, { useState } from 'react'
 import { Mutation } from 'react-apollo'
-import { CREATE_TRAVEL_SERVICE } from '../../apollo/mutations'
+import { CREATE_SERVICE } from '../../apollo/mutations'
 import graphQlErrors from '../../util/graphqlErrors'
 import StepOne from './forms/StepOne'
 import StepThree from './forms/StepThree'
@@ -35,19 +35,6 @@ const CreateService = ({ form }) => {
           title: getFieldValue('title'),
           date: getFieldValue('date').format(),
           notes: getFieldValue('notes'),
-          details: {
-            ...serviceDetails,
-            fromName: baseLocation.address,
-            fromLocation: {
-              lat: baseLocation.location.y,
-              lng: baseLocation.location.x,
-            },
-            toName: serviceDetails.toLocation.address,
-            toLocation: {
-              lat: serviceDetails.toLocation.location.y,
-              lng: serviceDetails.toLocation.location.x,
-            },
-          },
         }
 
         if (baseLocation) {
@@ -55,6 +42,30 @@ const CreateService = ({ form }) => {
             lat: baseLocation.location.y,
             lng: baseLocation.location.x,
           }
+        }
+
+        // Transform Travel location variables
+        switch (serviceType) {
+          case 'Travel':
+            variables.travelServiceDetails = {
+              ...serviceDetails,
+              fromName: baseLocation.address,
+              fromLocation: {
+                lat: baseLocation.location.y,
+                lng: baseLocation.location.x,
+              },
+              toName: serviceDetails.toLocation.address,
+              toLocation: {
+                lat: serviceDetails.toLocation.location.y,
+                lng: serviceDetails.toLocation.location.x,
+              },
+            }
+            break
+          case 'Childcare':
+            variables.childcareServiceDetails = form.getFieldValue('details')
+            break
+          default:
+            break
         }
 
         console.log(variables)
@@ -126,7 +137,7 @@ const CreateService = ({ form }) => {
   return (
     <>
       <h3>Request Service</h3>
-      <Mutation mutation={CREATE_TRAVEL_SERVICE}>
+      <Mutation mutation={CREATE_SERVICE}>
         {(createService, { loading, error }) => {
           return (
             <Form onSubmit={e => handleSubmit(e, createService)}>

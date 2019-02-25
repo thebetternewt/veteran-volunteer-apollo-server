@@ -95,14 +95,15 @@ export const UPDATE_RECIPIENT_PROFILE = gql`
   }
 `
 
-export const CREATE_TRAVEL_SERVICE = gql`
-  mutation createTravelService(
+export const CREATE_SERVICE = gql`
+  mutation createService(
     $title: String!
     $date: String!
     $serviceType: ServiceType!
     $notes: String
     $location: LocationInput!
-    $details: TravelServiceInput
+    $travelServiceDetails: TravelServiceInput
+    $childcareServiceDetails: ChildcareServiceInput
   ) {
     createService(
       title: $title
@@ -110,7 +111,8 @@ export const CREATE_TRAVEL_SERVICE = gql`
       serviceType: $serviceType
       notes: $notes
       location: $location
-      travelServiceDetails: $details
+      travelServiceDetails: $travelServiceDetails
+      childcareServiceDetails: $childcareServiceDetails
     ) {
       id
     }

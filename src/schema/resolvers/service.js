@@ -1,3 +1,4 @@
+import Joi from 'joi'
 import {
   ChildcareService,
   LawncareService,
@@ -7,6 +8,7 @@ import {
 } from '../../models'
 import { mongoose as db } from '../../server'
 import { geoArrayToObj, geoObjToArray } from '../../utils/convertCoordinates'
+import { childcareServiceSchema } from '../../validation/services'
 
 const METERS_PER_MILE = 1609.34
 
@@ -77,7 +79,7 @@ export default {
   Mutation: {
     createService: async (parent, args, { user }) => {
       // TODO: Check if profile already exists for user
-      console.log('service args', args)
+      // console.log('service args', args)
 
       const {
         title,
@@ -94,7 +96,6 @@ export default {
 
       console.log('starting transaction...')
       session.startTransaction()
-      console.log('serviceType', typeof serviceType)
 
       // Create service
       const [newService] = await Service.create(
@@ -103,7 +104,6 @@ export default {
             title,
             date: new Date(date),
             serviceType,
-            serviceDetails: serviceDetailsId,
             notes,
             recipient: user.id,
             location: {
@@ -115,15 +115,10 @@ export default {
         { session }
       )
 
-      console.log('newService', newService)
-      // Verify created service
-      // await assert.ok(newService)
-
       // Check for serviceType and Details
 
-      let newServiceDetails
       if (serviceType === 'TRAVEL') {
-        ;[newServiceDetails] = await TravelService.create(
+        const [newServiceDetails] = await TravelService.create(
           [
             {
               ...travelServiceDetails,
@@ -135,16 +130,23 @@ export default {
                 type: 'Point',
                 coordinates: geoObjToArray(travelServiceDetails.toLocation),
               },
-              service: newService.id,
+              service: newService,
             },
           ],
           { session }
         )
 
-        console.log('newServiceDetails', newServiceDetails)
         // await assert.ok(newServiceDetails)
       } else if (serviceType === 'CHILDCARE') {
-        ;[newServiceDetails] = await ChildcareService.create(
+        const errors = await Joi.validate(
+          childcareServiceDetails,
+          childcareServiceSchema,
+          {
+            abortEarly: false,
+          }
+        )
+
+        const [newServiceDetails] = await ChildcareService.create(
           [{ ...childcareServiceDetails, service: newService }],
           { session }
         )

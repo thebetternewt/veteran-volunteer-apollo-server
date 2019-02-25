@@ -15,7 +15,7 @@ const schema = new Schema(
       default: 'CHILDCARE',
     },
     age: {
-      type: [ages],
+      type: [String],
       required: true,
     },
     service: {

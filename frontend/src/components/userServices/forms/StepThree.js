@@ -1,6 +1,7 @@
 import { Button, Form } from 'antd'
 import React from 'react'
-import TravelForm from './Travel'
+import ChildcareDetailsForm from './ChildcareDetails'
+import TravelDetailsForm from './TravelDetails'
 
 const ServiceDetailsForm = props => {
   const {
@@ -39,7 +40,16 @@ const ServiceDetailsForm = props => {
   switch (getFieldValue('serviceType')) {
     case 'Travel':
       serviceDetailsFields = (
-        <TravelForm
+        <TravelDetailsForm
+          form={form}
+          serviceDetails={serviceDetails}
+          setServiceDetails={setServiceDetails}
+        />
+      )
+      break
+    case 'Childcare':
+      serviceDetailsFields = (
+        <ChildcareDetailsForm
           form={form}
           serviceDetails={serviceDetails}
           setServiceDetails={setServiceDetails}
@@ -58,7 +68,7 @@ const ServiceDetailsForm = props => {
           type="primary"
           style={{ marginRight: '2rem' }}
           onClick={() => {
-            if (!checkFieldsForErrors(['details.toLocation'])) nextStep()
+            if (!checkFieldsForErrors(['details'])) nextStep()
           }}
         >
           Next
