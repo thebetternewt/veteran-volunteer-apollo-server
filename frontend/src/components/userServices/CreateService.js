@@ -39,6 +39,7 @@ const CreateService = ({ form }) => {
 
         if (baseLocation) {
           variables.location = {
+            address: baseLocation.address,
             lat: baseLocation.location.y,
             lng: baseLocation.location.x,
           }
@@ -49,13 +50,13 @@ const CreateService = ({ form }) => {
           case 'Travel':
             variables.travelServiceDetails = {
               ...serviceDetails,
-              fromName: baseLocation.address,
               fromLocation: {
+                address: baseLocation.address,
                 lat: baseLocation.location.y,
                 lng: baseLocation.location.x,
               },
-              toName: serviceDetails.toLocation.address,
               toLocation: {
+                address: serviceDetails.toLocation.address,
                 lat: serviceDetails.toLocation.location.y,
                 lng: serviceDetails.toLocation.location.x,
               },

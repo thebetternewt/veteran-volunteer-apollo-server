@@ -1,5 +1,5 @@
-import 'mongoose-geojson-schema'
 import mongoose from 'mongoose'
+import 'mongoose-geojson-schema'
 
 const {
   Schema,
@@ -12,21 +12,26 @@ const schema = new Schema(
       type: String,
       default: 'TRAVEL',
     },
-    fromName: {
-      type: String,
-      required: true,
-    },
+
     fromLocation: {
-      type: Point,
-      required: true,
-    },
-    toName: {
-      type: String,
-      required: true,
+      address: {
+        type: String,
+        required: true,
+      },
+      point: {
+        type: Point,
+        required: true,
+      },
     },
     toLocation: {
-      type: Point,
-      required: true,
+      address: {
+        type: String,
+        required: true,
+      },
+      point: {
+        type: Point,
+        required: true,
+      },
     },
     service: {
       type: ObjectId,

@@ -23,8 +23,14 @@ const serviceSchema = new Schema(
       ref: 'VolunteerProfile',
     },
     location: {
-      type: Point,
-      required: true,
+      address: {
+        type: String,
+        required: true,
+      },
+      point: {
+        type: Point,
+        required: true,
+      },
     },
     notes: String,
     date: {
@@ -42,6 +48,6 @@ const serviceSchema = new Schema(
   }
 )
 
-serviceSchema.index({ location: '2dsphere' })
+serviceSchema.index({ 'location.point': '2dsphere' })
 
 export default mongoose.model('Service', serviceSchema)

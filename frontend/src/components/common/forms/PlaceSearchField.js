@@ -1,11 +1,26 @@
-import { AutoComplete, Form } from 'antd'
+import { AutoComplete, Button, Form, Icon } from 'antd'
 import axios from 'axios'
 import React, { useState } from 'react'
+import styled from 'styled-components'
 
 const ARCGIS_SUGGEST_BASE_URL =
   'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest'
 const ARCGIS_FIND_ADDRESS_CANDIDATES_BASE_URL =
   'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates'
+
+const SelectedLocationContainer = styled.div`
+  display: flex;
+  align-items: center;
+
+  svg {
+    font-size: 1.5rem;
+    margin-right: 10px;
+  }
+
+  .change-location-btn {
+    margin-left: 1rem;
+  }
+`
 
 const PlaceSearchField = ({ form, fieldname, label, setLocationState }) => {
   const [searchResults, setSearchResults] = useState([])
@@ -62,18 +77,22 @@ const PlaceSearchField = ({ form, fieldname, label, setLocationState }) => {
   } = form
 
   const SelectedLocationComponent = () => (
-    <div>
+    <SelectedLocationContainer>
+      <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" />
       {selectedLocation.address}
-      <br />
-      <button
+      <Button
+        size="small"
+        type="danger"
+        ghost
+        className="change-location-btn"
         onClick={() => {
           setSelectedLocation(null)
           setFieldsValue({ [fieldname]: null })
         }}
       >
-        Change location
-      </button>
-    </div>
+        change
+      </Button>
+    </SelectedLocationContainer>
   )
 
   return (

@@ -42,7 +42,10 @@ export default {
     },
     location: parent => {
       if (parent.location) {
-        return geoArrayToObj(parent.location.coordinates)
+        return {
+          address: parent.location.address,
+          ...geoArrayToObj(parent.location.point.coordinates),
+        }
       }
 
       return null
@@ -107,8 +110,11 @@ export default {
             notes,
             recipient: user.id,
             location: {
-              type: 'Point',
-              coordinates: geoObjToArray(location),
+              address: location.address,
+              point: {
+                type: 'Point',
+                coordinates: geoObjToArray(location),
+              },
             },
           },
         ],
@@ -123,12 +129,18 @@ export default {
             {
               ...travelServiceDetails,
               fromLocation: {
-                type: 'Point',
-                coordinates: geoObjToArray(travelServiceDetails.fromLocation),
+                address: travelServiceDetails.fromLocation.address,
+                point: {
+                  type: 'Point',
+                  coordinates: geoObjToArray(travelServiceDetails.fromLocation),
+                },
               },
               toLocation: {
-                type: 'Point',
-                coordinates: geoObjToArray(travelServiceDetails.toLocation),
+                address: travelServiceDetails.toLocation.address,
+                point: {
+                  type: 'Point',
+                  coordinates: geoObjToArray(travelServiceDetails.toLocation),
+                },
               },
               service: newService,
             },

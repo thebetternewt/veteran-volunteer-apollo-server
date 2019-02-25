@@ -70,13 +70,11 @@ const BaseServiceForm = props => {
             onChange={onChange}
             onOk={onOk}
             style={{ width: '100%' }}
+            showToday={false}
           />
         )}
       </Form.Item>
 
-      {/* TODO: ADD DATE!!! */}
-
-      {/* TODO: Set selected location in parent form */}
       <PlaceSearchField
         form={form}
         fieldname="baseLocation"
@@ -89,7 +87,8 @@ const BaseServiceForm = props => {
           type="primary"
           style={{ marginRight: '2rem' }}
           onClick={() => {
-            if (!checkFieldsForErrors(['title', 'baseLocation'])) nextStep()
+            if (!checkFieldsForErrors(['title', 'date', 'baseLocation']))
+              nextStep()
           }}
         >
           Next
