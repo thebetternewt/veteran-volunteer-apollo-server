@@ -2,6 +2,7 @@ import { ApolloServer, makeExecutableSchema } from 'apollo-server-express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
+import { express as voyagerMiddleware } from 'graphql-voyager/middleware'
 import jwt from 'jsonwebtoken'
 import mongoose from 'mongoose'
 import { User } from './models'
@@ -61,7 +62,12 @@ const main = async () => {
     })
 
     const app = express()
+
     app.use(cors())
+
+    // Initialize GraphQL Voyager
+    app.use('/voyager', voyagerMiddleware({ endpointUrl: '/graphql' }))
+
     server.applyMiddleware({ app })
 
     app.listen({ port: PORT }, () =>

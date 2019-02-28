@@ -2,8 +2,14 @@ import { geoArrayToObj } from '../../utils/convertCoordinates'
 
 export default {
   TravelService: {
-    fromLocation: parent => geoArrayToObj(parent.fromLocation.coordinates),
-    toLocation: parent => geoArrayToObj(parent.toLocation.coordinates),
+    fromLocation: parent => ({
+      address: parent.fromLocation.address,
+      ...geoArrayToObj(parent.fromLocation.point.coordinates),
+    }),
+    toLocation: parent => ({
+      address: parent.toLocation.address,
+      ...geoArrayToObj(parent.toLocation.point.coordinates),
+    }),
   },
   Query: {
     // travelService: async () => {},

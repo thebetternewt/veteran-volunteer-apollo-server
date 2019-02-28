@@ -50,5 +50,6 @@ export default gql`
       travelServiceDetails: TravelServiceInput
       childcareServiceDetails: ChildcareServiceInput
     ): Service
+    assignVolunteer(serviceId: ID!, volunteerId: ID!): Service
   }
 `

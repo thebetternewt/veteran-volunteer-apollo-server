@@ -19,6 +19,15 @@ export default {
 
       return services
     },
+    volunteeredServices: async parent => {
+      const services = await Service.find({ volunteer: parent })
+
+      await services.forEach(
+        async service => await service.populate('serviceDetails').execPopulate()
+      )
+
+      return services
+    },
   },
   Query: {
     me: async (parent, args, { user }) => {

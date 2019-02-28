@@ -35,6 +35,7 @@ export default gql`
     recipientProfile: RecipientProfile
     volunteerProfile: VolunteerProfile
     requestedServices: [Service!]!
+    volunteeredServices: [Service!]!
   }
 
   extend type Query {

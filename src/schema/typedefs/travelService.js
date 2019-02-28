@@ -9,9 +9,7 @@ export default gql`
 
   type TravelService {
     id: ID!
-    fromName: String!
     fromLocation: Location!
-    toName: String!
     toLocation: Location!
   }
 
@@ -22,9 +20,7 @@ export default gql`
   }
 
   input TravelServiceInput {
-    fromName: String
     fromLocation: LocationInput!
-    toName: String
     toLocation: LocationInput!
   }
 `

@@ -1,3 +1,25 @@
+fragment ServiceDetails on Service {
+  serviceDetails {
+    ... on ChildcareService {
+      id
+      age
+    }
+    ... on TravelService {
+      id
+      fromLocation {
+        address
+        lat
+        lng
+      }
+      toLocation {
+        address
+        lat
+        lng
+      }
+    }
+  }
+}
+
 query Services {
   services(location: { lng: -88.813037, lat: 33.452127 }, range: 24) {
     id
@@ -7,27 +29,14 @@ query Services {
       lng
     }
     serviceType
-    serviceDetails {
-      ... on ChildcareService {
-        age
-        id
-      }
-      ... on TravelService {
-        id
-        fromName
-        fromLocation {
-          lat
-          lng
-        }
-        toName
-        toLocation {
-          lat
-          lng
-        }
-      }
-    }
+    ...ServiceDetails
     recipient {
       id
+      fullName
+    }
+    volunteer {
+      id
+      fullName
     }
   }
 }

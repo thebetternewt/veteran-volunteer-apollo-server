@@ -51,6 +51,7 @@ export default {
       return null
     },
     recipient: parent => User.findById(parent.recipient),
+    volunteer: parent => User.findById(parent.volunteer),
   },
   Query: {
     service: async (_, { id }) => Service.findById(id),
@@ -170,6 +171,31 @@ export default {
       await session.commitTransaction()
 
       return newService
+    },
+
+    assignVolunteer: async (_, { serviceId, volunteerId }, { user }) => {
+      const service = await Service.findById(serviceId).exec()
+
+      if (service) {
+        // TODO: Handle other checks before assigning volunteer:
+        // (1) Make sure user is logged in (may be handled in auth directive)
+        // (2) Make sure request exists
+        // (3) Make sure user is volunteer or recipient
+        // (4) Check if volunteer is user (may be handled in createRequest)
+        // (5) Make sure volunteer provides service type (may be handled in createRequest)
+        // ...
+
+        service.set({
+          volunteer: volunteerId,
+        })
+
+        await service.save()
+
+        return service
+      }
+
+      // TODO: Throw error if no service found?
+      return null
     },
   },
 }

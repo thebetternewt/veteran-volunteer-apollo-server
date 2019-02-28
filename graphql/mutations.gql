@@ -109,3 +109,10 @@ mutation {
     description
   }
 }
+
+mutation AssignVolunteer($serviceId: ID!, $volunteerId: ID!) {
+  assignVolunteer(serviceId: $serviceId, volunteerId: $volunteerId) {
+    id
+    title
+  }
+}

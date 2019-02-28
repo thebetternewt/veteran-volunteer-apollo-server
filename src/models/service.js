@@ -15,12 +15,12 @@ const serviceSchema = new Schema(
     },
     recipient: {
       type: ObjectId,
-      ref: 'RecipientProfile',
+      ref: 'User',
       required: true,
     },
     volunteer: {
       type: ObjectId,
-      ref: 'VolunteerProfile',
+      ref: 'User',
     },
     location: {
       address: {
