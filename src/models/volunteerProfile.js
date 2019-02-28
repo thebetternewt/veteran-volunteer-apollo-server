@@ -1,5 +1,5 @@
-import 'mongoose-geojson-schema'
 import mongoose from 'mongoose'
+import 'mongoose-geojson-schema'
 import serviceTypes from './serviceTypes/types'
 
 const {
@@ -26,7 +26,7 @@ export default mongoose.model(
           type: Boolean,
           default: false,
         },
-        description: String,
+        details: String,
       },
       servicesProvided: [
         {
@@ -34,9 +34,16 @@ export default mongoose.model(
           enum: serviceTypes,
         },
       ],
+      skills: [String],
       serviceLocation: {
-        type: Point,
-        required: true,
+        address: {
+          type: String,
+          required: true,
+        },
+        point: {
+          type: Point,
+          required: true,
+        },
       },
       serviceRadius: {
         type: Number,

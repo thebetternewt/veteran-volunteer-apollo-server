@@ -45,3 +45,67 @@ mutation {
     }
   }
 }
+
+# Create Travel Service
+mutation {
+  createService(
+    title: "Test travel with address"
+    serviceType: TRAVEL
+    notes: "Testing..."
+    location: { address: "Test Address", lng: -88.426430, lat: 33.515996 }
+    date: "2019-03-02T02:00:00+00:00"
+    travelServiceDetails: {
+      toLocation: { address: "Test TO address", lng: -88, lat: 33 }
+      fromLocation: {
+        address: "Test FROM address"
+        lng: -88.426430
+        lat: 33.515996
+      }
+    }
+  ) {
+    id
+    title
+    serviceType
+    notes
+    location {
+      lat
+      lng
+    }
+    date
+  }
+}
+
+# Create Childcare Service
+mutation {
+  createService(
+    title: "Babysitter Friday Night"
+    serviceType: CHILDCARE
+    notes: "No allergies"
+    location: { lng: -88.426430, lat: 33.515996 }
+    date: "2019-03-02T02:00:00+00:00"
+    childcareServiceDetails: { age: [INFANT, TODDLER] }
+  ) {
+    id
+    title
+    serviceType
+    notes
+    location {
+      lat
+      lng
+    }
+    date
+  }
+}
+
+# Create Lawncare Service
+mutation {
+  createLawncareService(
+    equipmentNeeded: true
+    description: "Cut my grass. I have a small yard."
+    serviceId: "5c5b0509eb52da189e562eb0"
+  ) {
+    id
+    equipmentNeeded
+    description
+  }
+}

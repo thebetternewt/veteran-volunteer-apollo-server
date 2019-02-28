@@ -33,7 +33,7 @@ export default gql`
     createdAt: String
     updatedAt: String
     recipientProfile: RecipientProfile
-    volunteerProfile: RecipientProfile
+    volunteerProfile: VolunteerProfile
     requestedServices: [Service!]!
   }
 

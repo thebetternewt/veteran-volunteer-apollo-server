@@ -3,11 +3,14 @@ import { geoArrayToObj, geoObjToArray } from '../../utils/convertCoordinates'
 
 export default {
   RecipientProfile: {
-    location: parent => geoArrayToObj(parent.location.coordinates),
+    location: parent => ({
+      address: parent.location.address,
+      ...geoArrayToObj(parent.location.point.coordinates),
+    }),
     user: parent => User.findById(parent.user),
   },
   Query: {
-    recipientProfile: async (parent, args, { user }) =>
+    recipientProfile: async (parent, { id }, { user }) =>
       RecipientProfile.findById(id),
     recipientProfiles: async () => RecipientProfile.find({}),
   },
@@ -22,8 +25,11 @@ export default {
       const newProfile = await RecipientProfile.create({
         user: user.id,
         location: {
-          type: 'Point',
-          coordinates: geoObjToArray(location),
+          address: location.address,
+          point: {
+            type: 'Point',
+            coordinates: geoObjToArray(location),
+          },
         },
         ...args,
       })
@@ -37,8 +43,11 @@ export default {
 
       if (location) {
         updatedAttributes.location = {
-          type: 'Point',
-          coordinates: geoObjToArray(location),
+          address: location.address,
+          point: {
+            type: 'Point',
+            coordinates: geoObjToArray(location),
+          },
         }
       }
 

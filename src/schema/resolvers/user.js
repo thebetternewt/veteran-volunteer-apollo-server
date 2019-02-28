@@ -1,14 +1,15 @@
 import { AuthenticationError } from 'apollo-server-core'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import { RecipientProfile, Service, User } from '../../models'
+import { RecipientProfile, Service, User, VolunteerProfile } from '../../models'
 
 export default {
   User: {
     fullName: async parent => `${parent.firstName} ${parent.lastName}`,
-    recipientProfile: async parent => {
-      return RecipientProfile.findOne({ user: parent })
-    },
+    recipientProfile: async parent =>
+      RecipientProfile.findOne({ user: parent }),
+    volunteerProfile: async parent =>
+      VolunteerProfile.findOne({ user: parent }),
     requestedServices: async parent => {
       const services = await Service.find({ recipient: parent })
 

@@ -1,6 +1,42 @@
-query {
+query Services {
+  services(location: { lng: -88.813037, lat: 33.452127 }, range: 24) {
+    id
+    title
+    location {
+      lat
+      lng
+    }
+    serviceType
+    serviceDetails {
+      ... on ChildcareService {
+        age
+        id
+      }
+      ... on TravelService {
+        id
+        fromName
+        fromLocation {
+          lat
+          lng
+        }
+        toName
+        toLocation {
+          lat
+          lng
+        }
+      }
+    }
+    recipient {
+      id
+    }
+  }
+}
+
+query Me {
   me {
     id
+    fullName
+    avatar
     recipientProfile {
       id
       allowPhoneContact
@@ -9,6 +45,11 @@ query {
         lat
         lng
       }
+    }
+    requestedServices {
+      id
+      title
+      serviceType
     }
   }
 }

@@ -1,5 +1,5 @@
-import 'mongoose-geojson-schema'
 import mongoose from 'mongoose'
+import 'mongoose-geojson-schema'
 
 const {
   Schema,
@@ -24,8 +24,14 @@ export default mongoose.model(
         default: false,
       },
       location: {
-        type: Point,
-        required: true,
+        address: {
+          type: String,
+          required: true,
+        },
+        point: {
+          type: Point,
+          required: true,
+        },
       },
     },
     {
