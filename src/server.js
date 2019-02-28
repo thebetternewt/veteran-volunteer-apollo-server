@@ -71,7 +71,13 @@ const main = async () => {
     app.use(cors())
 
     // Initialize GraphQL Voyager
-    app.use('/voyager', voyagerMiddleware({ endpointUrl: '/graphql' }))
+    app.use(
+      '/voyager',
+      voyagerMiddleware({
+        endpointUrl: '/graphql',
+        displayOptions: { skipRelay: false },
+      })
+    )
 
     server.applyMiddleware({ app })
 
