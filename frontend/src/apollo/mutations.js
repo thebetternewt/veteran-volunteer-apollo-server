@@ -94,3 +94,27 @@ export const UPDATE_RECIPIENT_PROFILE = gql`
     }
   }
 `
+
+export const CREATE_SERVICE = gql`
+  mutation createService(
+    $title: String!
+    $date: String!
+    $serviceType: ServiceType!
+    $notes: String
+    $location: LocationInput!
+    $travelServiceDetails: TravelServiceInput
+    $childcareServiceDetails: ChildcareServiceInput
+  ) {
+    createService(
+      title: $title
+      date: $date
+      serviceType: $serviceType
+      notes: $notes
+      location: $location
+      travelServiceDetails: $travelServiceDetails
+      childcareServiceDetails: $childcareServiceDetails
+    ) {
+      id
+    }
+  }
+`

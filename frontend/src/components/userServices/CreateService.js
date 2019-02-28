@@ -1,6 +1,9 @@
 import { Button, Form } from 'antd'
 import { navigate } from 'gatsby'
 import React, { useState } from 'react'
+import { Mutation } from 'react-apollo'
+import { CREATE_SERVICE } from '../../apollo/mutations'
+import graphQlErrors from '../../util/graphqlErrors'
 import StepOne from './forms/StepOne'
 import StepThree from './forms/StepThree'
 import StepTwo from './forms/StepTwo'
@@ -15,25 +18,65 @@ const CreateService = ({ form }) => {
   // TODO: Handle clearing state for fields associated with a specific service
   // when service type changes
 
-  const { validateFields } = form
+  const { validateFields, getFieldValue } = form
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e, submit) => {
     e.preventDefault()
 
     await validateFields(async (errors, values) => {
       console.log('errors:', errors)
-      console.log('values:', values)
+      // console.log('values:', values)
 
-      // if (!errors) {
+      console.log('toLocation before vars:', serviceDetails.toLocation)
 
-      //   console.log(variables)
-      //   try {
-      //     await submit({ variables, refetchQueries: ['Me'] })
-      //     this.props.toggleForm()
-      //   } catch (err) {
-      //     console.error(err)
-      //   }
-      // }
+      if (!errors) {
+        const variables = {
+          serviceType: serviceType && serviceType.toUpperCase(),
+          title: getFieldValue('title'),
+          date: getFieldValue('date').format(),
+          notes: getFieldValue('notes'),
+        }
+
+        if (baseLocation) {
+          variables.location = {
+            address: baseLocation.address,
+            lat: baseLocation.location.y,
+            lng: baseLocation.location.x,
+          }
+        }
+
+        // Transform Travel location variables
+        switch (serviceType) {
+          case 'Travel':
+            variables.travelServiceDetails = {
+              ...serviceDetails,
+              fromLocation: {
+                address: baseLocation.address,
+                lat: baseLocation.location.y,
+                lng: baseLocation.location.x,
+              },
+              toLocation: {
+                address: serviceDetails.toLocation.address,
+                lat: serviceDetails.toLocation.location.y,
+                lng: serviceDetails.toLocation.location.x,
+              },
+            }
+            break
+          case 'Childcare':
+            variables.childcareServiceDetails = form.getFieldValue('details')
+            break
+          default:
+            break
+        }
+
+        console.log(variables)
+        try {
+          await submit({ variables, refetchQueries: ['Me'] })
+          navigate('/app')
+        } catch (err) {
+          console.error(err)
+        }
+      }
       window.scrollTo(0, 0)
     })
   }
@@ -95,31 +138,47 @@ const CreateService = ({ form }) => {
   return (
     <>
       <h3>Request Service</h3>
-      {/* <Mutation mutation= */}
-      <Form onSubmit={handleSubmit}>
-        {steps[currentStep].component}
-        <Form.Item>
-          {currentStep > 1 && (
-            <Button type="primary" icon="left-circle" onClick={goToPrevStep}>
-              Prev
-            </Button>
-          )}
-          {currentStep === steps.length - 1 && (
-            <Button
-              type="primary"
-              htmlType="submit"
-              // disabled={hasErrors(getFieldsError())}
-              // loading={loading}
-              style={{ marginRight: '2rem' }}
+      <Mutation mutation={CREATE_SERVICE}>
+        {(createService, { loading, error }) => {
+          return (
+            <Form
+              onSubmit={e => handleSubmit(e, createService)}
+              style={{ maxWidth: 500 }}
             >
-              Request Service
-            </Button>
-          )}
-          <Button type="secondary" onClick={() => navigate('/app')}>
-            Cancel
-          </Button>
-        </Form.Item>
-      </Form>
+              {steps[currentStep].component}
+              <Form.Item>{error && graphQlErrors(error)}</Form.Item>
+              <Form.Item>
+                {currentStep > 0 && (
+                  <Button
+                    type="primary"
+                    icon="left-circle"
+                    onClick={goToPrevStep}
+                  >
+                    Prev
+                  </Button>
+                )}
+                {currentStep === steps.length - 1 && (
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    loading={loading}
+                    style={{ marginRight: '2rem' }}
+                  >
+                    Request Service
+                  </Button>
+                )}
+                <Button
+                  type="secondary"
+                  disabled={loading}
+                  onClick={() => navigate('/app')}
+                >
+                  Cancel
+                </Button>
+              </Form.Item>
+            </Form>
+          )
+        }}
+      </Mutation>
     </>
   )
 }

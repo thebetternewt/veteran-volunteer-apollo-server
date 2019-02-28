@@ -1,11 +1,8 @@
+import { Col, Row } from 'antd'
 import React from 'react'
-import Layout from '../components/layout'
-import { Row, Col } from 'antd'
-import LoginForm from '../components/loginForm'
-import { getAuthenticatedUser } from '../apollo/client'
-
+import LoginForm from '../components/auth/LoginForm'
+import Layout from '../components/layouts/main/Layout'
 import family from '../images/family.jpeg'
-import { navigate } from 'gatsby'
 
 const LoginPage = () => (
   <Layout>

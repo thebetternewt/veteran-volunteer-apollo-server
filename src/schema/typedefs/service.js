@@ -1,16 +1,18 @@
 import { gql } from 'apollo-server-express'
 
 export default gql`
-  union ServiceDetails = TravelService | LawncareService
+  union ServiceDetails = TravelService | LawncareService | ChildcareService
 
   enum ServiceType {
     TRAVEL
     LAWNCARE
+    CHILDCARE
   }
 
   type Service {
     id: ID!
     title: String!
+    date: String!
     serviceType: String!
     serviceDetails: ServiceDetails
     notes: String
@@ -41,9 +43,11 @@ export default gql`
     createService(
       serviceType: ServiceType!
       title: String!
+      date: String!
       notes: String
       location: LocationInput!
       travelServiceDetails: TravelServiceInput
+      childcareServiceDetails: ChildcareServiceInput
     ): Service
   }
 `

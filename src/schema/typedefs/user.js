@@ -34,6 +34,7 @@ export default gql`
     updatedAt: String
     recipientProfile: RecipientProfile
     volunteerProfile: RecipientProfile
+    requestedServices: [Service!]!
   }
 
   extend type Query {

@@ -1,7 +1,8 @@
 import { Icon, Layout, Menu } from 'antd'
 import { Link } from 'gatsby'
 import React from 'react'
-import { logOutUser } from '../../apollo/client'
+import styled from 'styled-components'
+import { logOutUser } from '../../../apollo/client'
 
 const { Sider } = Layout
 
@@ -11,20 +12,16 @@ const logoStyles = {
   margin: 16,
 }
 
+const FixedSider = styled(Sider)`
+  overflow: auto;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+`
+
 const Sidebar = ({ collapsed = false }) => {
   return (
-    <Sider
-      trigger={null}
-      // breakpoint="lg"
-      collapsedWidth="0"
-      collapsed={collapsed}
-      // onBreakpoint={broken => {
-      //   console.log(broken)
-      // }}
-      onCollapse={(collapsed, type) => {
-        console.log(collapsed, type)
-      }}
-    >
+    <FixedSider trigger={null} collapsedWidth="0" collapsed={collapsed}>
       <div className="logo" style={logoStyles} />
       <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
         <Menu.Item key="1">
@@ -57,7 +54,7 @@ const Sidebar = ({ collapsed = false }) => {
           <span className="nav-text">Log Out</span>
         </Menu.Item>
       </Menu>
-    </Sider>
+    </FixedSider>
   )
 }
 

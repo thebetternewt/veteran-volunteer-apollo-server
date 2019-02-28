@@ -2,7 +2,6 @@ import { Button, Col, Row } from 'antd'
 import React, { Component } from 'react'
 import styled from 'styled-components'
 // import { Button } from './ui/buttons'
-import CreateNeed from './createNeed'
 import CreateVolunteerProfile from './createVolunteerProfile'
 
 const RegisterOption = styled(Col)`
@@ -63,7 +62,7 @@ export default class HomeSignup extends Component {
     )
 
     if (startedNeed) {
-      content = <CreateNeed cancel={this.handleCancel} />
+      content = <h1>Create Need</h1>
     }
 
     if (startedVolunteerProfile) {

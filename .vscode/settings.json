@@ -1,0 +1,23 @@
+{
+  "editor.tabSize": 2,
+  "editor.fontFamily": "Fira Code",
+  "editor.fontSize": 14,
+  "editor.fontLigatures": true,
+  "editor.rulers": [
+    80
+  ],
+  "editor.snippetSuggestions": "top",
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true,
+  },
+  "emmet.triggerExpansionOnTab": true,
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact",
+    "markdown": "html"
+  },
+  "emmet.syntaxProfiles": {
+    "javascript": "jsx"
+  },
+  "files.insertFinalNewline": true,
+  "javascript.updateImportsOnFileMove.enabled": "never",
+}

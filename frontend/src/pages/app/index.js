@@ -1,12 +1,12 @@
 import { Redirect, Router } from '@reach/router'
 import React from 'react'
 import { getAuthenticatedUser } from '../../apollo/client'
-import PrivateRoute from '../../components/privateRoute'
+import PrivateRoute from '../../components/common/PrivateRoute'
+import Dashboard from '../../components/layouts/dashboard/Dashboard'
 import RecipientProfile from '../../components/recipientProfile'
 import UserServices from '../../components/userServices'
 import CreateService from '../../components/userServices/CreateService'
-import VolunteerProfileForm from '../../components/volunteerProfile'
-import Dashboard from './dashboard'
+import VolunteerProfileForm from '../../components/VolunteerProfileForm'
 
 const AppIndex = props => {
   const user = getAuthenticatedUser()

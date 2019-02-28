@@ -1,16 +1,16 @@
-import { LawncareService, Service, TravelService } from '../../models'
+import Joi from 'joi'
+import {
+  ChildcareService,
+  LawncareService,
+  Service,
+  TravelService,
+  User,
+} from '../../models'
 import { mongoose as db } from '../../server'
 import { geoArrayToObj, geoObjToArray } from '../../utils/convertCoordinates'
+import { childcareServiceSchema } from '../../validation/services'
 
 const METERS_PER_MILE = 1609.34
-
-// const transformTravelService = travelService => ({
-//   id: travelService.id,
-//   fromName: travelService.fromName,
-//   fromLocation: travelService.fromLocation.coordinates,
-//   toName: travelService.toName,
-//   toLocation: travelService.toLocation.coordinates,
-// })
 
 export default {
   ServiceDetails: {
@@ -20,6 +20,8 @@ export default {
           return 'TravelService'
         case 'LAWNCARE':
           return 'LawncareService'
+        case 'CHILDCARE':
+          return 'ChildcareService'
         default:
           return null
       }
@@ -32,20 +34,26 @@ export default {
           return TravelService.findOne({ service: parent })
         case 'LAWNCARE':
           return LawncareService.findOne({ service: parent })
+        case 'CHILDCARE':
+          return ChildcareService.findOne({ service: parent })
         default:
           return null
       }
     },
     location: parent => {
       if (parent.location) {
-        return geoArrayToObj(parent.location.coordinates)
+        return {
+          address: parent.location.address,
+          ...geoArrayToObj(parent.location.point.coordinates),
+        }
       }
 
       return null
     },
+    recipient: parent => User.findById(parent.recipient),
   },
   Query: {
-    service: async () => {},
+    service: async (_, { id }) => Service.findById(id),
     services: async (parent, args) => {
       const { serviceType, location, range } = args
 
@@ -74,44 +82,44 @@ export default {
   Mutation: {
     createService: async (parent, args, { user }) => {
       // TODO: Check if profile already exists for user
-      console.log('service args', args)
+      // console.log('service args', args)
 
       const {
         title,
+        date,
         serviceType,
         serviceDetailsId,
         notes,
         location,
         travelServiceDetails,
+        childcareServiceDetails,
       } = args
 
       const session = await db.startSession()
 
       console.log('starting transaction...')
       session.startTransaction()
-      console.log('serviceType', typeof serviceType)
 
       // Create service
       const [newService] = await Service.create(
         [
           {
             title,
+            date: new Date(date),
             serviceType,
-            serviceDetails: serviceDetailsId,
             notes,
             recipient: user.id,
             location: {
-              type: 'Point',
-              coordinates: geoObjToArray(location),
+              address: location.address,
+              point: {
+                type: 'Point',
+                coordinates: geoObjToArray(location),
+              },
             },
           },
         ],
         { session }
       )
-
-      console.log('newService', newService)
-      // Verify created service
-      // await assert.ok(newService)
 
       // Check for serviceType and Details
 
@@ -121,21 +129,39 @@ export default {
             {
               ...travelServiceDetails,
               fromLocation: {
-                type: 'Point',
-                coordinates: geoObjToArray(travelServiceDetails.fromLocation),
+                address: travelServiceDetails.fromLocation.address,
+                point: {
+                  type: 'Point',
+                  coordinates: geoObjToArray(travelServiceDetails.fromLocation),
+                },
               },
               toLocation: {
-                type: 'Point',
-                coordinates: geoObjToArray(travelServiceDetails.toLocation),
+                address: travelServiceDetails.toLocation.address,
+                point: {
+                  type: 'Point',
+                  coordinates: geoObjToArray(travelServiceDetails.toLocation),
+                },
               },
-              service: newService.id,
+              service: newService,
             },
           ],
           { session }
         )
 
-        console.log('newServiceDetails', newServiceDetails)
         // await assert.ok(newServiceDetails)
+      } else if (serviceType === 'CHILDCARE') {
+        const errors = await Joi.validate(
+          childcareServiceDetails,
+          childcareServiceSchema,
+          {
+            abortEarly: false,
+          }
+        )
+
+        const [newServiceDetails] = await ChildcareService.create(
+          [{ ...childcareServiceDetails, service: newService }],
+          { session }
+        )
       } else {
         // Abort transaction if no service details created.
         session.abortTransaction()

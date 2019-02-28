@@ -1,11 +1,9 @@
-import React from 'react'
+import { Row } from 'antd'
 import { Link } from 'gatsby'
-import { Row, Col } from 'antd'
-
-import family from '../images/family.jpeg'
-
-import Layout from '../components/layout'
+import React from 'react'
 import HomeSignup from '../components/homeSignup'
+import Layout from '../components/layouts/main/Layout'
+import family from '../images/family.jpeg'
 
 const IndexPage = () => (
   <Layout>

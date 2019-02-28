@@ -1,15 +1,32 @@
 import { Avatar, Icon, Layout } from 'antd'
 import React, { useState } from 'react'
-import { getAuthenticatedUser } from '../../apollo/client'
-import Sidebar from './sidebar'
+import styled from 'styled-components'
+import { getAuthenticatedUser } from '../../../apollo/client'
+import Sidebar from './Sidebar'
+
 const { Header, Content, Footer, Sider } = Layout
+
+const StickyHeader = styled(Header)`
+  position: sticky;
+  top: 0;
+  background-color: #326ba0;
+  color: #fff;
+  padding: 0 1rem;
+  width: 100%;
+  min-width: 320px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 200;
+  transition: all 200ms ease;
+`
 
 const defaultContent = (
   <div
     style={{
       padding: 24,
       background: '#fff',
-      minHeight: 360,
+      minHeight: '100vh',
     }}
   >
     content
@@ -33,25 +50,20 @@ const Dashboard = ({ children = defaultContent }) => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sidebar collapsed={sidebarCollapsed} />
-      <Layout>
-        <Header
-          style={{
-            backgroundColor: '#326ba0',
-            color: '#fff',
-            padding: '0 1rem',
-            minWidth: 320,
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
+      <Layout
+        style={{
+          overflowX: 'visible',
+          marginLeft: sidebarCollapsed ? 0 : 200,
+          transition: 'all 200ms ease',
+        }}
+      >
+        <StickyHeader>
           <Icon
             className="trigger"
             type={sidebarCollapsed ? 'menu-unfold' : 'menu-fold'}
             onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
             style={{ fontSize: 20 }}
           />
-          {/* <h2 style={{ margin: 0 }}>Dashboard</h2> */}
           <div
             style={{
               display: 'flex',
@@ -61,17 +73,16 @@ const Dashboard = ({ children = defaultContent }) => {
             <Icon type="setting" style={{ fontSize: 20, marginRight: 15 }} />
             <Avatar size={40} icon="user" src={user && user.avatar} />
           </div>
-        </Header>
+        </StickyHeader>
         <Content
           style={{
             background: '#fff',
             padding: '2rem 1rem',
-            minWidth: 288,
+            maxWidth: '100vw',
+            overflow: 'initial',
           }}
         >
-          {/* <div style={{ padding: 24, background: '#fff', minHeight: 360 }}> */}
           {children}
-          {/* </div> */}
         </Content>
         <Footer style={{ textAlign: 'center' }}>
           Veterans Center © {new Date().getFullYear()}

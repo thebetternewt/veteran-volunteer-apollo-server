@@ -2,9 +2,9 @@ import { Button, Form, Icon, Input } from 'antd'
 import { Link, navigate } from 'gatsby'
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
-import { getAuthenticatedUser, setAuthenticatedUser } from '../apollo/client'
-import { LOGIN } from '../apollo/mutations'
-import graphQlErrors from './graphqlErrors'
+import { getAuthenticatedUser, setAuthenticatedUser } from '../../apollo/client'
+import { LOGIN } from '../../apollo/mutations'
+import graphQlErrors from '../../util/graphqlErrors'
 
 class NormalLoginForm extends Component {
   handleSubmit = (e, login) => {

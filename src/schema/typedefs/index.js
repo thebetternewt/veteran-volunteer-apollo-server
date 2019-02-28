@@ -1,9 +1,10 @@
-import root from './root'
-import user from './user'
+import childcareService from './childcareService'
+import lawncareService from './lawncareService'
 import recipientProfile from './recipientProfile'
+import root from './root'
 import service from './service'
 import travelService from './travelService'
-import lawncareService from './lawncareService'
+import user from './user'
 
 export default [
   root,
@@ -12,4 +13,5 @@ export default [
   service,
   travelService,
   lawncareService,
+  childcareService,
 ]

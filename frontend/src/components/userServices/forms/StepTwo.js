@@ -1,15 +1,16 @@
-import { Button, Form, Input } from 'antd'
+import { Button, DatePicker, Form, Input } from 'antd'
+import moment from 'moment'
 import React from 'react'
 import PlaceSearchField from '../../common/forms/PlaceSearchField'
 
 const BaseServiceForm = props => {
   const { nextStep, form, baseLocation, setBaseLocation } = props
-  const {
-    getFieldDecorator,
-    getFieldsError,
-    validateFields,
-    setFieldsValue,
-  } = form
+  const { getFieldDecorator, validateFields, setFieldsValue } = form
+
+  const disabledDate = current => {
+    // Can not select days before today
+    return current < moment().endOf('day')
+  }
 
   // Check specified field for errors and reset state for any absent
   // location values.
@@ -30,8 +31,6 @@ const BaseServiceForm = props => {
 
   return (
     <>
-      {/* <Form.Item>{error && graphQlErrors(error)}</Form.Item> */}
-
       <Form.Item
         label="Title"
         help="Enter a descriptive title for your request."
@@ -47,9 +46,24 @@ const BaseServiceForm = props => {
         })(<Input />)}
       </Form.Item>
 
-      {/* TODO: ADD DATE!!! */}
+      <Form.Item label="When do you need help?" help="Select a date and time.">
+        {getFieldDecorator('date', {
+          preserve: true,
+          rules: [
+            { required: true, message: 'Please choose a date and time.' },
+          ],
+        })(
+          <DatePicker
+            showTime={{ use12Hours: true, format: 'h:mm a', minuteStep: 15 }}
+            placeholder="Select Date & Time"
+            format="LLL"
+            style={{ width: '100%' }}
+            showToday={false}
+            disabledDate={disabledDate}
+          />
+        )}
+      </Form.Item>
 
-      {/* TODO: Set selected location in parent form */}
       <PlaceSearchField
         form={form}
         fieldname="baseLocation"
@@ -62,7 +76,8 @@ const BaseServiceForm = props => {
           type="primary"
           style={{ marginRight: '2rem' }}
           onClick={() => {
-            if (!checkFieldsForErrors(['title', 'baseLocation'])) nextStep()
+            if (!checkFieldsForErrors(['title', 'date', 'baseLocation']))
+              nextStep()
           }}
         >
           Next

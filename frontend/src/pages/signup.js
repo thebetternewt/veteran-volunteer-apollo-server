@@ -1,7 +1,7 @@
+import { Col, Row } from 'antd'
 import React from 'react'
-import SignUpForm from '../components/signupForm'
-import Layout from '../components/layout'
-import { Row, Col } from 'antd'
+import SignUpForm from '../components/auth/SignupForm'
+import Layout from '../components/layouts/main/Layout'
 
 const SignupPage = () => {
   return (
