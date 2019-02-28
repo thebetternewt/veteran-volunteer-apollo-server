@@ -14,9 +14,9 @@ const ChildcareDetailsForm = ({ form, serviceDetails, setServiceDetails }) => {
 
   const onCheckAllChange = e => {
     if (e.target.checked) {
-      setFieldsValue({ ages: ageOptions })
+      setFieldsValue({ ['details.age']: ageOptions })
     } else {
-      setFieldsValue({ ages: [] })
+      setFieldsValue({ ['details.age']: [] })
     }
 
     setIndeterminate(false)
@@ -46,10 +46,11 @@ const ChildcareDetailsForm = ({ form, serviceDetails, setServiceDetails }) => {
 
         {getFieldDecorator('details.age', {
           preserve: true,
-          required: true,
           rules: [
             {
-              required: true,
+              validator: (rule, value, cb) =>
+                value.length > 0 ? cb() : cb(true),
+              type: 'array',
               message: 'Please choose at least one age.',
             },
           ],

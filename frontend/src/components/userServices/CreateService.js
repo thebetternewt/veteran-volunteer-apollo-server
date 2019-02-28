@@ -148,7 +148,7 @@ const CreateService = ({ form }) => {
               {steps[currentStep].component}
               <Form.Item>{error && graphQlErrors(error)}</Form.Item>
               <Form.Item>
-                {currentStep > 1 && (
+                {currentStep > 0 && (
                   <Button
                     type="primary"
                     icon="left-circle"
