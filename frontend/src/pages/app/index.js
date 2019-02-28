@@ -5,7 +5,7 @@ import PrivateRoute from '../../components/privateRoute'
 import RecipientProfile from '../../components/recipientProfile'
 import UserServices from '../../components/userServices'
 import CreateService from '../../components/userServices/CreateService'
-import VolunteerProfileForm from '../../components/VolunteerProfileForm'
+import VolunteerProfileForm from '../../components/volunteerProfile'
 import Dashboard from './dashboard'
 
 const AppIndex = props => {
