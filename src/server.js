@@ -20,13 +20,14 @@ const main = async () => {
       useNewUrlParser: true,
     })
 
-    const playground = IN_PROD
-      ? false
-      : {
-          settings: {
-            'editor.cursorShape': 'block',
-          },
-        }
+    // TODO: Disable playground in production (uncomment and use code below)
+    // const playground = IN_PROD
+    //   ? false
+    //   : {
+    //       settings: {
+    //         'editor.cursorShape': 'block',
+    //       },
+    //     }
 
     const corsOptions = {
       origin: IN_PROD ? process.env.FRONTEND_URL : '*',
@@ -46,7 +47,11 @@ const main = async () => {
       schemaDirectives: {
         auth: AuthDirective,
       },
-      playground,
+      playground: {
+        settings: {
+          'editor.cursorShape': 'block',
+        },
+      },
       context: async ({ req }) => {
         // get the user token from the headers
         const authorization = req.headers.authorization || ''
