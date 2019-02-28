@@ -7,6 +7,7 @@ export default gql`
     TRAVEL
     LAWNCARE
     CHILDCARE
+    HOME_MAINTENANCE
   }
 
   type Service {
