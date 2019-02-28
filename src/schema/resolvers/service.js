@@ -7,7 +7,7 @@ import {
   User,
 } from '../../models'
 import { mongoose as db } from '../../server'
-import { geoArrayToObj, geoObjToArray } from '../../utils/convertCoordinates'
+import { formatLocationOutput, geoObjToArray } from '../../utils/locations'
 import { childcareServiceSchema } from '../../validation/services'
 
 const METERS_PER_MILE = 1609.34
@@ -40,16 +40,7 @@ export default {
           return null
       }
     },
-    location: parent => {
-      if (parent.location) {
-        return {
-          address: parent.location.address,
-          ...geoArrayToObj(parent.location.point.coordinates),
-        }
-      }
-
-      return null
-    },
+    location: parent => formatLocationOutput(parent.location),
     recipient: parent => User.findById(parent.recipient),
     volunteer: parent => User.findById(parent.volunteer),
   },
@@ -110,13 +101,7 @@ export default {
             serviceType,
             notes,
             recipient: user.id,
-            location: {
-              address: location.address,
-              point: {
-                type: 'Point',
-                coordinates: geoObjToArray(location),
-              },
-            },
+            location: formatLocationInput(location),
           },
         ],
         { session }
@@ -129,20 +114,10 @@ export default {
           [
             {
               ...travelServiceDetails,
-              fromLocation: {
-                address: travelServiceDetails.fromLocation.address,
-                point: {
-                  type: 'Point',
-                  coordinates: geoObjToArray(travelServiceDetails.fromLocation),
-                },
-              },
-              toLocation: {
-                address: travelServiceDetails.toLocation.address,
-                point: {
-                  type: 'Point',
-                  coordinates: geoObjToArray(travelServiceDetails.toLocation),
-                },
-              },
+              fromLocation: formatLocationInput(
+                travelServiceDetails.fromLocation
+              ),
+              toLocation: formatLocationInput(travelServiceDetails.toLocation),
               service: newService,
             },
           ],

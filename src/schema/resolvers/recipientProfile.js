@@ -1,12 +1,12 @@
 import { RecipientProfile, User } from '../../models'
-import { geoArrayToObj, geoObjToArray } from '../../utils/convertCoordinates'
+import {
+  formatLocationInput,
+  formatLocationOutput,
+} from '../../utils/locations'
 
 export default {
   RecipientProfile: {
-    location: parent => ({
-      address: parent.location.address,
-      ...geoArrayToObj(parent.location.point.coordinates),
-    }),
+    location: parent => formatLocationOutput(parent.location),
     user: parent => User.findById(parent.user),
   },
   Query: {
@@ -24,13 +24,7 @@ export default {
 
       const newProfile = await RecipientProfile.create({
         user: user.id,
-        location: {
-          address: location.address,
-          point: {
-            type: 'Point',
-            coordinates: geoObjToArray(location),
-          },
-        },
+        location: formatLocationInput(location),
         ...args,
       })
 
@@ -42,13 +36,7 @@ export default {
       const updatedAttributes = { ...args }
 
       if (location) {
-        updatedAttributes.location = {
-          address: location.address,
-          point: {
-            type: 'Point',
-            coordinates: geoObjToArray(location),
-          },
-        }
+        updatedAttributes.location = formatLocationInput(location)
       }
 
       const profile = await RecipientProfile.findOne({ user })

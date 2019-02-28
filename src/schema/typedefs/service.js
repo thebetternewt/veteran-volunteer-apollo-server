@@ -19,7 +19,7 @@ export default gql`
     notes: String
     recipient: User!
     volunteer: User
-    location: Location
+    location: Location!
     createdAt: String!
     updatedAt: String!
   }

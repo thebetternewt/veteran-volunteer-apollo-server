@@ -1,12 +1,9 @@
 import { User, VolunteerProfile } from '../../models'
-import { geoArrayToObj, geoObjToArray } from '../../utils/convertCoordinates'
+import { formatLocationOutput } from '../../utils/locations'
 
 export default {
   VolunteerProfile: {
-    serviceLocation: parent => ({
-      address: parent.serviceLocation.address,
-      ...geoArrayToObj(parent.serviceLocation.point.coordinates),
-    }),
+    serviceLocation: parent => formatLocationOutput(parent.serviceLocation),
     user: parent => User.findById(parent.user),
   },
   Query: {
@@ -32,13 +29,7 @@ export default {
       // Create new profile
       const newProfile = await VolunteerProfile.create({
         user: user.id,
-        serviceLocation: {
-          address: serviceLocation.address,
-          point: {
-            type: 'Point',
-            coordinates: geoObjToArray(serviceLocation),
-          },
-        },
+        serviceLocation: formatLocationInput(serviceLocation),
         ...args,
       })
 
@@ -63,13 +54,7 @@ export default {
 
       // Set new serviceLocation field if in args
       if (serviceLocation) {
-        updatedAttributes.serviceLocation = {
-          address: serviceLocation.address,
-          point: {
-            type: 'Point',
-            coordinates: geoObjToArray(serviceLocation),
-          },
-        }
+        updatedAttributes.serviceLocation = formatLocationInput(serviceLocation)
       }
 
       profile.set({

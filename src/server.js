@@ -75,7 +75,6 @@ const main = async () => {
       '/voyager',
       voyagerMiddleware({
         endpointUrl: '/graphql',
-        displayOptions: { skipRelay: false },
       })
     )
 
@@ -83,7 +82,7 @@ const main = async () => {
 
     app.listen({ port: PORT }, () =>
       console.log(
-        `🚀 Server ready at http://localhost:4000${server.graphqlPath}`
+        `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
       )
     )
   } catch (err) {
