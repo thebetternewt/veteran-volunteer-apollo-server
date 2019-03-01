@@ -39,9 +39,9 @@ export default gql`
   }
 
   extend type Query {
-    me: User
-    user(id: ID!): User
-    users(limit: Int): [User!]!
+    me: User @auth
+    user(id: ID!): User @auth
+    users(limit: Int): [User!]! @auth
   }
 
   extend type Mutation {
@@ -54,8 +54,8 @@ export default gql`
       phone: String!
       address: AddressInput!
       password: String!
-    ): User
-    login(email: String!, password: String!): String
+    ): User @guest
+    login(email: String!, password: String!): String @guest
     updateUser(
       id: ID!
       firstName: String
@@ -68,7 +68,7 @@ export default gql`
       password: String
       admin: Boolean
       active: Boolean
-    ): User!
-    deleteUser(id: ID!): String!
+    ): User! @auth
+    deleteUser(id: ID!): String! @auth
   }
 `

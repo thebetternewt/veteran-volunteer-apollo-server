@@ -7,7 +7,7 @@ import jwt from 'jsonwebtoken'
 import mongoose from 'mongoose'
 import { User } from './models'
 import { resolvers, typeDefs } from './schema'
-import AuthDirective from './schema/directives/auth'
+import schemaDirectives from './schema/directives'
 
 dotenv.config()
 
@@ -20,7 +20,7 @@ const main = async () => {
       useNewUrlParser: true,
     })
 
-    // TODO: Disable playground in production (uncomment and use code below)
+    // TODO: Disable playground in production (uncomment code below and update in server constructor)
     // const playground = IN_PROD
     //   ? false
     //   : {
@@ -36,6 +36,7 @@ const main = async () => {
 
     const schema = makeExecutableSchema({
       typeDefs,
+      schemaDirectives,
       resolvers,
       resolverValidationOptions: {
         requireResolversForResolveType: false,
@@ -44,9 +45,7 @@ const main = async () => {
 
     const server = new ApolloServer({
       schema,
-      schemaDirectives: {
-        auth: AuthDirective,
-      },
+      introspection: true,
       playground: {
         settings: {
           'editor.cursorShape': 'block',

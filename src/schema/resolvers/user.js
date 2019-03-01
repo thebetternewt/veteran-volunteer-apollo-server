@@ -30,12 +30,7 @@ export default {
     },
   },
   Query: {
-    me: async (parent, args, { user }) => {
-      // verifyUser({ user });
-
-      // user is authenticated
-      return User.findById(user.id)
-    },
+    me: async (parent, args, { user }) => User.findById(user.id),
     user: async (parent, { id }, { user }) => {
       // verifyUser({
       //   user,
@@ -120,15 +115,7 @@ export default {
           throw new Error('User already exists.')
         }
 
-        // Generate new gravatar url from email
-        // const avatar = gravatar.url(email, {
-        //   s: '200', // Size
-        //   r: 'pg', // Rating
-        //   d: 'mm', // Default
-        // })
-
         updatedProperties.email = email
-        // updatedProperties.avatar = avatar
       }
 
       if (password) {
