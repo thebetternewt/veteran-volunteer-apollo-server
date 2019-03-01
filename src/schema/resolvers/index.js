@@ -1,6 +1,7 @@
 import childcareService from './childcareService'
 import lawncareService from './lawncareService'
 import recipientProfile from './recipientProfile'
+import request from './request'
 import service from './service'
 import travelService from './travelService'
 import user from './user'
@@ -14,4 +15,5 @@ export default [
   travelService,
   lawncareService,
   childcareService,
+  request,
 ]
