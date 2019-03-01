@@ -2,11 +2,11 @@ import { gql } from 'apollo-server-express'
 
 export default gql`
   type Address {
-    street1: String!
+    street1: String
     street2: String
-    city: String!
-    state: String!
-    zipcode: String!
+    city: String
+    state: String
+    zipcode: String
   }
 
   input AddressInput {
@@ -23,13 +23,11 @@ export default gql`
     middleName: String
     lastName: String
     fullName: String
-    age: Int!
-    email: String
-    phone: String
-    address: Address
+    age: Int! @admin
+    email: String @admin
+    phone: String @admin
+    address: Address @admin
     avatar: String
-    admin: Boolean
-    active: Boolean!
     createdAt: String
     updatedAt: String
     recipientProfile: RecipientProfile
@@ -40,8 +38,8 @@ export default gql`
 
   extend type Query {
     me: User @auth
-    user(id: ID!): User @auth
-    users(limit: Int): [User!]! @auth
+    user(id: ID!): User
+    users(limit: Int): [User!]!
   }
 
   extend type Mutation {
@@ -66,9 +64,11 @@ export default gql`
       phone: String
       address: AddressInput
       password: String
-      admin: Boolean
       active: Boolean
     ): User! @auth
-    deleteUser(id: ID!): String! @auth
+    makeAdmin(id: ID!): Boolean @admin
+    deleteUser(id: ID!): Boolean @admin
+    activateUser(id: ID!): Boolean @admin
+    deactivateUser(id: ID!): Boolean @admin
   }
 `

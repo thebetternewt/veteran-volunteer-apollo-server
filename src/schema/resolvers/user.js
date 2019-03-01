@@ -136,7 +136,7 @@ export default {
 
       return updatedUser
     },
-    deleteUser: async (parent, { id }, { user }) => {
+    deleteUser: async (parent, { id }) => {
       // verifyUser({ user, testUserId: id, current: true, admin: true })
 
       const removedUser = await User.findOneAndRemove({ _id: id }).exec()
@@ -145,7 +145,23 @@ export default {
         throw new Error('User not found')
       }
 
-      return removedUser.id
+      return true
+    },
+    activateUser: async (_, { id }) => {
+      const user = await User.findById(id).exec()
+
+      user.set({ active: true })
+      await user.save()
+
+      return true
+    },
+    deactivateUser: async (_, { id }) => {
+      const user = await User.findById(id).exec()
+
+      user.set({ active: false })
+      await user.save()
+
+      return true
     },
   },
 }

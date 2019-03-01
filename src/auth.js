@@ -16,7 +16,6 @@ export const attemptSignIn = async (email, password) => {
 const signedIn = context => context.user
 
 export const ensureSignedIn = context => {
-  console.log(context)
   if (!signedIn(context)) {
     throw new AuthenticationError('You must be signed in.')
   }
@@ -26,4 +25,14 @@ export const ensureSignedOut = context => {
   if (signedIn(context)) {
     throw new AuthenticationError('You are already signed in.')
   }
+}
+
+const isAdmin = context => context.user.admin
+
+export const ensureAdmin = context => {
+  if (!signedIn(context) || !isAdmin(context)) {
+    return false
+  }
+
+  return true
 }
