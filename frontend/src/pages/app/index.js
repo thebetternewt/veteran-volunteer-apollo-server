@@ -6,7 +6,7 @@ import Dashboard from '../../components/layouts/dashboard/Dashboard'
 import RecipientProfile from '../../components/recipientProfile'
 import UserServices from '../../components/userServices'
 import CreateService from '../../components/userServices/CreateService'
-import VolunteerProfileForm from '../../components/VolunteerProfileForm'
+import VolunteerProfileForm from '../../components/VolunteerProfile'
 
 const AppIndex = props => {
   const user = getAuthenticatedUser()
