@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node -r esm .",
     "server": "nodemon -r esm",
-    "client": "cd frontend; gatsby develop",
+    "client": "cd client; yarn start",
     "dev": "concurrently \"yarn server\" \"yarn client\""
   },
   "dependencies": {

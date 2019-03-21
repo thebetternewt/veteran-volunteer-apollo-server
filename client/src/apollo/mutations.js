@@ -118,3 +118,19 @@ export const CREATE_SERVICE = gql`
     }
   }
 `
+
+export const CREATE_REQUEST = gql`
+  mutation CreateRequest(
+    $service: ServiceInput!
+    $recipient: ID
+    $volunteer: ID
+  ) {
+    createRequest(
+      service: $service
+      recipient: $recipient
+      volunteer: $volunteer
+    ) {
+      id
+    }
+  }
+`

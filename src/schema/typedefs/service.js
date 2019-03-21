@@ -17,15 +17,15 @@ export default gql`
     serviceType: String!
     serviceDetails: ServiceDetails
     notes: String
-    recipient: User!
-    volunteer: User
     location: Location!
+    recipient: User!
+    request: Request!
     createdAt: String!
     updatedAt: String!
   }
 
   extend type Query {
-    service(id: ID!): Service
+    service(id: ID!): Service @auth
     services(
       serviceType: ServiceType
       location: LocationInput
@@ -33,11 +33,7 @@ export default gql`
       Radius in miles
       """
       range: Int
-    ): [Service!]!
-  }
-
-  input TestInput {
-    testString: String
+    ): [Service!]! @auth
   }
 
   extend type Mutation {
@@ -49,7 +45,17 @@ export default gql`
       location: LocationInput!
       travelServiceDetails: TravelServiceInput
       childcareServiceDetails: ChildcareServiceInput
-    ): Service
-    assignVolunteer(serviceId: ID!, volunteerId: ID!): Service
+    ): Service @auth
+    assignVolunteer(serviceId: ID!, volunteerId: ID!): Service @auth
+  }
+
+  input ServiceInput {
+    serviceType: ServiceType!
+    title: String!
+    date: String!
+    notes: String
+    location: LocationInput!
+    travelServiceDetails: TravelServiceInput
+    childcareServiceDetails: ChildcareServiceInput
   }
 `

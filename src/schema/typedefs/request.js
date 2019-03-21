@@ -16,7 +16,7 @@ export default gql`
     id: ID!
     service: Service!
     recipient: User!
-    volunteer: User!
+    volunteer: User
     initiator: UserRole!
     status: RequestStatus!
   }
@@ -28,10 +28,9 @@ export default gql`
 
   extend type Mutation {
     createRequest(
-      service: ID!
-      recipient: ID!
-      volunteer: ID!
-      status: RequestStatus!
+      service: ServiceInput!
+      recipient: ID # TODO: Default current user
+      volunteer: ID
     ): Request
     updateRequestStatus(id: ID!, status: RequestStatus): Request
     deleteRequest(id: ID!): Boolean # TODO: Check if user owns request or if user is admin

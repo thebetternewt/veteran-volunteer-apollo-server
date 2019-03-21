@@ -2,7 +2,7 @@ import { navigate } from '@reach/router'
 import { Button, Form } from 'antd'
 import React, { useState } from 'react'
 import { Mutation } from 'react-apollo'
-import { CREATE_SERVICE } from '../../apollo/mutations'
+import { CREATE_REQUEST } from '../../apollo/mutations'
 import graphQlErrors from '../../util/graphqlErrors'
 import StepOne from './forms/StepOne'
 import StepThree from './forms/StepThree'
@@ -30,7 +30,7 @@ const CreateService = ({ form }) => {
       console.log('toLocation before vars:', serviceDetails.toLocation)
 
       if (!errors) {
-        const variables = {
+        const serviceInput = {
           serviceType: serviceType && serviceType.toUpperCase(),
           title: getFieldValue('title'),
           date: getFieldValue('date').format(),
@@ -38,7 +38,7 @@ const CreateService = ({ form }) => {
         }
 
         if (baseLocation) {
-          variables.location = {
+          serviceInput.location = {
             address: baseLocation.address,
             lat: baseLocation.location.y,
             lng: baseLocation.location.x,
@@ -48,7 +48,7 @@ const CreateService = ({ form }) => {
         // Transform Travel location variables
         switch (serviceType) {
           case 'Travel':
-            variables.travelServiceDetails = {
+            serviceInput.travelServiceDetails = {
               ...serviceDetails,
               fromLocation: {
                 address: baseLocation.address,
@@ -63,15 +63,18 @@ const CreateService = ({ form }) => {
             }
             break
           case 'Childcare':
-            variables.childcareServiceDetails = form.getFieldValue('details')
+            serviceInput.childcareServiceDetails = form.getFieldValue('details')
             break
           default:
             break
         }
 
-        console.log(variables)
+        console.log(serviceInput)
         try {
-          await submit({ variables, refetchQueries: ['Me'] })
+          await submit({
+            variables: { service: serviceInput },
+            refetchQueries: ['Me'],
+          })
           navigate('/app')
         } catch (err) {
           console.error(err)
@@ -138,11 +141,11 @@ const CreateService = ({ form }) => {
   return (
     <>
       <h3>Request Service</h3>
-      <Mutation mutation={CREATE_SERVICE}>
-        {(createService, { loading, error }) => {
+      <Mutation mutation={CREATE_REQUEST}>
+        {(createRequest, { loading, error }) => {
           return (
             <Form
-              onSubmit={e => handleSubmit(e, createService)}
+              onSubmit={e => handleSubmit(e, createRequest)}
               style={{ maxWidth: 500 }}
             >
               {steps[currentStep].component}

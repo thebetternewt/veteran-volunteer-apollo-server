@@ -4,10 +4,13 @@ import {
   LawncareService,
   Service,
   TravelService,
-  User,
 } from '../../models'
 import { mongoose as db } from '../../server'
-import { formatLocationOutput, geoObjToArray } from '../../utils/locations'
+import {
+  formatLocationInput,
+  formatLocationOutput,
+  geoObjToArray,
+} from '../../utils/locations'
 import { childcareServiceSchema } from '../../validation/services'
 
 const METERS_PER_MILE = 1609.34
@@ -42,7 +45,7 @@ export default {
     },
     location: parent => formatLocationOutput(parent.location),
     recipient: parent => User.findById(parent.recipient),
-    volunteer: parent => User.findById(parent.volunteer),
+    // volunteer: parent => User.findById(parent.volunteer),
   },
   Query: {
     service: async (_, { id }) => Service.findById(id),
@@ -56,7 +59,7 @@ export default {
       }
 
       if (location && range) {
-        queryParams.location = {
+        queryParams['location.point'] = {
           $near: {
             $geometry: {
               type: 'Point',
@@ -67,6 +70,8 @@ export default {
           },
         }
       }
+
+      // TODO: Filter out services that belong to current user.
 
       return Service.find(queryParams).exec()
     },

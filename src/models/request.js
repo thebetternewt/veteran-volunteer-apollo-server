@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
 const STATUS_OPTIONS = ['PENDING', 'ACCEPTED', 'REJECTED']
-const INITIATOR_OPTIONS = ['VOLUNTEER', 'RECIPIENT']
+const INITIATOR_OPTIONS = ['RECIPIENT', 'VOLUNTEER']
 
 const {
   Schema,
@@ -27,7 +27,7 @@ const requestSchema = new Schema(
     initiator: {
       type: String,
       enum: INITIATOR_OPTIONS,
-      required: true,
+      default: INITIATOR_OPTIONS[0],
     },
     status: {
       type: String,

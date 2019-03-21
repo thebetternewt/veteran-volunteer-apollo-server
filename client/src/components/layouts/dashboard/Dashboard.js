@@ -3,6 +3,7 @@ import { Avatar, Button, Icon, Layout } from 'antd'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { getAuthenticatedUser } from '../../../apollo/client'
+import ScrollToTop from '../../common/ScrollToTop'
 import Sidebar from './Sidebar'
 
 const { Header, Content, Footer, Sider } = Layout
@@ -49,60 +50,65 @@ const Dashboard = ({ children = defaultContent }) => {
   // TODO: set inital sidebarCollapse state based on window size
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Sidebar collapsed={sidebarCollapsed} />
-      <Layout
-        style={{
-          overflowX: 'visible',
-          marginLeft: sidebarCollapsed ? 0 : 200,
-          transition: 'all 200ms ease',
-        }}
-      >
-        <StickyHeader>
-          <Icon
-            className="trigger"
-            type={sidebarCollapsed ? 'menu-unfold' : 'menu-fold'}
-            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            style={{ fontSize: 20 }}
-          />
-          {user ? (
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-              }}
-            >
-              <Icon type="setting" style={{ fontSize: 20, marginRight: 15 }} />
-              <Avatar size={40} icon="user" src={user && user.avatar} />
-            </div>
-          ) : (
-            <div>
-              <Link to="/login">
-                <Button>Login</Button>
-              </Link>
-              <Link to="/signup">
-                <Button>SignUp</Button>
-              </Link>
-            </div>
-          )}
-        </StickyHeader>
-        <Content
+    <ScrollToTop>
+      <Layout style={{ minHeight: '100vh' }}>
+        <Sidebar collapsed={sidebarCollapsed} />
+        <Layout
           style={{
-            background: '#fff',
-            padding: '2rem 1rem',
-            maxWidth: '100vw',
-            overflow: 'initial',
+            overflowX: 'visible',
+            marginLeft: sidebarCollapsed ? 0 : 200,
+            transition: 'all 200ms ease',
           }}
         >
-          {children}
-        </Content>
-        <Footer style={{ textAlign: 'center' }}>
-          Veterans Center © {new Date().getFullYear()}
-          <br />
-          Created by BIS 8753
-        </Footer>
+          <StickyHeader>
+            <Icon
+              className="trigger"
+              type={sidebarCollapsed ? 'menu-unfold' : 'menu-fold'}
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              style={{ fontSize: 20 }}
+            />
+            {user ? (
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
+                <Icon
+                  type="setting"
+                  style={{ fontSize: 20, marginRight: 15 }}
+                />
+                <Avatar size={40} icon="user" src={user && user.avatar} />
+              </div>
+            ) : (
+              <div>
+                <Link to="/login">
+                  <Button>Login</Button>
+                </Link>
+                <Link to="/signup">
+                  <Button>SignUp</Button>
+                </Link>
+              </div>
+            )}
+          </StickyHeader>
+          <Content
+            style={{
+              background: '#fff',
+              padding: '2rem 1rem',
+              maxWidth: '100vw',
+              overflow: 'initial',
+            }}
+          >
+            {children}
+          </Content>
+          <Footer style={{ textAlign: 'center' }}>
+            Veterans Center © {new Date().getFullYear()}
+            <br />
+            Created by BIS 8753
+          </Footer>
+        </Layout>
       </Layout>
-    </Layout>
+    </ScrollToTop>
   )
 }
 
