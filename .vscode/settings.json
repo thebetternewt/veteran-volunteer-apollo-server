@@ -1,14 +1,12 @@
 {
   "editor.tabSize": 2,
-  "editor.fontFamily": "Fira Code",
+  "editor.fontFamily": "'Fira Code', 'FuraCode Nerd Font','Droid Sans Mono', 'monospace', monospace, 'Droid Sans Fallback'",
   "editor.fontSize": 14,
   "editor.fontLigatures": true,
-  "editor.rulers": [
-    80
-  ],
+  "editor.rulers": [80],
   "editor.snippetSuggestions": "top",
   "editor.codeActionsOnSave": {
-    "source.organizeImports": true,
+    "source.organizeImports": true
   },
   "emmet.triggerExpansionOnTab": true,
   "emmet.includeLanguages": {
@@ -20,4 +18,7 @@
   },
   "files.insertFinalNewline": true,
   "javascript.updateImportsOnFileMove.enabled": "never",
+  "prettier.singleQuote": true,
+  "prettier.trailingComma": "es5",
+  "prettier.semi": false
 }

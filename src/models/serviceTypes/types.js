@@ -1,1 +1,0 @@
-export default ['TRAVEL', 'LAWNCARE', 'CHILDCARE', 'HOME_MAINTENANCE']

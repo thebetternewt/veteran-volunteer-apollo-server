@@ -1,11 +1,11 @@
-import mongoose from 'mongoose'
-import 'mongoose-geojson-schema'
-import serviceTypes from './serviceTypes/types'
+import mongoose from 'mongoose';
+import 'mongoose-geojson-schema';
+import needTypes from './needTypes/types';
 
 const {
   Schema,
-  Types: { ObjectId, Point },
-} = mongoose
+  Types: { ObjectId, Point }
+} = mongoose;
 
 export default mongoose.model(
   'VolunteerProfile',
@@ -14,45 +14,45 @@ export default mongoose.model(
       user: {
         type: ObjectId,
         ref: 'User',
-        required: true,
+        required: true
       },
       bio: String,
       availability: {
         weekdays: {
           type: Boolean,
-          default: false,
+          default: false
         },
         weekends: {
           type: Boolean,
-          default: false,
+          default: false
         },
-        details: String,
+        details: String
       },
-      servicesProvided: [
+      needsProvided: [
         {
           type: String,
-          enum: serviceTypes,
-        },
+          enum: needTypes
+        }
       ],
       skills: [String],
       serviceLocation: {
         address: {
           type: String,
-          required: true,
+          required: true
         },
         point: {
           type: Point,
-          required: true,
-        },
+          required: true
+        }
       },
       serviceRadius: {
         type: Number,
         required: true,
-        default: 10,
-      },
+        default: 10
+      }
     },
     {
-      timestamps: true,
+      timestamps: true
     }
   )
-)
+);

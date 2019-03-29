@@ -1,7 +1,9 @@
 import { ApolloServer, makeExecutableSchema } from 'apollo-server-express'
+import connectRedis from 'connect-redis'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
+import session from 'express-session'
 import { express as voyagerMiddleware } from 'graphql-voyager/middleware'
 import jwt from 'jsonwebtoken'
 import mongoose from 'mongoose'
@@ -13,12 +15,59 @@ dotenv.config()
 
 const PORT = process.env.PORT || 4000
 const IN_PROD = process.env.NODE_ENV === 'production'
+const SESS_NAME = 'sid'
+const SESS_SECRET = 'ssh!secret!'
+const SESS_LIFETIME = 1000 * 60 * 60 * 2 // 2 hours
+const REDIS_HOST = 'localhost'
+const REDIS_PORT = 6379
+const REDIS_PASSWORD = 'secret'
 
 const main = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI, {
+    await mongoose.connect(process.env.MONGO_DEV, {
       useNewUrlParser: true,
     })
+
+    const app = express()
+    app.disable('x-powered-by')
+
+    const corsOptions = {
+      origin: IN_PROD ? process.env.FRONTEND_URL : 'http://localhost:3000',
+      optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+    }
+
+    app.use(cors(corsOptions))
+
+    // Connect Redis
+    const RedisStore = connectRedis(session)
+    const store = new RedisStore({
+      host: REDIS_HOST,
+      port: REDIS_PORT,
+      // pass: REDIS_PASSWORD
+    })
+
+    app.use(
+      session({
+        store,
+        name: SESS_NAME,
+        resave: false,
+        saveUninitialized: false,
+        secret: SESS_SECRET,
+        cookie: {
+          maxAge: SESS_LIFETIME,
+          sameSite: true,
+          secure: IN_PROD,
+        },
+      })
+    )
+
+    // Initialize GraphQL Voyager
+    app.use(
+      '/voyager',
+      voyagerMiddleware({
+        endpointUrl: '/graphql',
+      })
+    )
 
     // TODO: Disable playground in production (uncomment code below and update in server constructor)
     // const playground = IN_PROD
@@ -28,11 +77,6 @@ const main = async () => {
     //         'editor.cursorShape': 'block',
     //       },
     //     }
-
-    const corsOptions = {
-      origin: IN_PROD ? process.env.FRONTEND_URL : '*',
-      optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-    }
 
     const schema = makeExecutableSchema({
       typeDefs,
@@ -49,35 +93,26 @@ const main = async () => {
       playground: {
         settings: {
           'editor.cursorShape': 'block',
+          'request.credentials': 'include',
         },
       },
-      context: async ({ req }) => {
-        // get the user token from the headers
-        const authorization = req.headers.authorization || ''
-        const bearerLength = 'Bearer '.length
-        const token = authorization.slice(bearerLength)
+      context: async ({ req, res }) => {
+        console.log(req.session)
+        return { req, res }
+        // // get the user token from the headers
+        // const authorization = req.headers.authorization || '';
+        // const bearerLength = 'Bearer '.length;
+        // const token = authorization.slice(bearerLength);
 
-        // try to retrieve a user with the token
-        const user = await getUser(token)
+        // // try to retrieve a user with the token
+        // const user = await getUser(token);
 
-        // add the user to the context
-        return { user }
+        // // add the user to the context
+        // return { user };
       },
     })
 
-    const app = express()
-
-    app.use(cors())
-
-    // Initialize GraphQL Voyager
-    app.use(
-      '/voyager',
-      voyagerMiddleware({
-        endpointUrl: '/graphql',
-      })
-    )
-
-    server.applyMiddleware({ app })
+    server.applyMiddleware({ app, cors: corsOptions })
 
     app.listen({ port: PORT }, () =>
       console.log(

@@ -1,114 +1,108 @@
-import Joi from 'joi'
-import {
-  ChildcareService,
-  Request,
-  Service,
-  TravelService,
-  User,
-} from '../../models'
-import { mongoose as db } from '../../server'
-import { formatLocationInput } from '../../utils/locations'
-import { childcareServiceSchema } from '../../validation/services'
+import Joi from "joi";
+import { ChildcareNeed, Request, TravelNeed, User } from "../../models";
+import { mongoose as db } from "../../server";
+import { formatLocationInput } from "../../utils/locations";
+import { childcareNeedSchema } from "../../validation/needs";
 
 export default {
   Request: {
-    service: parent => Service.findById(parent.service),
+    need: parent => Need.findById(parent.need),
     volunteer: parent => User.findById(parent.user),
-    recipient: parent => User.findById(parent.recipient),
+    recipient: parent => User.findById(parent.recipient)
   },
   Query: {
     requests: () => Request.find({}),
-    request: (_, { id }) => Request.findById(id),
+    request: (_, { id }) => Request.findById(id)
   },
   Mutation: {
     createRequest: async (_, args, { user }) => {
-      console.log(args)
-      const { service } = args
+      console.log(args);
+      const { need } = args;
 
-      const session = await db.startSession()
+      const session = await db.startSession();
 
-      console.log('starting transaction...')
-      session.startTransaction()
+      console.log("starting transaction...");
+      session.startTransaction();
 
-      // Create service
-      const [newService] = await Service.create(
+      // Create need
+      const [newNeed] = await Need.create(
         [
           {
-            title: service.title,
-            date: new Date(service.date),
-            serviceType: service.serviceType,
-            notes: service.notes,
+            title: need.title,
+            date: new Date(need.date),
+            needType: need.needType,
+            notes: need.notes,
             recipient: user.id,
-            location: formatLocationInput(service.location),
-          },
+            location: formatLocationInput(need.location)
+          }
         ],
         { session }
-      )
+      );
 
-      // Check for serviceType and Details
+      // Check for needType and Details
 
-      if (service.serviceType === 'TRAVEL') {
-        const [newServiceDetails] = await TravelService.create(
+      if (need.needType === "TRAVEL") {
+        const [newNeedDetails] = await TravelNeed.create(
           [
             {
-              ...service.travelServiceDetails,
+              ...need.travelNeedDetails,
               fromLocation: formatLocationInput(
-                service.travelServiceDetails.fromLocation
+                need.travelNeedDetails.fromLocation
               ),
               toLocation: formatLocationInput(
-                service.travelServiceDetails.toLocation
+                need.travelNeedDetails.toLocation
               ),
-              service: newService,
-            },
+              need: newNeed
+            }
           ],
           { session }
-        )
+        );
 
-        // await assert.ok(newServiceDetails)
-      } else if (service.serviceType === 'CHILDCARE') {
+        // await assert.ok(newNeedDetails)
+      } else if (need.needType === "CHILDCARE") {
         const errors = await Joi.validate(
-          service.childcareServiceDetails,
-          childcareServiceSchema,
+          need.childcareNeedDetails,
+          childcareNeedSchema,
           {
-            abortEarly: false,
+            abortEarly: false
           }
-        )
+        );
 
-        const [newServiceDetails] = await ChildcareService.create(
-          [{ ...service.childcareServiceDetails, service: newService }],
+        const [newNeedDetails] = await ChildcareNeed.create(
+          [{ ...need.childcareNeedDetails, need: newNeed }],
           { session }
-        )
+        );
       } else {
-        // Abort transaction if no service details created.
-        session.abortTransaction()
+        // Abort transaction if no need details created.
+        session.abortTransaction();
       }
 
       const request = await Request.create({
-        service: newService,
-        recipient: user,
-      })
+        need: newNeed,
+        recipient: user
+      });
 
-      await session.commitTransaction()
+      await session.commitTransaction();
 
-      return request
+      return request;
     },
     updateRequestStatus: async (_, args) => {
-      const request = await Request.findById(args.id).exec()
+      const request = await Request.findById(args.id).exec();
 
-      request.set({ status })
+      request.set({ status });
 
-      await request.save()
+      await request.save();
 
-      return request
+      return request;
     },
     deleteRequest: async (_, { id }) => {
-      const removedRequest = await Request.findOneAndRemove({ _id: id }).exec()
+      const removedRequest = await Request.findOneAndRemove({ _id: id }).exec();
 
       if (!removedRequest) {
-        throw new Error('Request not found')
+        throw new Error("Request not found");
       }
 
-      return true
-    },
-  },
-}
+      return true;
+    }
+  }
+};

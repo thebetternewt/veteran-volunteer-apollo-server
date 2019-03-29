@@ -9,7 +9,7 @@ class AdminDirective extends SchemaDirectiveVisitor {
     field.resolve = function(...args) {
       const [, , context] = args
 
-      if (!ensureAdmin(context)) return null
+      if (!ensureAdmin(context.req)) return null
 
       return resolve.apply(this, args)
     }

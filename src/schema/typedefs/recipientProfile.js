@@ -12,8 +12,8 @@ export default gql`
   }
 
   extend type Query {
-    recipientProfile(id: ID!): RecipientProfile
-    recipientProfiles: [RecipientProfile!]!
+    recipientProfile(id: ID!): RecipientProfile @auth
+    recipientProfiles: [RecipientProfile!]! @auth
   }
 
   extend type Mutation {
@@ -21,11 +21,11 @@ export default gql`
       allowPhoneContact: Boolean
       allowEmailContact: Boolean
       location: LocationInput
-    ): RecipientProfile
+    ): RecipientProfile @auth
     updateRecipientProfile(
       allowPhoneContact: Boolean
       allowEmailContact: Boolean
       location: LocationInput
-    ): RecipientProfile
+    ): RecipientProfile @auth
   }
 `

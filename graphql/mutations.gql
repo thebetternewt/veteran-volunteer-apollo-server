@@ -75,25 +75,45 @@ mutation {
   }
 }
 
-# Create Childcare Service
+# Create Childcare Need
 mutation {
-  createService(
+  createNeed(
     title: "Babysitter Friday Night"
-    serviceType: CHILDCARE
+    needType: CHILDCARE
     notes: "No allergies"
     location: { lng: -88.426430, lat: 33.515996 }
     date: "2019-03-02T02:00:00+00:00"
-    childcareServiceDetails: { age: [INFANT, TODDLER] }
+    childcareNeedDetails: { age: [INFANT, TODDLER] }
   ) {
     id
     title
-    serviceType
+    needType
     notes
     location {
       lat
       lng
     }
     date
+  }
+}
+
+mutation {
+  createRecipientProfile(
+    allowPhoneContact: true
+    allowEmailContact: false
+    location: {
+      address: "100 Test Street, Starkville, MS"
+      lng: -88.426430
+      lat: 33.515996
+    }
+  ) {
+    id
+    allowEmailContact
+    allowPhoneContact
+    location {
+      lat
+      lng
+    }
   }
 }
 

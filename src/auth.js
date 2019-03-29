@@ -1,10 +1,11 @@
 import { AuthenticationError } from 'apollo-server-express'
+import { SESS_NAME } from './config'
 import { User } from './models'
 
 export const attemptSignIn = async (email, password) => {
   const message = 'Incorrect email or password. Please try again.'
 
-  const user = await User.findOne({ email })
+  const user = await User.findOne({ email: email.toLowerCase() })
 
   if (!user || !(await user.matchesPassword(password))) {
     throw new AuthenticationError(message)
@@ -13,24 +14,35 @@ export const attemptSignIn = async (email, password) => {
   return user
 }
 
-const signedIn = context => context.user
+const signedIn = req => req.session.userId
 
-export const ensureSignedIn = context => {
-  if (!signedIn(context)) {
+export const ensureSignedIn = req => {
+  if (!signedIn(req)) {
     throw new AuthenticationError('You must be signed in.')
   }
 }
 
-export const ensureSignedOut = context => {
-  if (signedIn(context)) {
+export const ensureSignedOut = req => {
+  if (signedIn(req)) {
     throw new AuthenticationError('You are already signed in.')
   }
 }
 
-const isAdmin = context => context.user.admin
+export const signOut = (req, res) =>
+  new Promise((resolve, reject) => {
+    req.session.destroy(err => {
+      if (err) reject(err)
 
-export const ensureAdmin = context => {
-  if (!signedIn(context) || !isAdmin(context)) {
+      res.clearCookie(SESS_NAME)
+
+      resolve(true)
+    })
+  })
+
+const isAdmin = req => req.session.admin
+
+export const ensureAdmin = req => {
+  if (!signedIn(req) || !isAdmin(req)) {
     return false
   }
 

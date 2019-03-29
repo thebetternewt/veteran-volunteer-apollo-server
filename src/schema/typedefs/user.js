@@ -23,23 +23,23 @@ export default gql`
     middleName: String
     lastName: String
     fullName: String
-    age: Int! @admin
-    email: String @admin
-    phone: String @admin
-    address: Address @admin
+    age: Int! #@admin
+    email: String #@admin
+    phone: String #@admin
+    address: Address #@admin
     avatar: String
     createdAt: String
     updatedAt: String
     recipientProfile: RecipientProfile
     volunteerProfile: VolunteerProfile
-    requestedServices: [Service!]!
-    volunteeredServices: [Service!]!
+    requestedNeeds: [Need!]!
+    volunteeredNeeds: [Need!]!
   }
 
   extend type Query {
     me: User @auth
-    user(id: ID!): User
-    users(limit: Int): [User!]!
+    user(id: ID!): User @auth
+    users(limit: Int = 10): [User!]! @auth
   }
 
   extend type Mutation {
@@ -53,7 +53,8 @@ export default gql`
       address: AddressInput!
       password: String!
     ): User @guest
-    login(email: String!, password: String!): String @guest
+    login(email: String!, password: String!): User @guest
+    signOut: Boolean
     updateUser(
       id: ID!
       firstName: String

@@ -1,7 +1,7 @@
 import { AuthenticationError } from 'apollo-server-core'
 import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
-import { RecipientProfile, Service, User, VolunteerProfile } from '../../models'
+import { attemptSignIn, signOut } from '../../auth'
+import { Need, RecipientProfile, User, VolunteerProfile } from '../../models'
 
 export default {
   User: {
@@ -10,28 +10,31 @@ export default {
       RecipientProfile.findOne({ user: parent }),
     volunteerProfile: async parent =>
       VolunteerProfile.findOne({ user: parent }),
-    requestedServices: async parent => {
-      const services = await Service.find({ recipient: parent })
+    requestedNeeds: async parent => {
+      const needs = await Need.find({ recipient: parent })
 
-      await services.forEach(
-        async service => await service.populate('serviceDetails').execPopulate()
+      await needs.forEach(
+        async need => await need.populate('serviceDetails').execPopulate()
       )
 
-      return services
+      return needs
     },
-    volunteeredServices: async parent => {
-      const services = await Service.find({ volunteer: parent })
+    volunteeredNeeds: async parent => {
+      const needs = await Need.find({ volunteer: parent })
 
-      await services.forEach(
-        async service => await service.populate('serviceDetails').execPopulate()
+      await needs.forEach(
+        async need => await need.populate('serviceDetails').execPopulate()
       )
 
-      return services
+      return needs
     },
   },
   Query: {
-    me: async (parent, args, { user }) => User.findById(user.id),
-    user: async (parent, { id }, { user }) => {
+    me: async (parent, args, { req }) => {
+      const { userId } = req.session
+      return User.findById(userId)
+    },
+    user: async (parent, { id }, { req }) => {
       // verifyUser({
       //   user,
       //   testUserId: id,
@@ -40,10 +43,10 @@ export default {
       // });
       return User.findById(id)
     },
-    users: async (parent, { limit }, { user }) => {
+    users: async (parent, { limit }, { req }) => {
       // verifyUser({ user, admin: true });
       return User.find()
-        .limit(limit || 10)
+        .limit(limit)
         .exec()
     },
   },
@@ -67,34 +70,41 @@ export default {
       })
 
       await newUser.save()
+      console.log(newUser)
 
       return newUser
     },
-    login: async (parent, { email, password }) => {
-      const user = await User.findOne({
-        email: email.toLowerCase(),
-      }).exec()
+    login: async (parent, { email, password }, { req }) => {
+      // const user = await User.findOne({
+      //   email: email.toLowerCase(),
+      // }).exec()
+
+      const user = await attemptSignIn(email, password)
 
       if (!user) {
         throw new AuthenticationError('Invalid email or password')
       }
 
-      const valid = await bcrypt.compare(password, user.password)
+      console.log(user)
 
-      if (!valid) {
-        throw new AuthenticationError('Invalid email or password')
-      }
+      req.session.userId = user.id
+      req.session.isAdmin = user.admin
+
+      console.log(req.session)
 
       const { id, firstName, lastName, avatar = null } = user
-      const fullName = `${firstName} ${lastName}`
+      // const fullName = `${firstName} ${lastName}`
 
-      return jwt.sign(
-        { id, firstName, lastName, fullName, email, avatar },
-        process.env.JWT_SECRET,
-        // TODO: update to lower time limit before launch
-        { expiresIn: '1d' }
-      )
+      // return jwt.sign(
+      //   { id, firstName, lastName, fullName, email, avatar },
+      //   process.env.JWT_SECRET,
+      //   // TODO: update to lower time limit before launch
+      //   { expiresIn: '1d' }
+      // )
+      return user
     },
+
+    signOut: async (parent, args, { req, res }) => signOut(req, res),
     updateUser: async (parent, args, { user }) => {
       const { id, admin, password, email, ...updatedProperties } = args
 
@@ -118,11 +128,12 @@ export default {
         updatedProperties.email = email
       }
 
-      if (password) {
-        // Hash new password
-        const hashedPass = await bcrypt.hash(password, 10)
-        updatedProperties.password = hashedPass
-      }
+      // NOTE: Password now hashed on model
+      // if (password) {
+      //   // Hash new password
+      //   const hashedPass = await bcrypt.hash(password, 10);
+      //   updatedProperties.password = hashedPass;
+      // }
 
       const updatedUser = await User.findOneAndUpdate(
         { _id: id },

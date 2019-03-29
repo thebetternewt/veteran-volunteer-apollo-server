@@ -20,6 +20,13 @@ fragment ServiceDetails on Service {
   }
 }
 
+query Users {
+  users {
+    id
+    fullName
+  }
+}
+
 query Services {
   services(location: { lng: -88.813037, lat: 33.452127 }, range: 24) {
     id
