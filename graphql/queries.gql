@@ -1,21 +1,8 @@
-fragment ServiceDetails on Service {
-  serviceDetails {
-    ... on ChildcareService {
+fragment NeedDetails on Need {
+  NeedDetails {
+    ... on ChildcareNeed {
       id
       age
-    }
-    ... on TravelService {
-      id
-      fromLocation {
-        address
-        lat
-        lng
-      }
-      toLocation {
-        address
-        lat
-        lng
-      }
     }
   }
 }
@@ -27,16 +14,16 @@ query Users {
   }
 }
 
-query Services {
-  services(location: { lng: -88.813037, lat: 33.452127 }, range: 24) {
+query Needs {
+  needs(location: { lng: -88.813037, lat: 33.452127 }, range: 24) {
     id
     title
     location {
       lat
       lng
     }
-    serviceType
-    ...ServiceDetails
+    needType
+    ...NeedDetails
     recipient {
       id
       fullName
@@ -62,10 +49,10 @@ query Me {
         lng
       }
     }
-    requestedServices {
+    requestedNeeds {
       id
       title
-      serviceType
+      needType
     }
   }
 }

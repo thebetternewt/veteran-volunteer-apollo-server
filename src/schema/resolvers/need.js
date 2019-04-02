@@ -1,5 +1,11 @@
 import Joi from 'joi'
-import { ChildcareNeed, LawncareNeed, Need, TravelNeed } from '../../models'
+import {
+  ChildcareNeed,
+  LawncareNeed,
+  Need,
+  TravelNeed,
+  User,
+} from '../../models'
 import { mongoose as db } from '../../server'
 import {
   formatLocationInput,
@@ -40,7 +46,7 @@ export default {
     },
     location: parent => formatLocationOutput(parent.location),
     recipient: parent => User.findById(parent.recipient),
-    // volunteer: parent => User.findById(parent.volunteer),
+    volunteer: parent => User.findById(parent.volunteer),
   },
   Query: {
     need: async (_, { id }) => Need.findById(id),
@@ -74,7 +80,7 @@ export default {
     createNeed: async (parent, args, { req }) => {
       const { userId } = req.session
       // TODO: Check if profile already exists for user
-      // console.log('need args', args)
+      console.log('need args:', args)
 
       const {
         title,

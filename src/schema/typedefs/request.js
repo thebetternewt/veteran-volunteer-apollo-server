@@ -1,10 +1,12 @@
-import { gql } from "apollo-server-express";
+import { gql } from 'apollo-server-express'
 
 export default gql`
   enum RequestStatus {
     PENDING
     ACCEPTED
     REJECTED
+    CANCELLED
+    COMPLETED
   }
 
   enum UserRole {
@@ -16,7 +18,7 @@ export default gql`
     id: ID!
     need: Need!
     recipient: User!
-    volunteer: User
+    volunteer: User!
     initiator: UserRole!
     status: RequestStatus!
   }
@@ -27,12 +29,8 @@ export default gql`
   }
 
   extend type Mutation {
-    createRequest(
-      need: NeedInput!
-      recipient: ID # TODO: Default current user
-      volunteer: ID
-    ): Request
+    createRequest(recipient: ID, volunteer: ID!, need: ID!): Request
     updateRequestStatus(id: ID!, status: RequestStatus): Request
     deleteRequest(id: ID!): Boolean # TODO: Check if user owns request or if user is admin
   }
-`;
+`

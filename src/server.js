@@ -24,7 +24,7 @@ const REDIS_PASSWORD = 'secret'
 
 const main = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_DEV, {
+    await mongoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
     })
 

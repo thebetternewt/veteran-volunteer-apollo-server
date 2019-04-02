@@ -31,7 +31,22 @@ mutation {
 }
 
 mutation {
-  login(email: "john@test.com", password: "123456")
+  login(email: "john@test.com", password: "123456") {
+    id
+    firstName
+    lastName
+    age
+    email
+    phone
+    age
+    address {
+      street1
+      street2
+      city
+      state
+      zipcode
+    }
+  }
 }
 
 mutation {

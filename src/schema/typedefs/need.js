@@ -1,13 +1,13 @@
-import { gql } from "apollo-server-express";
+import { gql } from 'apollo-server-express'
 
 export default gql`
   union NeedDetails = TravelNeed | LawncareNeed | ChildcareNeed
 
   enum NeedType {
-    TRAVEL
-    LAWNCARE
+    # TRAVEL
+    # LAWNCARE
     CHILDCARE
-    HOME_MAINTENANCE
+    # HOME_MAINTENANCE
   }
 
   type Need {
@@ -19,6 +19,7 @@ export default gql`
     notes: String
     location: Location!
     recipient: User!
+    volunteer: User
     request: Request!
     createdAt: String!
     updatedAt: String!
@@ -58,4 +59,4 @@ export default gql`
     travelNeedDetails: TravelNeedInput
     childcareNeedDetails: ChildcareNeedInput
   }
-`;
+`

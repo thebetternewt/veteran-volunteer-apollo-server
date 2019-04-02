@@ -1,6 +1,12 @@
 import mongoose from 'mongoose'
 
-const STATUS_OPTIONS = ['PENDING', 'ACCEPTED', 'REJECTED']
+const STATUS_OPTIONS = [
+  'PENDING',
+  'ACCEPTED',
+  'REJECTED',
+  'CANCELLED',
+  'COMPLETED',
+]
 const INITIATOR_OPTIONS = ['RECIPIENT', 'VOLUNTEER']
 
 const {
@@ -10,9 +16,9 @@ const {
 
 const requestSchema = new Schema(
   {
-    service: {
+    need: {
       type: ObjectId,
-      ref: 'Service',
+      ref: 'Need',
       required: true,
     },
     recipient: {
@@ -23,6 +29,7 @@ const requestSchema = new Schema(
     volunteer: {
       type: ObjectId,
       ref: 'User',
+      require: true,
     },
     initiator: {
       type: String,

@@ -1,108 +1,43 @@
-import Joi from "joi";
-import { ChildcareNeed, Request, TravelNeed, User } from "../../models";
-import { mongoose as db } from "../../server";
-import { formatLocationInput } from "../../utils/locations";
-import { childcareNeedSchema } from "../../validation/needs";
+import { Need, Request, User } from '../../models'
 
 export default {
   Request: {
     need: parent => Need.findById(parent.need),
-    volunteer: parent => User.findById(parent.user),
-    recipient: parent => User.findById(parent.recipient)
+    recipient: parent => User.findById(parent.recipient),
+    volunteer: parent => User.findById(parent.volunteer),
   },
   Query: {
     requests: () => Request.find({}),
-    request: (_, { id }) => Request.findById(id)
+    request: (_, { id }) => Request.findById(id),
   },
   Mutation: {
-    createRequest: async (_, args, { user }) => {
-      console.log(args);
-      const { need } = args;
+    createRequest: async (_, args, { req }) => {
+      console.log(args)
+      const { userId } = req.session
 
-      const session = await db.startSession();
+      const newRequest = await Request.create({ ...args, recipient: userId })
 
-      console.log("starting transaction...");
-      session.startTransaction();
+      console.log('newRequest:', newRequest)
 
-      // Create need
-      const [newNeed] = await Need.create(
-        [
-          {
-            title: need.title,
-            date: new Date(need.date),
-            needType: need.needType,
-            notes: need.notes,
-            recipient: user.id,
-            location: formatLocationInput(need.location)
-          }
-        ],
-        { session }
-      );
-
-      // Check for needType and Details
-
-      if (need.needType === "TRAVEL") {
-        const [newNeedDetails] = await TravelNeed.create(
-          [
-            {
-              ...need.travelNeedDetails,
-              fromLocation: formatLocationInput(
-                need.travelNeedDetails.fromLocation
-              ),
-              toLocation: formatLocationInput(
-                need.travelNeedDetails.toLocation
-              ),
-              need: newNeed
-            }
-          ],
-          { session }
-        );
-
-        // await assert.ok(newNeedDetails)
-      } else if (need.needType === "CHILDCARE") {
-        const errors = await Joi.validate(
-          need.childcareNeedDetails,
-          childcareNeedSchema,
-          {
-            abortEarly: false
-          }
-        );
-
-        const [newNeedDetails] = await ChildcareNeed.create(
-          [{ ...need.childcareNeedDetails, need: newNeed }],
-          { session }
-        );
-      } else {
-        // Abort transaction if no need details created.
-        session.abortTransaction();
-      }
-
-      const request = await Request.create({
-        need: newNeed,
-        recipient: user
-      });
-
-      await session.commitTransaction();
-
-      return request;
+      return newRequest
     },
     updateRequestStatus: async (_, args) => {
-      const request = await Request.findById(args.id).exec();
+      const request = await Request.findById(args.id).exec()
 
-      request.set({ status });
+      request.set({ status })
 
-      await request.save();
+      await request.save()
 
-      return request;
+      return request
     },
     deleteRequest: async (_, { id }) => {
-      const removedRequest = await Request.findOneAndRemove({ _id: id }).exec();
+      const removedRequest = await Request.findOneAndRemove({ _id: id }).exec()
 
       if (!removedRequest) {
-        throw new Error("Request not found");
+        throw new Error('Request not found')
       }
 
-      return true;
-    }
-  }
-};
+      return true
+    },
+  },
+}
