@@ -1,7 +1,7 @@
 import { gql } from 'apollo-boost'
 
 export const SIGNUP = gql`
-  mutation Signup(
+  mutation SignUp(
     $firstName: String!
     $lastName: String!
     $age: Int!
@@ -14,7 +14,7 @@ export const SIGNUP = gql`
     $state: String!
     $zipcode: String!
   ) {
-    signup(
+    signUp(
       firstName: $firstName
       lastName: $lastName
       age: $age
@@ -46,9 +46,17 @@ export const SIGNUP = gql`
     }
   }
 `
-export const LOGIN = gql`
-  mutation Login($email: String!, $password: String!) {
-    login(email: $email, password: $password)
+export const SIGN_IN = gql`
+  mutation SignIn($email: String!, $password: String!) {
+    signIn(email: $email, password: $password) {
+      id
+    }
+  }
+`
+
+export const SIGN_OUT = gql`
+  mutation SignOut {
+    signOut
   }
 `
 

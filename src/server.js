@@ -1,6 +1,5 @@
 import { ApolloServer, makeExecutableSchema } from 'apollo-server-express'
 import connectRedis from 'connect-redis'
-import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
 import session from 'express-session'
@@ -32,11 +31,12 @@ const main = async () => {
     app.disable('x-powered-by')
 
     const corsOptions = {
-      origin: IN_PROD ? process.env.FRONTEND_URL : 'http://localhost:3000',
+      origin: 'http://localhost:3000',
+      credentials: true,
       optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
     }
 
-    app.use(cors(corsOptions))
+    // app.use(cors(corsOptions))
 
     // Connect Redis
     const RedisStore = connectRedis(session)
@@ -97,7 +97,7 @@ const main = async () => {
         },
       },
       context: async ({ req, res }) => {
-        console.log(req.session)
+        console.log('request...')
         return { req, res }
         // // get the user token from the headers
         // const authorization = req.headers.authorization || '';

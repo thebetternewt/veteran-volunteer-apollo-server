@@ -6,9 +6,10 @@ import { client } from './apollo/client'
 import App from './App'
 import './index.css'
 import * as serviceWorker from './serviceWorker'
-import checkToken from './util/checkToken'
+import checkCookie from './util/checkCookie'
 
-checkToken()
+// checkToken()
+checkCookie()
 
 const app = (
   <ApolloProvider client={client}>

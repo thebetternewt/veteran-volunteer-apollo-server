@@ -1,5 +1,6 @@
 import { AuthenticationError } from 'apollo-server-core'
 import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 import { attemptSignIn, signOut } from '../../auth'
 import { Need, RecipientProfile, User, VolunteerProfile } from '../../models'
 
@@ -85,7 +86,17 @@ export default {
       req.session.userId = user.id
       req.session.isAdmin = user.admin
 
-      return user
+      const token = jwt.sign(
+        {
+          id: user.id,
+          firstName: user.firstName,
+          name: user.fullName,
+          isAdmin: user.admin,
+        },
+        process.env.JWT_SECRET
+      )
+
+      return { user, token }
     },
 
     signOut: async (parent, args, { req, res }) => signOut(req, res),

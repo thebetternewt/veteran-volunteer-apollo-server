@@ -11,12 +11,14 @@ const defaultState = {
 
 export const client = new ApolloClient({
   // uri: `${process.env.REACT_APP_SERVER_URL}/graphql`,
-  uri: `http://localhost:4000/graphql`,
+  uri: `http://localhost:5000/graphql`,
+  credentials: 'include',
   fetch,
   clientState: {
     defaults: defaultState,
   },
   request: operation => {
+    console.log('operation:', operation)
     const token = localStorage.getItem('token')
     if (token) {
       operation.setContext({
