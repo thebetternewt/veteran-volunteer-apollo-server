@@ -1,11 +1,12 @@
-import Need from './need';
-import ChildcareNeed from './needTypes/childcareNeed';
-import LawncareNeed from './needTypes/lawncareNeed';
-import TravelNeed from './needTypes/travelNeed';
-import RecipientProfile from './recipientProfile';
-import Request from './request';
-import User from './user';
-import VolunteerProfile from './volunteerProfile';
+import Message from './message'
+import Need from './need'
+import ChildcareNeed from './needTypes/childcareNeed'
+import LawncareNeed from './needTypes/lawncareNeed'
+import TravelNeed from './needTypes/travelNeed'
+import RecipientProfile from './recipientProfile'
+import Request from './request'
+import User from './user'
+import VolunteerProfile from './volunteerProfile'
 
 export {
   User,
@@ -15,5 +16,6 @@ export {
   TravelNeed,
   LawncareNeed,
   ChildcareNeed,
-  Request
-};
+  Request,
+  Message,
+}

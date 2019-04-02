@@ -52,7 +52,7 @@ export default {
   },
 
   Mutation: {
-    signup: async (parent, { email, password, ...args }) => {
+    signUp: async (parent, { email, password, ...args }) => {
       // Check for user with given email address.
       const user = await User.findOne({ email }).exec()
       if (user) {
@@ -74,49 +74,23 @@ export default {
 
       return newUser
     },
-    login: async (parent, { email, password }, { req }) => {
-      // const user = await User.findOne({
-      //   email: email.toLowerCase(),
-      // }).exec()
-
+    signIn: async (parent, { email, password }, { req }) => {
       const user = await attemptSignIn(email, password)
 
       if (!user) {
         throw new AuthenticationError('Invalid email or password')
       }
 
-      console.log(user)
-
+      // Set session variables from user.
       req.session.userId = user.id
       req.session.isAdmin = user.admin
 
-      console.log(req.session)
-
-      const { id, firstName, lastName, avatar = null } = user
-      // const fullName = `${firstName} ${lastName}`
-
-      // return jwt.sign(
-      //   { id, firstName, lastName, fullName, email, avatar },
-      //   process.env.JWT_SECRET,
-      //   // TODO: update to lower time limit before launch
-      //   { expiresIn: '1d' }
-      // )
       return user
     },
 
     signOut: async (parent, args, { req, res }) => signOut(req, res),
     updateUser: async (parent, args, { user }) => {
       const { id, admin, password, email, ...updatedProperties } = args
-
-      // verifyUser({ user, testUserId: id, current: true, admin: true })
-
-      // Only allow update of admin if current user is admin and
-      // only update admin if specified args
-      // if (user.admin && admin !== undefined) {
-      //   updatedProperties.admin = admin
-      // }
-
-      // console.log('verify user passed')
 
       if (email) {
         // Check for user with that email address.
@@ -127,13 +101,6 @@ export default {
 
         updatedProperties.email = email
       }
-
-      // NOTE: Password now hashed on model
-      // if (password) {
-      //   // Hash new password
-      //   const hashedPass = await bcrypt.hash(password, 10);
-      //   updatedProperties.password = hashedPass;
-      // }
 
       const updatedUser = await User.findOneAndUpdate(
         { _id: id },
@@ -148,8 +115,6 @@ export default {
       return updatedUser
     },
     deleteUser: async (parent, { id }) => {
-      // verifyUser({ user, testUserId: id, current: true, admin: true })
-
       const removedUser = await User.findOneAndRemove({ _id: id }).exec()
 
       if (!removedUser) {

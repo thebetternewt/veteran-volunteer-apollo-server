@@ -112,6 +112,36 @@ mutation {
   }
 }
 
+mutation CreateMessage {
+  createMessage(
+    recipient: "5c5c517368ee095576c51166"
+    associatedNeed: "5ca3921448979e215e8fb36c"
+    message: "Can I babysit for you?"
+  ) {
+    id
+    sender {
+      id
+      fullName
+    }
+    recipient {
+      id
+      fullName
+    }
+    associatedNeed {
+      id
+      title
+    }
+  }
+}
+
+mutation MarkMessageRead {
+  markMessageRead(messageId: "5ca3c4bf2c70693cb022f57d") {
+    id
+    message
+    read
+  }
+}
+
 mutation {
   createRecipientProfile(
     allowPhoneContact: true

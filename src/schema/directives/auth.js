@@ -10,6 +10,7 @@ class AuthDirective extends SchemaDirectiveVisitor {
       const [, , context] = args
 
       ensureSignedIn(context.req)
+      console.log('signed in...')
 
       return resolve.apply(this, args)
     }

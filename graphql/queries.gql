@@ -56,3 +56,43 @@ query Me {
     }
   }
 }
+
+mutation {
+  createRequest(
+    need: "5ca3921448979e215e8fb36c"
+    volunteer: "5c48cea7bfdf112e82c5b0df"
+  ) {
+    id
+    need {
+      id
+      title
+    }
+    volunteer {
+      id
+      fullName
+    }
+    recipient {
+      id
+      fullName
+    }
+  }
+}
+
+query Requests {
+  requests(userId: "5c48cea7bfdf112e82c5b0df") {
+    id
+    status
+    need {
+      id
+      title
+    }
+    volunteer {
+      id
+      fullName
+    }
+    recipient {
+      id
+      fullName
+    }
+  }
+}

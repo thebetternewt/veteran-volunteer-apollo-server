@@ -43,7 +43,7 @@ export default gql`
   }
 
   extend type Mutation {
-    signup(
+    signUp(
       firstName: String!
       middleName: String
       lastName: String!
@@ -53,7 +53,7 @@ export default gql`
       address: AddressInput!
       password: String!
     ): User @guest
-    login(email: String!, password: String!): User @guest
+    signIn(email: String!, password: String!): User @guest
     signOut: Boolean
     updateUser(
       id: ID!

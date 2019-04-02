@@ -1,10 +1,11 @@
-import need from "./need";
-import needTypes from "./needTypes";
-import recipientProfile from "./recipientProfile";
-import request from "./request";
-import root from "./root";
-import user from "./user";
-import volunteerProfile from "./volunteerProfile";
+import message from './message'
+import need from './need'
+import needTypes from './needTypes'
+import recipientProfile from './recipientProfile'
+import request from './request'
+import root from './root'
+import user from './user'
+import volunteerProfile from './volunteerProfile'
 
 export default [
   root,
@@ -13,5 +14,6 @@ export default [
   volunteerProfile,
   need,
   request,
-  ...needTypes
-];
+  message,
+  ...needTypes,
+]
