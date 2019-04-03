@@ -39,18 +39,18 @@ export const ME_QUERY = gql`
           lng
         }
       }
-      requestedServices {
+      requestedNeeds {
         id
         title
         date
-        serviceType
+        needType
       }
     }
   }
 `
-const SERVICES_QUERY = gql`
-  query ServicesQuery {
-    services {
+export const NEEDS_QUERY = gql`
+  query NeedsQuery {
+    needs {
       id
       title
       date
@@ -58,26 +58,29 @@ const SERVICES_QUERY = gql`
         lat
         lng
       }
-      serviceType
-      serviceDetails {
-        ... on LawncareService {
-          description
-          id
-          equipmentNeeded
+      needType
+      needDetails {
+        ... on ChildcareNeed {
+          age
         }
-        ... on TravelService {
-          id
-          fromName
-          fromLocation {
-            lat
-            lng
-          }
-          toName
-          toLocation {
-            lat
-            lng
-          }
-        }
+        # ... on LawncareService {
+        #   description
+        #   id
+        #   equipmentNeeded
+        # }
+        # ... on TravelService {
+        #   id
+        #   fromName
+        #   fromLocation {
+        #     lat
+        #     lng
+        #   }
+        #   toName
+        #   toLocation {
+        #     lat
+        #     lng
+        #   }
+        # }
       }
     }
     recipient {

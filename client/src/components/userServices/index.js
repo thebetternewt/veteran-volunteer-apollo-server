@@ -5,6 +5,7 @@ import React from 'react'
 import { Query } from 'react-apollo'
 import styled from 'styled-components'
 import { ME_QUERY } from '../../apollo/queries'
+import PrivateRoute from '../common/PrivateRoute'
 
 const { Meta } = Card
 
@@ -139,4 +140,4 @@ const UserServices = () => {
   )
 }
 
-export default UserServices
+export default <PrivateRoute>UserServices</PrivateRoute>

@@ -28,6 +28,16 @@ export const client = new ApolloClient({
       })
     }
   },
+  onError: error => {
+    if (error.graphQLErrors) {
+      console.log('ApolloClient graphQLErrors')
+      console.log(error.graphQLErrors)
+    }
+    if (error.networkError) {
+      console.log('ApolloClient networkError')
+      console.log(error.networkError)
+    }
+  },
 })
 
 export const setAuthenticatedUser = token => {
