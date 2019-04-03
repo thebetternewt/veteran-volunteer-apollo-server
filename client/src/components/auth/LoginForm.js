@@ -1,5 +1,4 @@
 import { Link, Redirect } from '@reach/router'
-import { navigate } from '@reach/router/lib/history'
 import { Button, Form, Icon, Input } from 'antd'
 import jwtDecode from 'jwt-decode'
 import React, { useContext } from 'react'
@@ -12,19 +11,36 @@ import { setUserToken } from '../../util/tokens'
 
 const NormalLoginForm = props => {
   const authContext = useContext(AuthContext)
+  const { form, navigate } = props
+
+  if (authContext.user) {
+    navigate('/dashboard')
+  }
 
   const handleSubmit = (e, signIn) => {
     e.preventDefault()
 
-    const { validateFields } = props.form
+    const { validateFields } = form
 
     validateFields(async (err, values) => {
       if (!err) {
         try {
-          await signIn({ variables: values })
+          const result = await signIn({ variables: values })
+          console.log('result:', result)
+
+          const token = result.data.signIn
+
+          setUserToken(token)
+
+          console.log('authCtx1:', authContext)
+          const decodedToken = jwtDecode(token)
+          console.log('decodedToken:', decodedToken)
+          !authContext.user && authContext.setAuthenticatedUser(decodedToken)
+          console.log('authCtx2:', authContext)
+          navigate('/dashboard')
 
           // setAuthenticatedUser(token)
-          // navigate('/app')
+          // ('/app')
         } catch (err) {
           console.error(err)
         }
@@ -45,80 +61,63 @@ const NormalLoginForm = props => {
     <>
       <h2>Login</h2>
       <Mutation mutation={SIGN_IN}>
-        {(login, { data, loading, error }) => {
-          if (data && data.signIn) {
-            console.log('data:', data)
-
-            const token = data.signIn
-
-            setUserToken(token)
-
-            console.log('authCtx1:', authContext)
-            const decodedToken = jwtDecode(token)
-            console.log('decodedToken:', decodedToken)
-            !authContext.user && authContext.setAuthenticatedUser(decodedToken)
-            console.log('authCtx2:', authContext)
-            navigate('/needs')
-          }
-
-          return (
-            <Form onSubmit={e => handleSubmit(e, login)}>
-              <Form.Item>{error && graphQlErrors(error)}</Form.Item>
-              <Form.Item>
-                {getFieldDecorator('email', {
-                  rules: [
-                    {
-                      required: true,
-                      message: 'Please enter your email address.',
-                    },
-                  ],
-                })(
-                  <Input
-                    prefix={
-                      <Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
-                    }
-                    placeholder="Email"
-                  />
-                )}
-              </Form.Item>
-              <Form.Item>
-                {getFieldDecorator('password', {
-                  rules: [
-                    { required: true, message: 'Please enter your password.' },
-                  ],
-                })(
-                  <Input.Password
-                    prefix={
-                      <Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />
-                    }
-                    type="password"
-                    placeholder="Password"
-                  />
-                )}
-              </Form.Item>
-              <Form.Item>
-                {/* {getFieldDecorator('remember', {
+        {(login, { data, loading, error }) => (
+          <Form onSubmit={e => handleSubmit(e, login)}>
+            <Form.Item>{error && graphQlErrors(error)}</Form.Item>
+            <Form.Item>
+              {getFieldDecorator('email', {
+                rules: [
+                  {
+                    required: true,
+                    message: 'Please enter your email address.',
+                  },
+                ],
+              })(
+                <Input
+                  prefix={
+                    <Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
+                  }
+                  placeholder="Email"
+                />
+              )}
+            </Form.Item>
+            <Form.Item>
+              {getFieldDecorator('password', {
+                rules: [
+                  { required: true, message: 'Please enter your password.' },
+                ],
+              })(
+                <Input.Password
+                  prefix={
+                    <Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />
+                  }
+                  type="password"
+                  placeholder="Password"
+                />
+              )}
+            </Form.Item>
+            <Form.Item>
+              {/* {getFieldDecorator('remember', {
                 valuePropName: 'checked',
                 initialValue: true,
               })(<Checkbox>Remember me</Checkbox>)}
               <a className="login-form-forgot" href="">
                 Forgot password
               </a> */}
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  className="login-form-button"
-                  loading={loading}
-                >
-                  Log in
-                </Button>
-                <div>
-                  Or <Link to="/signup">Create an account</Link>
-                </div>
-              </Form.Item>
-            </Form>
-          )
-        }}
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="login-form-button"
+                loading={loading}
+              >
+                Log in
+              </Button>
+              <div>
+                Or <Link to="/signup">Create an account</Link>
+              </div>
+            </Form.Item>
+          </Form>
+        )}
       </Mutation>
     </>
   )

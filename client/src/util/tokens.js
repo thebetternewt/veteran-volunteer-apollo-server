@@ -18,6 +18,8 @@ const checkToken = () => {
 export const setUserToken = token =>
   localStorage.setItem(config.userTokenName, token)
 
+export const getUserToken = () => localStorage.getItem(config.userTokenName)
+
 export const clearUserToken = () =>
   localStorage.removeItem(config.userTokenName)
 

@@ -75,7 +75,7 @@ const CreateService = ({ form }) => {
             variables: { service: serviceInput },
             refetchQueries: ['Me'],
           })
-          navigate('/app')
+          navigate('/dashboard')
         } catch (err) {
           console.error(err)
         }

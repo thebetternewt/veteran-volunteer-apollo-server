@@ -8,8 +8,6 @@ import AuthProvider from './contexts/auth.context'
 import './index.css'
 import * as serviceWorker from './serviceWorker'
 
-// checkToken()
-
 const app = (
   <AuthProvider>
     <ApolloProvider client={client}>

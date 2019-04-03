@@ -1,8 +1,8 @@
 import { Link } from '@reach/router'
 import { Icon, Layout, Menu } from 'antd'
-import React from 'react'
+import React, { useContext } from 'react'
 import styled from 'styled-components'
-import { getAuthenticatedUser, logOutUser } from '../../../apollo/client'
+import { AuthContext } from '../../../contexts/auth.context'
 
 const { Sider } = Layout
 
@@ -20,15 +20,18 @@ const FixedSider = styled(Sider)`
 `
 
 const Sidebar = ({ collapsed = false }) => {
+  const authContext = useContext(AuthContext)
+  const { user } = authContext
+
   return (
     <FixedSider trigger={null} collapsedWidth="0" collapsed={collapsed}>
       <div className="logo" style={logoStyles} />
-      {getAuthenticatedUser() && (
+      {user && (
         <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
           <Menu.Item key="1">
-            <Link to="/needs">
+            <Link to="/dashboard">
               <Icon type="thunderbolt" />
-              <span className="nav-text">Services</span>
+              <span className="nav-text">Dashboard</span>
             </Link>
           </Menu.Item>
           <Menu.Item key="2">
@@ -44,15 +47,11 @@ const Sidebar = ({ collapsed = false }) => {
             </Link>
           </Menu.Item>
 
-          <Menu.Item
-            key="4"
-            onClick={() => {
-              logOutUser()
-              window.location.href = '/'
-            }}
-          >
-            <Icon type="logout" />
-            <span className="nav-text">Log Out</span>
+          <Menu.Item key="4">
+            <Link to="/signout">
+              <Icon type="logout" />
+              <span className="nav-text">Sign Out</span>
+            </Link>
           </Menu.Item>
         </Menu>
       )}

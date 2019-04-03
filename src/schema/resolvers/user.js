@@ -36,12 +36,6 @@ export default {
       return User.findById(userId)
     },
     user: async (parent, { id }, { req }) => {
-      // verifyUser({
-      //   user,
-      //   testUserId: id,
-      //   current: true,
-      //   admin: true,
-      // });
       return User.findById(id)
     },
     users: async (parent, { limit }, { req }) => {
@@ -90,7 +84,8 @@ export default {
         {
           id: user.id,
           firstName: user.firstName,
-          name: user.fullName,
+          name: `${user.firstName} ${user.lastName}`,
+          avatar: user.avatar,
           isAdmin: user.admin,
         },
         process.env.JWT_SECRET

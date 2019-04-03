@@ -1,8 +1,8 @@
 import { Link } from '@reach/router'
 import { Avatar, Button, Icon, Layout } from 'antd'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import styled from 'styled-components'
-import { getAuthenticatedUser } from '../../../apollo/client'
+import { AuthContext } from '../../../contexts/auth.context'
 import ScrollToTop from '../../common/ScrollToTop'
 import Sidebar from './Sidebar'
 
@@ -42,10 +42,13 @@ const initSidebarCollapsed = () => {
 }
 
 const Dashboard = ({ children = defaultContent }) => {
+  const authContext = useContext(AuthContext)
   const [sidebarCollapsed, setSidebarCollapsed] = useState(
     initSidebarCollapsed()
   )
-  const user = getAuthenticatedUser()
+
+  console.log('dashboard authCtx:', authContext)
+  const { user } = authContext
 
   // TODO: set inital sidebarCollapse state based on window size
 
