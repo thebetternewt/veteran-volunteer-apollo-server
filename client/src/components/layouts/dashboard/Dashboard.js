@@ -82,11 +82,11 @@ const Dashboard = ({ children = defaultContent }) => {
               </div>
             ) : (
               <div>
-                <Link to="/login">
-                  <Button>Login</Button>
+                <Link to="/signin">
+                  <Button>Sign In</Button>
                 </Link>
                 <Link to="/signup">
-                  <Button>SignUp</Button>
+                  <Button>Sign Up</Button>
                 </Link>
               </div>
             )}

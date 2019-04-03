@@ -26,7 +26,7 @@ const Sidebar = ({ collapsed = false }) => {
       {getAuthenticatedUser() && (
         <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
           <Menu.Item key="1">
-            <Link to="/services">
+            <Link to="/needs">
               <Icon type="thunderbolt" />
               <span className="nav-text">Services</span>
             </Link>

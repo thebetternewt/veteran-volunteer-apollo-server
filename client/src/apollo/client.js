@@ -1,6 +1,8 @@
+import { navigate } from '@reach/router'
 import ApolloClient from 'apollo-boost'
 import fetch from 'isomorphic-fetch'
 import jwtDecode from 'jwt-decode'
+import graphQlErrors from '../util/graphqlErrors'
 import { AUTH_QUERY } from './queries'
 
 const defaultState = {
@@ -28,14 +30,23 @@ export const client = new ApolloClient({
       })
     }
   },
-  onError: error => {
-    if (error.graphQLErrors) {
+  onError: ({ graphQLErrors, networkError, response }) => {
+    if (graphQlErrors) {
+      const notAuthenticated = graphQLErrors.find(
+        err => err.message === 'You must be signed in.'
+      )
+      if (notAuthenticated) {
+        console.log('NOT AUTHENTICATED!')
+        navigate('/login')
+      }
+
       console.log('ApolloClient graphQLErrors')
-      console.log(error.graphQLErrors)
+      console.log(graphQLErrors)
     }
-    if (error.networkError) {
+
+    if (networkError) {
       console.log('ApolloClient networkError')
-      console.log(error.networkError)
+      console.log(networkError)
     }
   },
 })

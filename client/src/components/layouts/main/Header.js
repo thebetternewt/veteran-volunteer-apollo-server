@@ -1,7 +1,7 @@
-import React from 'react'
+import { Button } from 'antd'
 import { Link } from 'gatsby'
 import PropTypes from 'prop-types'
-import { Button } from 'antd'
+import React from 'react'
 
 const Header = ({ siteTitle }) => (
   <div
@@ -28,8 +28,8 @@ const Header = ({ siteTitle }) => (
           {siteTitle}
         </Link>
       </h1>
-      <Link to="/login">
-        <Button>Login</Button>
+      <Link to="/signin">
+        <Button>Sign In</Button>
       </Link>
       <Link to="/signup">
         <Button>Sign Up</Button>

@@ -1,11 +1,14 @@
 import { Link, Redirect } from '@reach/router'
+import { navigate } from '@reach/router/lib/history'
 import { Button, Form, Icon, Input } from 'antd'
+import jwtDecode from 'jwt-decode'
 import React, { useContext } from 'react'
 import { Mutation } from 'react-apollo'
 import { getAuthenticatedUser } from '../../apollo/client'
 import { SIGN_IN } from '../../apollo/mutations'
 import { AuthContext } from '../../contexts/auth.context'
 import graphQlErrors from '../../util/graphqlErrors'
+import { setUserToken } from '../../util/tokens'
 
 const NormalLoginForm = props => {
   const authContext = useContext(AuthContext)
@@ -18,9 +21,7 @@ const NormalLoginForm = props => {
     validateFields(async (err, values) => {
       if (!err) {
         try {
-          const result = await signIn({ variables: values })
-
-          console.log(result)
+          await signIn({ variables: values })
 
           // setAuthenticatedUser(token)
           // navigate('/app')
@@ -45,7 +46,20 @@ const NormalLoginForm = props => {
       <h2>Login</h2>
       <Mutation mutation={SIGN_IN}>
         {(login, { data, loading, error }) => {
-          if (data) console.log('data:', data)
+          if (data && data.signIn) {
+            console.log('data:', data)
+
+            const token = data.signIn
+
+            setUserToken(token)
+
+            console.log('authCtx1:', authContext)
+            const decodedToken = jwtDecode(token)
+            console.log('decodedToken:', decodedToken)
+            !authContext.user && authContext.setAuthenticatedUser(decodedToken)
+            console.log('authCtx2:', authContext)
+            navigate('/needs')
+          }
 
           return (
             <Form onSubmit={e => handleSubmit(e, login)}>

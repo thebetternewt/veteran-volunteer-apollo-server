@@ -4,17 +4,18 @@ import { ApolloProvider } from 'react-apollo'
 import ReactDOM from 'react-dom'
 import { client } from './apollo/client'
 import App from './App'
+import AuthProvider from './contexts/auth.context'
 import './index.css'
 import * as serviceWorker from './serviceWorker'
-import checkCookie from './util/checkCookie'
 
 // checkToken()
-checkCookie()
 
 const app = (
-  <ApolloProvider client={client}>
-    <App />
-  </ApolloProvider>
+  <AuthProvider>
+    <ApolloProvider client={client}>
+      <App />
+    </ApolloProvider>
+  </AuthProvider>
 )
 
 ReactDOM.render(app, document.getElementById('root'))
