@@ -1,4 +1,4 @@
-import { gql } from "apollo-server-express";
+import { gql } from 'apollo-server-express'
 
 export default gql`
   type Availability {
@@ -41,7 +41,7 @@ export default gql`
       serviceRadius: Int!
     ): VolunteerProfile
     updateVolunteerProfile(
-      bio: String!
+      bio: String
       availability: AvailabilityInput
       servicesProvided: [NeedType!]
       skills: [String!]
@@ -49,4 +49,4 @@ export default gql`
       serviceRadius: Int
     ): VolunteerProfile
   }
-`;
+`

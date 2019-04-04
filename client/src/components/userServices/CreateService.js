@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { Mutation } from 'react-apollo'
 import { CREATE_REQUEST } from '../../apollo/mutations'
 import graphQlErrors from '../../util/graphqlErrors'
+import PrivateRoute from '../common/PrivateRoute'
 import StepOne from './forms/StepOne'
 import StepThree from './forms/StepThree'
 import StepTwo from './forms/StepTwo'
@@ -186,4 +187,8 @@ const CreateService = ({ form }) => {
   )
 }
 
-export default Form.create({ name: 'createService' })(CreateService)
+export default () => (
+  <PrivateRoute
+    component={Form.create({ name: 'createService' })(CreateService)}
+  />
+)

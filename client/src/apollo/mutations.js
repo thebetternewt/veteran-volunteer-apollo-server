@@ -48,7 +48,9 @@ export const SIGNUP = gql`
 `
 export const SIGN_IN = gql`
   mutation SignIn($email: String!, $password: String!) {
-    signIn(email: $email, password: $password)
+    signIn(email: $email, password: $password) {
+      id
+    }
   }
 `
 
@@ -97,6 +99,84 @@ export const UPDATE_RECIPIENT_PROFILE = gql`
         lat
         lng
       }
+    }
+  }
+`
+
+// const AvailabilityInput = gql`
+// input AvailabilityInput {
+//   weekdays: Boolean
+//   weekends: Boolean
+//   details: String
+// }
+// `
+
+export const CREATE_VOLUNTEER_PROFILE = gql`
+  mutation CreateVolunteerProfile(
+    $bio: String!
+    $availability: AvailabilityInput!
+    $servicesProvided: [NeedType!]!
+    $skills: [String!]
+    $serviceLocation: LocationInput!
+    $serviceRadius: Int!
+  ) {
+    createVounteerProfile(
+      bio: $bio
+      availability: $availability
+      servicesProvided: $servicesProvided
+      skills: $skills
+      serviceLocation: $serviceLocation
+      serviceRadius: $serviceRadius
+    ) {
+      bio
+      availability {
+        weekdays
+        weekends
+        details
+      }
+      servicesProvided
+      skills
+      serviceLocation {
+        address
+        lat
+        lng
+      }
+      serviceRadius
+    }
+  }
+`
+
+export const UPDATE_VOLUNTEER_PROFILE = gql`
+  mutation UpdateVolunteerProfile(
+    $bio: String
+    $availability: AvailabilityInput
+    $servicesProvided: [NeedType!]
+    $skills: [String!]
+    $serviceLocation: LocationInput
+    $serviceRadius: Int
+  ) {
+    createVounteerProfile(
+      bio: $bio
+      availability: $availability
+      servicesProvided: $servicesProvided
+      skills: $skills
+      serviceLocation: $serviceLocation
+      serviceRadius: $serviceRadius
+    ) {
+      bio
+      availability {
+        weekdays
+        weekends
+        details
+      }
+      servicesProvided
+      skills
+      serviceLocation {
+        address
+        lat
+        lng
+      }
+      serviceRadius
     }
   }
 `

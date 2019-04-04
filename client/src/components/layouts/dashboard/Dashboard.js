@@ -1,7 +1,9 @@
 import { Link } from '@reach/router'
-import { Avatar, Button, Icon, Layout } from 'antd'
+import { Avatar, Badge, Button, Icon, Layout } from 'antd'
 import React, { useContext, useState } from 'react'
+import { Query } from 'react-apollo'
 import styled from 'styled-components'
+import { ME_QUERY } from '../../../apollo/queries'
 import { AuthContext } from '../../../contexts/auth.context'
 import ScrollToTop from '../../common/ScrollToTop'
 import Sidebar from './Sidebar'
@@ -70,29 +72,53 @@ const Dashboard = ({ children = defaultContent }) => {
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
               style={{ fontSize: 20 }}
             />
-            {user ? (
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                }}
-              >
-                <Icon
-                  type="setting"
-                  style={{ fontSize: 20, marginRight: 15 }}
-                />
-                <Avatar size={40} icon="user" src={user && user.avatar} />
-              </div>
-            ) : (
-              <div>
-                <Link to="/signin">
-                  <Button>Sign In</Button>
-                </Link>
-                <Link to="/signup">
-                  <Button>Sign Up</Button>
-                </Link>
-              </div>
-            )}
+            <Query query={ME_QUERY}>
+              {({ data }) => {
+                let user
+                if (data && data.me) {
+                  user = data.me
+                }
+
+                return (
+                  <>
+                    {user ? (
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <Badge count={99} offset={[-12, 3]} dot>
+                          <Icon
+                            type="bell"
+                            style={{ fontSize: 20, marginRight: 15 }}
+                          />
+                        </Badge>
+
+                        <Icon
+                          type="setting"
+                          style={{ fontSize: 20, marginRight: 15 }}
+                        />
+                        <Avatar
+                          size={40}
+                          icon="user"
+                          src={user && user.avatar}
+                        />
+                      </div>
+                    ) : (
+                      <div>
+                        <Link to="/signin">
+                          <Button>Sign In</Button>
+                        </Link>
+                        <Link to="/signup">
+                          <Button>Sign Up</Button>
+                        </Link>
+                      </div>
+                    )}
+                  </>
+                )
+              }}
+            </Query>
           </StickyHeader>
           <Content
             style={{

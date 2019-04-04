@@ -1,21 +1,19 @@
-import { Link, Redirect } from '@reach/router'
+import { Link } from '@reach/router'
 import { Button, Form, Icon, Input } from 'antd'
-import jwtDecode from 'jwt-decode'
 import React, { useContext } from 'react'
-import { Mutation } from 'react-apollo'
-import { getAuthenticatedUser } from '../../apollo/client'
+import { Mutation, Query } from 'react-apollo'
 import { SIGN_IN } from '../../apollo/mutations'
+import { ME_QUERY } from '../../apollo/queries'
 import { AuthContext } from '../../contexts/auth.context'
 import graphQlErrors from '../../util/graphqlErrors'
-import { setUserToken } from '../../util/tokens'
 
 const NormalLoginForm = props => {
   const authContext = useContext(AuthContext)
   const { form, navigate } = props
 
-  if (authContext.user) {
-    navigate('/dashboard')
-  }
+  // if (authContext.user) {
+  //   navigate('/dashboard')
+  // }
 
   const handleSubmit = (e, signIn) => {
     e.preventDefault()
@@ -25,22 +23,8 @@ const NormalLoginForm = props => {
     validateFields(async (err, values) => {
       if (!err) {
         try {
-          const result = await signIn({ variables: values })
-          console.log('result:', result)
-
-          const token = result.data.signIn
-
-          setUserToken(token)
-
-          console.log('authCtx1:', authContext)
-          const decodedToken = jwtDecode(token)
-          console.log('decodedToken:', decodedToken)
-          !authContext.user && authContext.setAuthenticatedUser(decodedToken)
-          console.log('authCtx2:', authContext)
+          await signIn({ variables: values, refetchQueries: () => ['Me'] })
           navigate('/dashboard')
-
-          // setAuthenticatedUser(token)
-          // ('/app')
         } catch (err) {
           console.error(err)
         }
@@ -48,18 +32,20 @@ const NormalLoginForm = props => {
     })
   }
 
-  // Redirect to app dashboard if logged in
-  const user = getAuthenticatedUser()
-  console.log('user:', user)
-  if (user) {
-    return <Redirect from="/login" to="/services" noThrow />
-  }
-
   const { getFieldDecorator } = props.form
 
   return (
     <>
       <h2>Login</h2>
+      <Query query={ME_QUERY}>
+        {({ data }) => {
+          if (data && data.me) {
+            navigate('/dashboard')
+          }
+
+          return null
+        }}
+      </Query>
       <Mutation mutation={SIGN_IN}>
         {(login, { data, loading, error }) => (
           <Form onSubmit={e => handleSubmit(e, login)}>

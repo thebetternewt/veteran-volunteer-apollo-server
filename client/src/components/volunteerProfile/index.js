@@ -3,10 +3,10 @@ import React, { useState } from 'react'
 import { Query } from 'react-apollo'
 import { ME_QUERY } from '../../apollo/queries'
 import PrivateRoute from '../common/PrivateRoute'
-import RecipientProfile from './RecipientProfile'
-import RecipientProfileForm from './RecipientProfileForm'
+import VolunteerProfile from './VolunteerProfile'
+import VolunteerProfileForm from './VolunteerProfileForm'
 
-const RecipientProfileIndex = () => {
+const VolunteerProfileIndex = () => {
   const [showForm, setShowForm] = useState(false)
 
   const toggleShowForm = () => setShowForm(!showForm)
@@ -20,34 +20,34 @@ const RecipientProfileIndex = () => {
 
         if (data && data.me) {
           const { me } = data
-          const { recipientProfile } = me
+          const { volunteerProfile } = me
 
-          if (recipientProfile) {
-            recipientProfile.name = me.fullName
-            recipientProfile.avatar = me.avatar
+          if (volunteerProfile) {
+            volunteerProfile.name = me.fullName
+            volunteerProfile.avatar = me.avatar
 
             if (showForm) {
               return (
-                <RecipientProfileForm
-                  profile={recipientProfile}
+                <VolunteerProfileForm
+                  profile={volunteerProfile}
                   toggleForm={toggleShowForm}
                 />
               )
             }
 
             return (
-              <RecipientProfile
-                profile={recipientProfile}
+              <VolunteerProfile
+                profile={volunteerProfile}
                 toggleForm={toggleShowForm}
               />
             )
           }
         }
 
-        return <RecipientProfileForm />
+        return <VolunteerProfileForm />
       }}
     </Query>
   )
 }
 
-export default () => <PrivateRoute component={RecipientProfileIndex} />
+export default () => <PrivateRoute component={VolunteerProfileIndex} />

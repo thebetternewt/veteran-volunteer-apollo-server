@@ -91,7 +91,7 @@ export default {
         process.env.JWT_SECRET
       )
 
-      return token
+      return user
     },
 
     signOut: async (parent, args, { req, res }) => signOut(req, res),

@@ -53,7 +53,7 @@ export default gql`
       address: AddressInput!
       password: String!
     ): User @guest
-    signIn(email: String!, password: String!): String @guest
+    signIn(email: String!, password: String!): User @guest
     signOut: Boolean
     updateUser(
       id: ID!

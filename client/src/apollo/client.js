@@ -30,18 +30,21 @@ export const client = new ApolloClient({
     }
   },
   onError: ({ graphQLErrors, networkError, response }) => {
-    if (graphQlErrors) {
-      const notAuthenticated = graphQLErrors.find(err => {
-        return err.message === 'You must be signed in.'
-      })
-
-      if (notAuthenticated) {
-        console.log('NOT AUTHENTICATED!')
-        window.location.replace('/')
-      }
-
+    let notAuthenticated
+    if (graphQlErrors !== undefined) {
       console.log('ApolloClient graphQLErrors')
       console.log(graphQLErrors)
+
+      notAuthenticated = graphQLErrors.find(err => {
+        return err.message === 'You must be signed in.'
+      })
+    }
+    if (notAuthenticated) {
+      console.log('NOT AUTHENTICATED!')
+      console.log('location:', window.location.pathname)
+      console.log(window.location.pathname !== '/signin')
+      window.location.pathname !== '/signin' &&
+        window.location.replace('/signin')
     }
 
     if (networkError) {
