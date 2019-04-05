@@ -1,4 +1,4 @@
-import { Avatar, Button, Divider, Icon } from 'antd'
+import { Avatar, Button, Divider, Icon, Tag } from 'antd'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import styled from 'styled-components'
@@ -7,13 +7,21 @@ import Map from '../common/map/Map'
 const Identity = styled.div`
   display: flex;
 
-  h2 {
+  div {
     margin-left: 1rem;
   }
 
   @media screen and (max-width: 800px) {
     flex-direction: column;
+
+    div {
+      margin-left: 0;
+    }
   }
+`
+
+const ServiceTagList = styled.ul`
+  padding: 0;
 `
 
 const ContactSettings = styled.ul`
@@ -43,46 +51,77 @@ const VolunteerProfile = props => {
           href="https://js.arcgis.com/4.10/esri/css/main.css"
         />
       </Helmet>
-      <h3 style={{ color: '#777', marginBottom: '2rem' }}>Recipient Profile</h3>
+      <h3
+        style={{
+          color: '#777',
+          marginBottom: '2rem',
+        }}
+      >
+        Volunteer Profile
+      </h3>
       <Identity>
         <Avatar
           size={64}
           icon="user"
           src={profile.avatar}
-          style={{ marginBottom: '1rem' }}
+          style={{
+            marginBottom: '1rem',
+          }}
         />
-        <h2>{profile.name}</h2>
+        <div>
+          <h2> {profile.name} </h2>
+          <p>Services Provided</p>
+          <ServiceTagList>
+            {profile.servicesProvided.map(service => (
+              <Tag key={service} color="geekblue">
+                {service}
+              </Tag>
+            ))}
+          </ServiceTagList>
+        </div>
       </Identity>
       <Divider />
-      <h3>Contact Settings</h3>
+      <h3> Availability </h3>
       <ContactSettings>
-        <li style={{ display: 'flex', alignItems: 'center' }}>
-          {profile.allowPhoneContact ? (
+        <li
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          {profile.availability.weekdays ? (
             <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" />
           ) : (
             <Icon type="close-circle" theme="twoTone" twoToneColor="#eb2f96" />
           )}
-          <span>Allow phone contact</span>
+          <span> Weekdays </span>
         </li>
         <li>
-          {profile.allowEmailContact ? (
+          {profile.availability.weekends ? (
             <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" />
           ) : (
             <Icon type="close-circle" theme="twoTone" twoToneColor="#eb2f96" />
           )}
-          <span>Allow email contact</span>
+          <span> Weekends </span>
         </li>
+
+        {profile.availability.details && (
+          <li>Details: {profile.availability.details}</li>
+        )}
       </ContactSettings>
       <p>
-        <strong>Location:</strong>
-        <br />
-        latitude: {profile.location.lat}
-        <br />
-        longitude: {profile.location.lng}
+        <strong> Service Location: </strong> <br />
+        latitude: {profile.serviceLocation.lat} <br />
+        longitude: {profile.serviceLocation.lng}
       </p>
-      <Map location={profile.location} />
-
-      <Button type="primary" onClick={toggleForm} style={{ marginTop: '2rem' }}>
+      <Map location={profile.serviceLocation} />
+      <Button
+        type="primary"
+        onClick={toggleForm}
+        style={{
+          marginTop: '2rem',
+        }}
+      >
         Edit Volunteer Profile
       </Button>
     </div>

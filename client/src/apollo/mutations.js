@@ -155,7 +155,7 @@ export const UPDATE_VOLUNTEER_PROFILE = gql`
     $serviceLocation: LocationInput
     $serviceRadius: Int
   ) {
-    createVounteerProfile(
+    updateVolunteerProfile(
       bio: $bio
       availability: $availability
       servicesProvided: $servicesProvided

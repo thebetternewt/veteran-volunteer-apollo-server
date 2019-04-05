@@ -141,7 +141,7 @@ const VolunteerProfileForm = props => {
            * point, the toggleForm function no longer exists and throws an
            * error in the console. There may be a better way to handle this.
            */
-          // toggleForm && toggleForm()
+          toggleForm && toggleForm()
         } catch (err) {
           console.error(err)
         }
@@ -153,6 +153,35 @@ const VolunteerProfileForm = props => {
   // const { profile, toggleForm, form } = this.props
   const { getFieldDecorator, getFieldsError } = form
 
+  const initAvailability = () => {
+    let availability = []
+    if (profile) {
+      if (profile.availability.weekdays) {
+        availability.push('Weekdays')
+      }
+      if (profile.availability.weekends) {
+        availability.push('Weekends')
+      }
+    }
+    return availability
+  }
+
+  const initServicesProvided = () => {
+    return needTypes
+      .filter(type => profile && profile.servicesProvided.includes(type.option))
+      .map(type => type.name)
+  }
+
+  const initServiceRadius = () => profile && profile.serviceRadius
+
+  const initSkills = () => {
+    let skills = ''
+    if (profile) {
+      skills = profile.skills.join(', ')
+    }
+    return skills
+  }
+
   console.log(toggleForm)
 
   const profileForm = ({ error, loading, submit }) => (
@@ -161,6 +190,7 @@ const VolunteerProfileForm = props => {
 
       <Form.Item label="Bio">
         {getFieldDecorator('bio', {
+          initialValue: profile && profile.bio,
           rules: [
             {
               required: true,
@@ -177,6 +207,7 @@ const VolunteerProfileForm = props => {
         <hr />
 
         {getFieldDecorator('availability', {
+          initialValue: initAvailability(),
           rules: [
             {
               required: true,
@@ -186,18 +217,21 @@ const VolunteerProfileForm = props => {
         })(
           <CheckboxGroup
             options={availabilityOptions.map(opt => opt.name)}
-            onChange={handleChecklistChange}
+            // onChange={handleChecklistChange}
           />
         )}
       </Form.Item>
       <Form.Item label="Details">
-        {getFieldDecorator('availabilityDetails')(<Input />)}
+        {getFieldDecorator('availabilityDetails', {
+          initialValue: profile && profile.availability.details,
+        })(<Input />)}
       </Form.Item>
 
       <Form.Item label="What types of needs can you provide?">
         <hr />
 
         {getFieldDecorator('servicesProvided', {
+          initialValue: initServicesProvided(),
           rules: [
             {
               required: true,
@@ -216,7 +250,7 @@ const VolunteerProfileForm = props => {
           In regard to these needs, what types of skills do you posess? (Enter
           values separated by commas, e.g. "Plumbing, Electrical".
         </p>
-        {getFieldDecorator('skills')(<Input />)}
+        {getFieldDecorator('skills', { initialValue: initSkills() })(<Input />)}
       </Form.Item>
 
       {!profile && (
@@ -229,7 +263,9 @@ const VolunteerProfileForm = props => {
       )}
 
       <Form.Item label="Service Radius (miles)">
-        {getFieldDecorator('serviceRadius')(
+        {getFieldDecorator('serviceRadius', {
+          initialValue: initServiceRadius(),
+        })(
           <InputNumber
             min={1}
             // value={serviceRadius}

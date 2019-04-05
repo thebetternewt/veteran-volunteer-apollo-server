@@ -5,7 +5,7 @@ export default gql`
 
   enum NeedType {
     # TRAVEL
-    # LAWNCARE
+    LAWNCARE
     CHILDCARE
     # HOME_MAINTENANCE
   }

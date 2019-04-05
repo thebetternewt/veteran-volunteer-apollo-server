@@ -1,6 +1,8 @@
-import { gql } from 'apollo-boost'
+import {
+  gql
+} from 'apollo-boost';
 
-export const AUTH_QUERY = gql`
+export const AUTH_QUERY = gql `
   query AuthQuery {
     user @client {
       firstName
@@ -12,19 +14,19 @@ export const AUTH_QUERY = gql`
   }
 `
 
-export const TOKEN_QUERY = gql`
+export const TOKEN_QUERY = gql `
   query TokenQuery {
     token @client
   }
 `
 
-export const REDIRECT_QUERY = gql`
+export const REDIRECT_QUERY = gql `
   query RedirectQuery {
     redirectPath @client
   }
 `
 
-export const ME_QUERY = gql`
+export const ME_QUERY = gql `
   query Me {
     me {
       id
@@ -39,6 +41,24 @@ export const ME_QUERY = gql`
           lng
         }
       }
+      volunteerProfile {
+        id
+        bio
+        availability {
+          weekends
+          weekdays
+          details
+        }
+        servicesProvided
+        skills
+        serviceLocation {
+          address
+          lat
+          lng
+
+        }
+        serviceRadius
+      }
       requestedNeeds {
         id
         title
@@ -48,7 +68,7 @@ export const ME_QUERY = gql`
     }
   }
 `
-export const NEEDS_QUERY = gql`
+export const NEEDS_QUERY = gql `
   query NeedsQuery {
     needs {
       id

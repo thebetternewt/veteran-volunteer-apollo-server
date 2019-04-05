@@ -43,11 +43,12 @@ export default {
     updateVolunteerProfile: async (
       parent,
       { serviceLocation, ...args },
-      { user }
+      { req }
     ) => {
+      const { userId } = req.session
       console.log('updatedVolProfile args:', serviceLocation, args)
       // Search for volunteer profile for user
-      const profile = await VolunteerProfile.findOne({ user })
+      const profile = await VolunteerProfile.findOne({ user: userId })
 
       // Throw error if profile doesn't exist
       if (!profile) {
