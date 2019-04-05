@@ -1,20 +1,20 @@
-export const needTypes = {
-  travel: {
+export const needTypes = [
+  {
     option: 'TRAVEL',
     name: 'Travel',
     icon: 'car',
   },
-  childcare: {
+  {
     option: 'CHILDCARE',
     name: 'Childcare',
     icon: 'smile',
   },
-  lawncare: {
+  {
     option: 'LAWNCARE',
     name: 'Lawncare',
     icon: 'home',
   },
-}
+]
 
 export const availabilityOptions = [
   {

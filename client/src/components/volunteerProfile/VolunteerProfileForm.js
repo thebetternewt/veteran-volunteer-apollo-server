@@ -1,13 +1,12 @@
-import { Button, Checkbox, Form, Input } from 'antd'
+import { Button, Checkbox, Form, Input, InputNumber } from 'antd'
 import React, { useState } from 'react'
 import { Mutation } from 'react-apollo'
 import {
   CREATE_VOLUNTEER_PROFILE,
   UPDATE_VOLUNTEER_PROFILE,
 } from '../../apollo/mutations'
-import { availabilityOptions } from '../../constants'
+import { availabilityOptions, needTypes } from '../../constants'
 import graphQlErrors from '../../util/graphqlErrors'
-import { hasErrors } from '../common/forms/helpers'
 import PlaceSearchField from '../common/forms/PlaceSearchField'
 
 const ARCGIS_SUGGEST_BASE_URL =
@@ -19,17 +18,17 @@ const CheckboxGroup = Checkbox.Group
 
 const contactOptions = ['Phone', 'Email']
 
-// function hasErrors(fieldsErrors) {
-//   return Object.keys(fieldsErrors).some(field => fieldsErrors[field])
-// }
+function hasErrors(fieldsErrors) {
+  return Object.keys(fieldsErrors).some(field => fieldsErrors[field])
+}
 
 const VolunteerProfileForm = props => {
   const [confirmDirty, setConfirmDirty] = useState(false)
   const [availability, setAvailability] = useState([])
   const [availabilityDetail, setAvailabilityDetail] = useState('')
-  const [location, setLocation] = useState({ lat: null, lng: null })
   const [searchResults, setSearchResults] = useState([])
-  const [selectedLocation, setSelectedLocation] = useState(null)
+  const [serviceLocation, setServiceLocation] = useState()
+  const [serviceRadius, setServiceRadius] = useState(props.serviceRadius || 15)
 
   const { profile, form, toggleForm } = props
 
@@ -83,7 +82,23 @@ const VolunteerProfileForm = props => {
   //   })
   // }
 
-  const handleLocationSelect = newLocation => setLocation(newLocation)
+  const handleNumberChange = e => {
+    const number = parseInt(e.target.value || 0, 10)
+    if (Number.isNaN(number)) {
+      return
+    }
+    // if (!('value' in this.props)) {
+    //   this.setState({ number });
+    // }
+    setServiceRadius(number)
+  }
+
+  const handleLocationSelect = newLocation => {
+    console.log('newLocation:', newLocation)
+    setServiceLocation(newLocation)
+  }
+
+  console.log('serviceLocation:', serviceLocation)
 
   const handleSubmit = async (e, submit) => {
     e.preventDefault()
@@ -91,20 +106,33 @@ const VolunteerProfileForm = props => {
 
     await validateFields(async (errors, values) => {
       console.log('errors:', errors)
+      console.log('values:', values)
       if (!errors) {
-        const variables = {
-          allowPhoneContact: values.preferredContact.includes('Phone'),
-          allowEmailContact: values.preferredContact.includes('Email'),
-        }
+        //   const variables = {
+        //     allowPhoneContact: values.preferredContact.includes('Phone'),
+        //     allowEmailContact: values.preferredContact.includes('Email'),
+        //   }
 
-        if (selectedLocation) {
-          variables.location = {
-            lat: selectedLocation.location.y,
-            lng: selectedLocation.location.x,
+        const variables = values
+        variables.availability = {
+          weekdays: values.availability.includes('Weekdays'),
+          weekends: values.availability.includes('Weekends'),
+        }
+        variables.servicesProvided = values.servicesProvided.map(need =>
+          need.toUpperCase()
+        )
+
+        if (serviceLocation) {
+          console.log('serviceLocation:', serviceLocation)
+          variables.serviceLocation = {
+            address: serviceLocation.address,
+            lat: serviceLocation.location.y,
+            lng: serviceLocation.location.x,
           }
         }
 
         try {
+          console.log('variables:', variables)
           await submit({ variables, refetchQueries: ['Me'] })
           /**
            * Check if toggleForm exists before executing. In the case that
@@ -113,7 +141,7 @@ const VolunteerProfileForm = props => {
            * point, the toggleForm function no longer exists and throws an
            * error in the console. There may be a better way to handle this.
            */
-          toggleForm && toggleForm()
+          // toggleForm && toggleForm()
         } catch (err) {
           console.error(err)
         }
@@ -145,22 +173,14 @@ const VolunteerProfileForm = props => {
         })(<Input.TextArea autosize />)}
       </Form.Item>
 
-      <Form.Item label="Preferred Contact">
-        {/* <Checkbox
-            indeterminate={this.state.indeterminate}
-            onChange={this.onCheckAllChange}
-            checked={this.state.checkAll}
-          >
-            Check all
-          </Checkbox> */}
-
+      <Form.Item label="Availability">
         <hr />
 
-        {getFieldDecorator('preferredContact', {
+        {getFieldDecorator('availability', {
           rules: [
             {
               required: true,
-              message: 'Please choose at least one preferred contact method.',
+              message: 'Please choose at least one availability option.',
             },
           ],
         })(
@@ -170,15 +190,53 @@ const VolunteerProfileForm = props => {
           />
         )}
       </Form.Item>
+      <Form.Item label="Details">
+        {getFieldDecorator('availabilityDetails')(<Input />)}
+      </Form.Item>
+
+      <Form.Item label="What types of needs can you provide?">
+        <hr />
+
+        {getFieldDecorator('servicesProvided', {
+          rules: [
+            {
+              required: true,
+              message: 'Please choose at least one need type.',
+            },
+          ],
+        })(
+          <CheckboxGroup
+            options={needTypes.map(opt => opt.name)}
+            onChange={handleChecklistChange}
+          />
+        )}
+      </Form.Item>
+      <Form.Item label="Skills">
+        <p>
+          In regard to these needs, what types of skills do you posess? (Enter
+          values separated by commas, e.g. "Plumbing, Electrical".
+        </p>
+        {getFieldDecorator('skills')(<Input />)}
+      </Form.Item>
 
       {!profile && (
         <PlaceSearchField
-          fieldname="location"
-          label="Where are you located?"
+          fieldname="serviceLocation"
+          label="What area do you wish to serve? First choose a starting location, then enter a radius in miles."
           form={form}
           setLocationState={handleLocationSelect}
         />
       )}
+
+      <Form.Item label="Service Radius (miles)">
+        {getFieldDecorator('serviceRadius')(
+          <InputNumber
+            min={1}
+            // value={serviceRadius}
+            // onChange={handleNumberChange}
+          />
+        )}
+      </Form.Item>
 
       <Form.Item>
         <Button

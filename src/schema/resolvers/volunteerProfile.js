@@ -1,5 +1,8 @@
 import { User, VolunteerProfile } from '../../models'
-import { formatLocationOutput } from '../../utils/locations'
+import {
+  formatLocationInput,
+  formatLocationOutput,
+} from '../../utils/locations'
 
 export default {
   VolunteerProfile: {
@@ -7,7 +10,7 @@ export default {
     user: parent => User.findById(parent.user),
   },
   Query: {
-    VolunteerProfile: async (parent, { id }, { user }) =>
+    VolunteerProfile: async (parent, { id }, { req }) =>
       VolunteerProfile.findById(id),
     VolunteerProfiles: async () => VolunteerProfile.find({}),
   },
@@ -15,12 +18,13 @@ export default {
     createVolunteerProfile: async (
       parent,
       { serviceLocation, ...args },
-      { user }
+      { req }
     ) => {
+      const { userId } = req.session
       console.log('Volunteer profile args:', args)
 
       // Check if volunteer profile already exists for user
-      const profile = await VolunteerProfile.findOne({ user: user.id })
+      const profile = await VolunteerProfile.findOne({ user: userId })
 
       if (profile) {
         throw new Error('Profile already exists for user.')
@@ -28,7 +32,7 @@ export default {
 
       // Create new profile
       const newProfile = await VolunteerProfile.create({
-        user: user.id,
+        user: userId,
         serviceLocation: formatLocationInput(serviceLocation),
         ...args,
       })
