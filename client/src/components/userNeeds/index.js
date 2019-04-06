@@ -58,9 +58,9 @@ const UserNeeds = () => {
                 const { me } = data
                 const { requestedNeeds } = me
 
-                const needCards = requestedNeeds.map(req => (
+                const needCards = requestedNeeds.map(need => (
                   <NeedCard
-                    key={req.id}
+                    key={need.id}
                     style={{
                       maxWidth: 400,
                       marginBottom: 20,
@@ -74,23 +74,28 @@ const UserNeeds = () => {
                       avatar={
                         <Avatar icon="avatar" size={64} src={me.avatar} />
                       }
-                      title={req.title}
+                      title={need.title}
                       description={
                         <div style={{ marginBottom: '1rem' }}>
                           <div className="need-details">
-                            Type: {req.needType.toLowerCase()}
+                            Type: {need.needType.toLowerCase()}
                           </div>
-                          {req.date && (
+                          {need.date && (
                             <div className="need-details">
-                              When: {moment(req.date, 'x').format('LLL')}
+                              When: {moment(need.date, 'x').format('LLL')}
                             </div>
                           )}
                         </div>
                       }
                     />
                     <div>
-                      <p>Lorem ipsum dolor sit amet.</p>
+                      <p>{need.notes || 'Lorem ipsum dolor sit amet'}</p>
                     </div>
+                    <Link to={`/volunteer-search/${need.id}`}>
+                      <Button type="primary" ghost>
+                        Find a Volunteer!
+                      </Button>
+                    </Link>
                   </NeedCard>
                 ))
 

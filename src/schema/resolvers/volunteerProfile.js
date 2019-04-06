@@ -4,15 +4,64 @@ import {
   formatLocationOutput,
 } from '../../utils/locations'
 
+const METERS_PER_MILE = 1609.34
+
 export default {
   VolunteerProfile: {
     serviceLocation: parent => formatLocationOutput(parent.serviceLocation),
     user: parent => User.findById(parent.user),
   },
   Query: {
-    VolunteerProfile: async (parent, { id }, { req }) =>
+    volunteerProfile: async (parent, { id }, { req }) =>
       VolunteerProfile.findById(id),
-    VolunteerProfiles: async () => VolunteerProfile.find({}),
+    volunteerProfiles: async (parent, { needType, location }) => {
+      const geoPoint = formatLocationInput(location).point
+      console.log('geoPoint:', geoPoint)
+
+      // Perform aggregation to find profiles that serve an area containing
+      // the need location and provide service for the specified type of need.
+      const profiles = await VolunteerProfile.aggregate([
+        // Get profiles (closest first) from the need location.
+        {
+          $geoNear: {
+            near: geoPoint,
+            distanceField: 'distance',
+          },
+        },
+
+        // Redact those who do not serve the location based on their specified
+        // serviceRadius.
+        {
+          $redact: {
+            $cond: {
+              if: {
+                $lt: [
+                  { $divide: [`$distance`, METERS_PER_MILE] },
+                  '$serviceRadius',
+                ],
+              },
+              then: '$$KEEP',
+              else: '$$PRUNE',
+            },
+          },
+        },
+
+        // Filter profiles who provided the specified need type.
+        {
+          $match: {
+            servicesProvided: needType,
+          },
+        },
+
+        // Add the 'id' field for graphQL type since mongodb
+        // returns it as '_id'.
+        { $addFields: { id: '$_id' } },
+      ])
+
+      // console.log('profiles:', profiles)
+
+      return profiles
+    },
   },
   Mutation: {
     createVolunteerProfile: async (

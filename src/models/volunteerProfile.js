@@ -43,6 +43,7 @@ export default mongoose.model(
         point: {
           type: Point,
           required: true,
+          index: '2dsphere',
         },
       },
       serviceRadius: {

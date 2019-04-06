@@ -42,16 +42,18 @@ const Sidebar = ({ collapsed = false }) => {
                       <span className="nav-text">Dashboard</span>
                     </Link>
                   </Menu.Item>
+
                   <Menu.Item key="2">
-                    <Link to="/volunteer-profile">
-                      <Icon type="user" />
-                      <span className="nav-text">Volunteer Profile</span>
-                    </Link>
-                  </Menu.Item>
-                  <Menu.Item key="3">
                     <Link to="/recipient-profile">
                       <Icon type="video-camera" />
                       <span className="nav-text">Recipient Profile</span>
+                    </Link>
+                  </Menu.Item>
+
+                  <Menu.Item key="3">
+                    <Link to="/volunteer-profile">
+                      <Icon type="user" />
+                      <span className="nav-text">Volunteer Profile</span>
                     </Link>
                   </Menu.Item>
 

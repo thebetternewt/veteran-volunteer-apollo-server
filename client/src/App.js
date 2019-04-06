@@ -5,8 +5,9 @@ import SignOut from './components/auth/SignOut'
 import SignupForm from './components/auth/SignupForm'
 import Dashboard from './components/layouts/dashboard/Dashboard'
 import RecipientProfile from './components/recipientProfile'
-import UserServices from './components/userServices'
-import CreateService from './components/userServices/CreateService'
+import VolunteerSearch from './components/search/VolunteerSearch'
+import UserNeeds from './components/userNeeds'
+import CreateNeed from './components/userNeeds/CreateNeed'
 import VolunteerProfile from './components/volunteerProfile/index'
 
 const App = () => (
@@ -14,10 +15,11 @@ const App = () => (
     <Dashboard path="/">
       <LoginForm default path="signin" />
       <SignupForm path="signup" />
-      <UserServices path="dashboard" />
+      <UserNeeds path="dashboard" />
       <VolunteerProfile path="volunteer-profile" />
       <RecipientProfile path="recipient-profile" />
-      <CreateService path="request-need" />
+      <CreateNeed path="request-need" />
+      <VolunteerSearch path="volunteer-search/:needId" />
       <SignOut path="signout" />
     </Dashboard>
   </Router>

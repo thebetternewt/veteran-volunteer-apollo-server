@@ -27,8 +27,11 @@ export default gql`
   }
 
   extend type Query {
-    VolunteerProfile(id: ID!): VolunteerProfile
-    VolunteerProfiles: [VolunteerProfile!]!
+    volunteerProfile(id: ID!): VolunteerProfile
+    volunteerProfiles(
+      needType: NeedType
+      location: LocationInput
+    ): [VolunteerProfile!]!
   }
 
   extend type Mutation {
