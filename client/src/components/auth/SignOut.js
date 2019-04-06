@@ -1,18 +1,15 @@
-import React, { useContext, useEffect } from 'react'
-import { Mutation } from 'react-apollo'
-import { SIGN_OUT } from '../../apollo/mutations'
-import { AuthContext } from '../../contexts/auth.context'
+import React, { useEffect } from 'react';
+import { Mutation } from 'react-apollo';
+import { SIGN_OUT } from '../../apollo/mutations';
 
 const CallSignOut = ({ signOut }) => {
-  const authContext = useContext(AuthContext)
 
   useEffect(() => {
     const handleSignOut = async () => {
       console.log('Signing out...')
       await signOut()
-      // clearUserToken()
-      // authContext.setAuthenticatedUser(null)
-      window.location.replace('/')
+
+      window.location.replace('/signin')
     }
 
     handleSignOut()

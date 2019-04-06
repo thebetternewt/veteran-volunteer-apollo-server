@@ -1,20 +1,17 @@
-import { Button, Form } from 'antd'
-import React from 'react'
-import ChildcareDetailsForm from './ChildcareDetails'
-import TravelDetailsForm from './TravelDetails'
+import { Button, Form } from 'antd';
+import React from 'react';
+import ChildcareDetailsForm from './ChildcareDetails';
+import TravelDetailsForm from './TravelDetails';
 
 const ServiceDetailsForm = props => {
   const {
     nextStep,
     form,
-    serviceType,
     serviceDetails,
     setServiceDetails,
   } = props
 
   const {
-    getFieldDecorator,
-    getFieldsError,
     validateFields,
     getFieldValue,
     setFieldsValue,

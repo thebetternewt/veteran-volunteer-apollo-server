@@ -9,96 +9,16 @@ import { availabilityOptions, needTypes } from '../../constants'
 import graphQlErrors from '../../util/graphqlErrors'
 import PlaceSearchField from '../common/forms/PlaceSearchField'
 
-const ARCGIS_SUGGEST_BASE_URL =
-  'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest'
-const ARCGIS_FIND_ADDRESS_CANDIDATES_BASE_URL =
-  'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates'
-
 const CheckboxGroup = Checkbox.Group
-
-const contactOptions = ['Phone', 'Email']
 
 function hasErrors(fieldsErrors) {
   return Object.keys(fieldsErrors).some(field => fieldsErrors[field])
 }
 
 const VolunteerProfileForm = props => {
-  const [confirmDirty, setConfirmDirty] = useState(false)
-  const [availability, setAvailability] = useState([])
-  const [availabilityDetail, setAvailabilityDetail] = useState('')
-  const [searchResults, setSearchResults] = useState([])
   const [serviceLocation, setServiceLocation] = useState()
-  const [serviceRadius, setServiceRadius] = useState(props.serviceRadius || 15)
 
   const { profile, form, toggleForm } = props
-
-  // getInitState = () => {
-
-  //   const checkedList = []
-  //   if (profile) {
-  //     if (profile.allowEmailContact) {
-  //       checkedList.push('Email')
-  //     }
-  //     if (profile.allowPhoneContact) {
-  //       checkedList.push('Phone')
-  //     }
-
-  //     if (profile.location) {
-  //       this.setState({
-  //         location: { lat: profile.location[1], lng: profile.location[0] },
-  //       })
-  //     }
-
-  //     form.setFieldsValue({ preferredContact: checkedList })
-  //     this.handleChecklistChange(checkedList)
-  //   }
-  // }
-
-  // componentDidMount() {
-  //   this.getInitState()
-  // }
-
-  const handleChecklistChange = checkedList => {
-    setAvailability(checkedList)
-    // this.setState({
-    //   checkedList,
-    //   indeterminate:
-    //     !!checkedList.length && checkedList.length < contactOptions.length,
-    //   checkAll: checkedList.length === contactOptions.length,
-    // })
-  }
-
-  // const onCheckAllChange = e => {
-  //   const { setFieldsValue } = form
-  //   if (e.target.checked) {
-  //     setFieldsValue({ preferredContact: contactOptions })
-  //   } else {
-  //     setFieldsValue({ preferredContact: [] })
-  //   }
-  //   this.setState({
-  //     // checkedList: e.target.checked ? contactOptions : [],
-  //     indeterminate: false,
-  //     checkAll: e.target.checked,
-  //   })
-  // }
-
-  const handleNumberChange = e => {
-    const number = parseInt(e.target.value || 0, 10)
-    if (Number.isNaN(number)) {
-      return
-    }
-    // if (!('value' in this.props)) {
-    //   this.setState({ number });
-    // }
-    setServiceRadius(number)
-  }
-
-  const handleLocationSelect = newLocation => {
-    console.log('newLocation:', newLocation)
-    setServiceLocation(newLocation)
-  }
-
-  console.log('serviceLocation:', serviceLocation)
 
   const handleSubmit = async (e, submit) => {
     e.preventDefault()
@@ -108,11 +28,6 @@ const VolunteerProfileForm = props => {
       console.log('errors:', errors)
       console.log('values:', values)
       if (!errors) {
-        //   const variables = {
-        //     allowPhoneContact: values.preferredContact.includes('Phone'),
-        //     allowEmailContact: values.preferredContact.includes('Email'),
-        //   }
-
         const variables = values
         variables.availability = {
           weekdays: values.availability.includes('Weekdays'),
@@ -172,7 +87,7 @@ const VolunteerProfileForm = props => {
       .map(type => type.name)
   }
 
-  const initServiceRadius = () => profile && profile.serviceRadius
+  const initServiceRadius = () => (profile ? profile.serviceRadius : 15)
 
   const initSkills = () => {
     let skills = ''
@@ -215,10 +130,7 @@ const VolunteerProfileForm = props => {
             },
           ],
         })(
-          <CheckboxGroup
-            options={availabilityOptions.map(opt => opt.name)}
-            // onChange={handleChecklistChange}
-          />
+          <CheckboxGroup options={availabilityOptions.map(opt => opt.name)} />
         )}
       </Form.Item>
       <Form.Item label="Details">
@@ -238,12 +150,7 @@ const VolunteerProfileForm = props => {
               message: 'Please choose at least one need type.',
             },
           ],
-        })(
-          <CheckboxGroup
-            options={needTypes.map(opt => opt.name)}
-            onChange={handleChecklistChange}
-          />
-        )}
+        })(<CheckboxGroup options={needTypes.map(opt => opt.name)} />)}
       </Form.Item>
       <Form.Item label="Skills">
         <p>
@@ -253,25 +160,20 @@ const VolunteerProfileForm = props => {
         {getFieldDecorator('skills', { initialValue: initSkills() })(<Input />)}
       </Form.Item>
 
-      {!profile && (
+      {
         <PlaceSearchField
           fieldname="serviceLocation"
           label="What area do you wish to serve? First choose a starting location, then enter a radius in miles."
           form={form}
-          setLocationState={handleLocationSelect}
+          setLocationState={setServiceLocation}
+          initialValue={profile && profile.serviceLocation}
         />
-      )}
+      }
 
       <Form.Item label="Service Radius (miles)">
         {getFieldDecorator('serviceRadius', {
           initialValue: initServiceRadius(),
-        })(
-          <InputNumber
-            min={1}
-            // value={serviceRadius}
-            // onChange={handleNumberChange}
-          />
-        )}
+        })(<InputNumber min={1} />)}
       </Form.Item>
 
       <Form.Item>

@@ -1,19 +1,13 @@
-import { Link } from '@reach/router'
-import { Button, Form, Icon, Input } from 'antd'
-import React, { useContext } from 'react'
-import { Mutation, Query } from 'react-apollo'
-import { SIGN_IN } from '../../apollo/mutations'
-import { ME_QUERY } from '../../apollo/queries'
-import { AuthContext } from '../../contexts/auth.context'
-import graphQlErrors from '../../util/graphqlErrors'
+import { Link } from '@reach/router';
+import { Button, Form, Icon, Input } from 'antd';
+import React from 'react';
+import { Mutation, Query } from 'react-apollo';
+import { SIGN_IN } from '../../apollo/mutations';
+import { ME_QUERY } from '../../apollo/queries';
+import graphQlErrors from '../../util/graphqlErrors';
 
 const NormalLoginForm = props => {
-  const authContext = useContext(AuthContext)
   const { form, navigate } = props
-
-  // if (authContext.user) {
-  //   navigate('/dashboard')
-  // }
 
   const handleSubmit = (e, signIn) => {
     e.preventDefault()

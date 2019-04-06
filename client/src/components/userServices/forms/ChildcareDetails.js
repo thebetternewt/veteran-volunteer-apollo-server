@@ -1,5 +1,5 @@
-import { Checkbox, Form } from 'antd'
-import React, { useState } from 'react'
+import { Checkbox, Form } from 'antd';
+import React, { useState } from 'react';
 
 const CheckboxGroup = Checkbox.Group
 
@@ -8,15 +8,14 @@ const ageOptions = ['INFANT', 'TODDLER', 'CHILD', 'TEENAGER']
 const ChildcareDetailsForm = ({ form, serviceDetails, setServiceDetails }) => {
   const [indeterminate, setIndeterminate] = useState(false)
   const [checkAll, setCheckAll] = useState(false)
-  const [checkedList, setCheckedList] = useState([])
 
-  const { setFieldsValue, getFieldDecorator, getFieldsError } = form
+  const { setFieldsValue, getFieldDecorator } = form
 
   const onCheckAllChange = e => {
     if (e.target.checked) {
-      setFieldsValue({ ['details.age']: ageOptions })
+      setFieldsValue({ 'details.age': ageOptions })
     } else {
-      setFieldsValue({ ['details.age']: [] })
+      setFieldsValue({ 'details.age': [] })
     }
 
     setIndeterminate(false)
@@ -24,7 +23,6 @@ const ChildcareDetailsForm = ({ form, serviceDetails, setServiceDetails }) => {
   }
 
   const handleChecklistChange = checkedList => {
-    setCheckedList(checkedList)
     setIndeterminate(
       !!checkedList.length && checkedList.length < ageOptions.length
     )

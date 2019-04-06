@@ -1,10 +1,10 @@
-import { navigate } from '@reach/router'
-import { Button, Divider, Form, Icon, Input, InputNumber, Select } from 'antd'
-import React, { Component } from 'react'
-import { Mutation } from 'react-apollo'
-import { UsaStates } from 'usa-states'
-import { SIGNUP } from '../../apollo/mutations'
-import graphQlErrors from '../../util/graphqlErrors'
+import { navigate } from '@reach/router';
+import { Button, Divider, Form, Icon, Input, InputNumber, Select } from 'antd';
+import React, { Component } from 'react';
+import { Mutation } from 'react-apollo';
+import { UsaStates } from 'usa-states';
+import { SIGNUP } from '../../apollo/mutations';
+import graphQlErrors from '../../util/graphqlErrors';
 
 function hasErrors(fieldsError) {
   const errors = {
@@ -69,8 +69,6 @@ class SignupForm extends Component {
       getFieldsError,
       getFieldError,
       isFieldTouched,
-      getFieldsValue,
-      validateFields,
     } = this.props.form
 
     const firstNameError =

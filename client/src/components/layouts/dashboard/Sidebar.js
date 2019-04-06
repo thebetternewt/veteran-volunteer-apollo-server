@@ -1,10 +1,9 @@
-import { Link } from '@reach/router'
-import { Icon, Layout, Menu } from 'antd'
-import React, { useContext } from 'react'
-import { Query } from 'react-apollo'
-import styled from 'styled-components'
-import { ME_QUERY } from '../../../apollo/queries'
-import { AuthContext } from '../../../contexts/auth.context'
+import { Link } from '@reach/router';
+import { Icon, Layout, Menu } from 'antd';
+import React from 'react';
+import { Query } from 'react-apollo';
+import styled from 'styled-components';
+import { ME_QUERY } from '../../../apollo/queries';
 
 const { Sider } = Layout
 
@@ -22,8 +21,6 @@ const FixedSider = styled(Sider)`
 `
 
 const Sidebar = ({ collapsed = false }) => {
-  const authContext = useContext(AuthContext)
-  const { user } = authContext
 
   return (
     <FixedSider trigger={null} collapsedWidth="0" collapsed={collapsed}>

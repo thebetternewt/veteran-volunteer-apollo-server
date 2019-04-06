@@ -1,14 +1,13 @@
-import { Link } from '@reach/router'
-import { Avatar, Badge, Button, Icon, Layout } from 'antd'
-import React, { useContext, useState } from 'react'
-import { Query } from 'react-apollo'
-import styled from 'styled-components'
-import { ME_QUERY } from '../../../apollo/queries'
-import { AuthContext } from '../../../contexts/auth.context'
-import ScrollToTop from '../../common/ScrollToTop'
-import Sidebar from './Sidebar'
+import { Link } from '@reach/router';
+import { Avatar, Badge, Button, Icon, Layout } from 'antd';
+import React, { useState } from 'react';
+import { Query } from 'react-apollo';
+import styled from 'styled-components';
+import { ME_QUERY } from '../../../apollo/queries';
+import ScrollToTop from '../../common/ScrollToTop';
+import Sidebar from './Sidebar';
 
-const { Header, Content, Footer, Sider } = Layout
+const { Header, Content, Footer } = Layout
 
 const StickyHeader = styled(Header)`
   position: sticky;
@@ -44,13 +43,10 @@ const initSidebarCollapsed = () => {
 }
 
 const Dashboard = ({ children = defaultContent }) => {
-  const authContext = useContext(AuthContext)
   const [sidebarCollapsed, setSidebarCollapsed] = useState(
     initSidebarCollapsed()
   )
 
-  console.log('dashboard authCtx:', authContext)
-  const { user } = authContext
 
   // TODO: set inital sidebarCollapse state based on window size
 

@@ -1,18 +1,11 @@
-import { Button, Checkbox, Form } from 'antd'
-import React, { Component } from 'react'
-import { Mutation } from 'react-apollo'
-import {
-  CREATE_RECIPIENT_PROFILE,
-  UPDATE_RECIPIENT_PROFILE,
-} from '../../apollo/mutations'
-import graphQlErrors from '../../util/graphqlErrors'
-import { hasErrors } from '../common/forms/helpers'
-import PlaceSearchField from '../common/forms/PlaceSearchField'
+import { Button, Checkbox, Form } from 'antd';
+import React, { Component } from 'react';
+import { Mutation } from 'react-apollo';
+import { CREATE_RECIPIENT_PROFILE, UPDATE_RECIPIENT_PROFILE } from '../../apollo/mutations';
+import graphQlErrors from '../../util/graphqlErrors';
+import { hasErrors } from '../common/forms/helpers';
+import PlaceSearchField from '../common/forms/PlaceSearchField';
 
-const ARCGIS_SUGGEST_BASE_URL =
-  'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest'
-const ARCGIS_FIND_ADDRESS_CANDIDATES_BASE_URL =
-  'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates'
 
 const CheckboxGroup = Checkbox.Group
 

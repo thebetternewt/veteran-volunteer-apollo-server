@@ -20,31 +20,21 @@ export const client = new ApolloClient({
   },
   request: operation => {
     console.log('operation:', operation)
-    const token = localStorage.getItem('token')
-    if (token) {
-      operation.setContext({
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      })
-    }
   },
   onError: ({ graphQLErrors, networkError, response }) => {
-    let notAuthenticated
-    if (graphQlErrors !== undefined) {
+    if (graphQlErrors) {
       console.log('ApolloClient graphQLErrors')
       console.log(graphQLErrors)
 
-      notAuthenticated = graphQLErrors.find(err => {
+      const notAuthenticated = graphQLErrors.find(err => {
         return err.message === 'You must be signed in.'
       })
-    }
-    if (notAuthenticated) {
-      console.log('NOT AUTHENTICATED!')
-      console.log('location:', window.location.pathname)
-      console.log(window.location.pathname !== '/signin')
-      window.location.pathname !== '/signin' &&
-        window.location.replace('/signin')
+
+      if (notAuthenticated) {
+        console.log('NOT AUTHENTICATED!')
+        window.location.pathname !== '/signin' &&
+          window.location.replace('/signin')
+      }
     }
 
     if (networkError) {

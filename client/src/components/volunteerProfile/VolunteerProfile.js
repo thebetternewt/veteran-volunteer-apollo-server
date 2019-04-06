@@ -111,8 +111,10 @@ const VolunteerProfile = props => {
       </ContactSettings>
       <p>
         <strong> Service Location: </strong> <br />
-        latitude: {profile.serviceLocation.lat} <br />
-        longitude: {profile.serviceLocation.lng}
+        {/* latitude: {profile.serviceLocation.lat} <br />
+        longitude: {profile.serviceLocation.lng} */}
+        Currently serving needs within <strong>{profile.serviceRadius}</strong>{' '}
+        miles of <strong>{profile.serviceLocation.address}</strong>.
       </p>
       <Map location={profile.serviceLocation} />
       <Button

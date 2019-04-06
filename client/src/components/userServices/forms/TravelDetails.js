@@ -1,10 +1,7 @@
-import React from 'react'
-import PlaceSearchField from '../../common/forms/PlaceSearchField'
+import React from 'react';
+import PlaceSearchField from '../../common/forms/PlaceSearchField';
 
-const TravelForm = ({ form, serviceDetails, setServiceDetails }) => {
-  const dataSource = []
-  const { getFieldDecorator, getFieldsError } = form
-  return (
+const TravelForm = ({ form, serviceDetails, setServiceDetails }) => (
     <PlaceSearchField
       form={form}
       fieldname="details.toLocation"
@@ -14,6 +11,6 @@ const TravelForm = ({ form, serviceDetails, setServiceDetails }) => {
       }
     />
   )
-}
+
 
 export default TravelForm
