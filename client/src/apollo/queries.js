@@ -106,9 +106,51 @@ export const NEEDS_QUERY = gql`
   }
 `
 
-export const VOLUNTEER_PROFILES_QUERY = gql`
-  query VolunteerProfiles($needType: NeedType, $location: LocationInput) {
-    volunteerProfiles(needType: $needType, location: $location) {
+export const NEED_QUERY = gql`
+  query NeedQuery($id: ID!) {
+    need(id: $id) {
+      id
+      title
+      date
+      location {
+        address
+        lat
+        lng
+      }
+      needType
+      needDetails {
+        ... on ChildcareNeed {
+          age
+        }
+        # ... on LawncareService {
+        #   description
+        #   id
+        #   equipmentNeeded
+        # }
+        # ... on TravelService {
+        #   id
+        #   fromName
+        #   fromLocation {
+        #     lat
+        #     lng
+        #   }
+        #   toName
+        #   toLocation {
+        #     lat
+        #     lng
+        #   }
+        # }
+      }
+    }
+  }
+`
+
+export const VOLUNTEER_PROFILES_FOR_NEED_QUERY = gql`
+  query VolunteerProfilesForNeed(
+    $needType: NeedType
+    $location: LocationInput
+  ) {
+    volunteerProfilesForNeed(needType: $needType, location: $location) {
       id
       user {
         fullName

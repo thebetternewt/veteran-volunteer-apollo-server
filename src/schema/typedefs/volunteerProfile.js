@@ -28,7 +28,7 @@ export default gql`
 
   extend type Query {
     volunteerProfile(id: ID!): VolunteerProfile
-    volunteerProfiles(
+    volunteerProfilesForNeed(
       needType: NeedType
       location: LocationInput
     ): [VolunteerProfile!]!

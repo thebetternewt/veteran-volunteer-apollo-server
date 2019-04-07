@@ -1,3 +1,4 @@
+import mongoose from 'mongoose'
 import { User, VolunteerProfile } from '../../models'
 import {
   formatLocationInput,
@@ -14,7 +15,12 @@ export default {
   Query: {
     volunteerProfile: async (parent, { id }, { req }) =>
       VolunteerProfile.findById(id),
-    volunteerProfiles: async (parent, { needType, location }) => {
+    volunteerProfilesForNeed: async (
+      parent,
+      { needType, location },
+      { req }
+    ) => {
+      const { userId } = req.session
       const geoPoint = formatLocationInput(location).point
       console.log('geoPoint:', geoPoint)
 
@@ -50,6 +56,8 @@ export default {
         {
           $match: {
             servicesProvided: needType,
+            // Exclude profile of current user.
+            user: { $ne: mongoose.Types.ObjectId(userId) },
           },
         },
 
@@ -58,7 +66,7 @@ export default {
         { $addFields: { id: '$_id' } },
       ])
 
-      // console.log('profiles:', profiles)
+      console.log('profiles:', profiles)
 
       return profiles
     },
