@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost'
+import { gql } from 'apollo-boost';
 
 export const SIGNUP = gql`
   mutation SignUp(
@@ -207,16 +207,30 @@ export const CREATE_SERVICE = gql`
 
 export const CREATE_REQUEST = gql`
   mutation CreateRequest(
-    $service: ServiceInput!
+    $need: ID!
     $recipient: ID
-    $volunteer: ID
+    $volunteer: ID!
   ) {
     createRequest(
-      service: $service
+      need: $need
       recipient: $recipient
       volunteer: $volunteer
     ) {
       id
+      need {
+        id
+        title
+      }
+      recipient {
+        id
+        fullName
+      }
+      volunteer {
+        id
+        fullName
+      }
+      initiator
+      status
     }
   }
 `

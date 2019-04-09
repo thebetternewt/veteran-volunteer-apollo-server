@@ -1,6 +1,6 @@
-import { Avatar, Button, Card, Tag } from 'antd'
-import React from 'react'
-import styled from 'styled-components'
+import { Avatar, Button, Card, Icon, Tag } from 'antd';
+import React from 'react';
+import styled from 'styled-components';
 
 const { Meta } = Card
 
@@ -13,6 +13,11 @@ const StyledVolunteerCard = styled(Card)`
     text-transform: capitalize;
     word-wrap: none;
     margin: 1rem 0;
+
+    ul {
+      padding: 0;
+      list-style: none;
+    }
   }
 
   @media screen and (max-width: 756px) {
@@ -21,7 +26,7 @@ const StyledVolunteerCard = styled(Card)`
   }
 `
 
-const VolunteerCard = ({ profile }) => {
+const VolunteerCard = ({ profile, createRequest, loading, error }) => {
   console.log(profile)
   return (
     <StyledVolunteerCard
@@ -34,7 +39,7 @@ const VolunteerCard = ({ profile }) => {
         <Button type="primary" ghost>{`Message ${
           profile.user.firstName
         }`}</Button>,
-        <Button type="primary">{`Book ${profile.user.firstName}`}</Button>,
+        <Button type="primary" loading={loading} onClick={() => createRequest()}>{`Book ${profile.user.firstName}`}</Button>,
       ]}
     >
       <Meta
@@ -60,6 +65,38 @@ const VolunteerCard = ({ profile }) => {
       />
       <div className="profile-details">
         <p>{profile.bio || 'Lorem ipsum dolor sit amet'}</p>
+        <h4>Availability</h4>
+        <ul>
+          <li
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            {profile.availability.weekdays && (
+              <>
+                <Icon
+                  type="check-circle"
+                  theme="twoTone"
+                  twoToneColor="#52c41a"
+                />
+                <span> Weekdays </span>
+              </>
+            )}
+          </li>
+          <li>
+            {profile.availability.weekends && (
+              <>
+                <Icon
+                  type="check-circle"
+                  theme="twoTone"
+                  twoToneColor="#52c41a"
+                />
+                <span> Weekends </span>
+              </>
+            )}
+          </li>
+        </ul>
       </div>
       {/* <Link to={`/volunteer-search/${profile.id}`}>
         <Button type="primary">

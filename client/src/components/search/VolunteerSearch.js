@@ -1,17 +1,21 @@
-import { Icon } from 'antd'
-import React from 'react'
-import { Query } from 'react-apollo'
-import {
-  NEED_QUERY,
-  VOLUNTEER_PROFILES_FOR_NEED_QUERY,
-} from '../../apollo/queries'
-import VolunteerCard from './VolunteerCard'
+import { Icon } from 'antd';
+import React from 'react';
+import { Mutation, Query } from 'react-apollo';
+import { CREATE_REQUEST } from '../../apollo/mutations';
+import { NEED_QUERY, VOLUNTEER_PROFILES_FOR_NEED_QUERY } from '../../apollo/queries';
+import VolunteerCard from './VolunteerCard';
 
 const VolunteerSearch = props => {
   console.log('search props:', props)
   const { needId } = props
 
   const loader = <Icon type="loading" style={{ fontSize: 24 }} spin />
+
+  const handleCreateRequest = async ({createRequest, volunteerId}) => {
+    const variables = {volunteer: volunteerId, need: needId}
+
+    await createRequest({variables})
+  }
 
   return (
     <div>
@@ -47,7 +51,10 @@ const VolunteerSearch = props => {
                     console.log('profiles:', profiles)
 
                     return profiles.map(profile => (
-                      <VolunteerCard key={profile.id} profile={profile} />
+                      <Mutation mutation={CREATE_REQUEST} >
+                      {(createRequest, {data, loading, error}) => (<VolunteerCard key={profile.id} profile={profile} createRequest={handleCreateRequest} loading={loading} error={error}/>)
+                      }
+                      </Mutation>
                     ))
                   }
 
