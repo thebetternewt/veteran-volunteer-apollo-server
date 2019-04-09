@@ -159,11 +159,32 @@ export const VOLUNTEER_PROFILES_FOR_NEED_QUERY = gql`
         details
       }
       user {
+        id
         avatar
         firstName
         fullName
       }
       servicesProvided
+    }
+  }
+`
+
+export const REQUESTS_QUERY = gql`
+  query Requests($userId: ID) {
+    requests(userId: $userId) {
+      id
+      status
+      need {
+        id
+        title
+        needType
+        date
+        notes
+        recipient {
+          id
+          fullName
+        }
+      }
     }
   }
 `

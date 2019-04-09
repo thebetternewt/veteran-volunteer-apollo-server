@@ -71,6 +71,7 @@ export default {
     },
     signIn: async (parent, { email, password }, { req }) => {
       const user = await attemptSignIn(email, password)
+      console.log(user)
 
       if (!user) {
         throw new AuthenticationError('Invalid email or password')

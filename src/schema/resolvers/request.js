@@ -7,7 +7,13 @@ export default {
     volunteer: parent => User.findById(parent.volunteer),
   },
   Query: {
-    requests: () => Request.find({}),
+    requests: (parent, args, { req }) => {
+      const { userId } = req.session
+      // TODO: Allow admin users to view requests for any user
+      // TODO: Allow volunteers to request to serve recipients
+      //? TODO: Query requests for recipients
+      return Request.find({ volunteer: userId })
+    },
     request: (_, { id }) => Request.findById(id),
   },
   Mutation: {
@@ -21,8 +27,32 @@ export default {
 
       return newRequest
     },
-    updateRequestStatus: async (_, args) => {
-      const request = await Request.findById(args.id).exec()
+    updateRequestStatus: async (_, { id, status }, { req }) => {
+      const { userId } = req.session
+      const request = await Request.findById(id).exec()
+
+      console.log('[USERID]:', userId)
+      console.log('[REQUEST]:', request)
+
+      if (!request) {
+        throw new Error('Request not found.')
+      }
+
+      // Make sure if the recipient initiated the request, then only the volunteer
+      // can accept the request. Or, if the volunteer initiated the request,
+      // then the recipient must accept the request.
+      // TODO: Restrict the kinds of updates (e.g. "CANCELLED") each user role can make.
+      if (
+        !(
+          (request.volunteer.toString() === userId &&
+            request.initiator === 'RECIPIENT') ||
+          (request.recipient.toString() === userId &&
+            request.initiator === 'VOLUNTEER')
+        )
+      ) {
+        // TODO: Better error
+        throw new Error('Not allowed.')
+      }
 
       request.set({ status })
 

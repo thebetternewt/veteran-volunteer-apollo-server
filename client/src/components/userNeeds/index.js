@@ -1,10 +1,11 @@
 import { Link } from '@reach/router'
-import { Avatar, Button, Card, Divider, Icon, Row } from 'antd'
+import { Alert, Avatar, Button, Card, Divider, Icon, Row, Tag } from 'antd'
 import moment from 'moment'
 import React from 'react'
-import { Query } from 'react-apollo'
+import { Mutation, Query } from 'react-apollo'
 import styled from 'styled-components'
-import { ME_QUERY } from '../../apollo/queries'
+import { ACCEPT_REQUEST } from '../../apollo/mutations'
+import { ME_QUERY, REQUESTS_QUERY } from '../../apollo/queries'
 import PrivateRoute from '../common/PrivateRoute'
 
 const { Meta } = Card
@@ -100,6 +101,90 @@ const UserNeeds = () => {
                         Find a Volunteer!
                       </Button>
                     </Link> */}
+                  </NeedCard>
+                ))
+
+                return needCards
+              }
+
+              return null
+            }}
+          </Query>
+        </Row>
+      </div>
+      <Divider />
+      <div>
+        <NeedSectionHeader>
+          <h2>Requests</h2>
+        </NeedSectionHeader>
+        <Row type="flex">
+          <Query query={REQUESTS_QUERY}>
+            {({ data, loading }) => {
+              if (loading) return <Icon type="loading" size={64} />
+
+              if (data && data.requests) {
+                console.log(data)
+                const { requests } = data
+
+                const needCards = requests.map(request => (
+                  <NeedCard
+                    key={request.id}
+                    style={{ maxWidth: 400, marginBottom: 20 }}
+                    actions={[
+                      <Button type="primary" ghost>
+                        Details
+                      </Button>,
+                      <Mutation
+                        mutation={ACCEPT_REQUEST}
+                        variables={{ requestId: request.id }}
+                        refetchQueries={['Requests']}
+                      >
+                        {(accept, { data, loading, error }) => {
+                          {
+                            /* TODO: Handle data, loading, and errors */
+                          }
+                          return (
+                            <Button
+                              type="primary"
+                              onClick={accept}
+                              disabled={request.status === 'ACCEPTED'}
+                            >
+                              {request.status === 'ACCEPTED'
+                                ? 'Accepted'
+                                : 'Accept'}
+                            </Button>
+                          )
+                        }}
+                      </Mutation>,
+                    ]}
+                  >
+                    <Alert
+                      message={request.status}
+                      type={
+                        request.status === 'PENDING' ? 'warning' : 'success'
+                      }
+                      style={{ marginBottom: '1.1rem' }}
+                    />
+                    <Meta
+                      avatar={
+                        <Avatar size={64} src="http://i.pravatar.cc/300" />
+                      }
+                      title={request.need.title}
+                      description={
+                        <div style={{ marginBottom: '1rem' }}>
+                          <div>
+                            Type:{' '}
+                            <Tag color="purple">{request.need.needType}</Tag>
+                          </div>
+                          <div>
+                            When: {moment(request.need.date, 'x').format('LLL')}
+                          </div>
+                        </div>
+                      }
+                    />
+                    <div>
+                      <p>{request.need.notes}</p>
+                    </div>
                   </NeedCard>
                 ))
 

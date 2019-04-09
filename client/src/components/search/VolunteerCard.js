@@ -1,6 +1,6 @@
-import { Avatar, Button, Card, Icon, Tag } from 'antd';
-import React from 'react';
-import styled from 'styled-components';
+import { Avatar, Button, Card, Icon, Tag } from 'antd'
+import React from 'react'
+import styled from 'styled-components'
 
 const { Meta } = Card
 
@@ -39,7 +39,11 @@ const VolunteerCard = ({ profile, createRequest, loading, error }) => {
         <Button type="primary" ghost>{`Message ${
           profile.user.firstName
         }`}</Button>,
-        <Button type="primary" loading={loading} onClick={() => createRequest()}>{`Book ${profile.user.firstName}`}</Button>,
+        <Button
+          type="primary"
+          loading={loading}
+          onClick={() => createRequest(profile.user.id)}
+        >{`Book ${profile.user.firstName}`}</Button>,
       ]}
     >
       <Meta
