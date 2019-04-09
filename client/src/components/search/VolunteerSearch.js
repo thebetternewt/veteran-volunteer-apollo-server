@@ -5,6 +5,7 @@ import {
   NEED_QUERY,
   VOLUNTEER_PROFILES_FOR_NEED_QUERY,
 } from '../../apollo/queries'
+import VolunteerCard from './VolunteerCard'
 
 const VolunteerSearch = props => {
   console.log('search props:', props)
@@ -34,6 +35,7 @@ const VolunteerSearch = props => {
               <Query
                 query={VOLUNTEER_PROFILES_FOR_NEED_QUERY}
                 variables={{ needType, location }}
+                fetchPolicy="network-only"
               >
                 {({ data, loading: volunteersLoading, error }) => {
                   if (volunteersLoading) {
@@ -45,7 +47,7 @@ const VolunteerSearch = props => {
                     console.log('profiles:', profiles)
 
                     return profiles.map(profile => (
-                      <p key={profile.id}>{profile.user.fullName}</p>
+                      <VolunteerCard key={profile.id} profile={profile} />
                     ))
                   }
 

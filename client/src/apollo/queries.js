@@ -152,7 +152,15 @@ export const VOLUNTEER_PROFILES_FOR_NEED_QUERY = gql`
   ) {
     volunteerProfilesForNeed(needType: $needType, location: $location) {
       id
+      bio
+      availability {
+        weekdays
+        weekends
+        details
+      }
       user {
+        avatar
+        firstName
         fullName
       }
       servicesProvided

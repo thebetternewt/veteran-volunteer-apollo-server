@@ -38,10 +38,10 @@ const NeedCard = styled(Card)`
 const UserNeeds = () => {
   return (
     <>
-      <h3 style={{ color: '#777' }}>My Needs</h3>
+      <h3 style={{ color: '#777' }}>Dashboard</h3>
       <div>
         <NeedSectionHeader>
-          <h2>Requested</h2>
+          <h2>My Needs</h2>
           <Link to="/request-need">
             <Button type="primary" icon="plus-circle">
               Request New Need
@@ -66,8 +66,12 @@ const UserNeeds = () => {
                       marginBottom: 20,
                     }}
                     actions={[
-                      <Icon type="info-circle" />,
-                      <Icon type="message" />,
+                      <Button type="primary" ghost>
+                        Edit Need
+                      </Button>,
+                      <Link to={`/volunteer-search/${need.id}`}>
+                        <Button type="primary">Find a Volunteer</Button>
+                      </Link>,
                     ]}
                   >
                     <Meta
@@ -91,11 +95,11 @@ const UserNeeds = () => {
                     <div>
                       <p>{need.notes || 'Lorem ipsum dolor sit amet'}</p>
                     </div>
-                    <Link to={`/volunteer-search/${need.id}`}>
+                    {/* <Link to={`/volunteer-search/${need.id}`}>
                       <Button type="primary" ghost>
                         Find a Volunteer!
                       </Button>
-                    </Link>
+                    </Link> */}
                   </NeedCard>
                 ))
 
@@ -121,12 +125,7 @@ const UserNeeds = () => {
             actions={[<Icon type="info-circle" />, <Icon type="message" />]}
           >
             <Meta
-              avatar={
-                <Avatar
-                  size={64}
-                  src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairCurly&accessoriesType=Prescription02&hairColor=Brown&facialHairType=Blank&clotheType=Overall&clotheColor=Pink&eyeType=Surprised&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Brown"
-                />
-              }
+              avatar={<Avatar size={64} src="http://i.pravatar.cc/300" />}
               title="Leaky faucet"
               description={
                 <div style={{ marginBottom: '1rem' }}>
