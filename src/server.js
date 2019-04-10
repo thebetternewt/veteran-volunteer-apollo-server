@@ -95,7 +95,10 @@ const main = async () => {
           'request.credentials': 'include',
         },
       },
-      context: async ({ req, res }) => ({ req, res }),
+      context: async ({ req, res }) => {
+        console.log('request...')
+        return { req, res }
+      },
     })
 
     server.applyMiddleware({ app, cors: corsOptions })

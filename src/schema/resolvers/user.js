@@ -33,6 +33,7 @@ export default {
   Query: {
     me: async (parent, args, { req }) => {
       const { userId } = req.session
+      console.log('userId:', userId)
       return User.findById(userId)
     },
     user: async (parent, { id }, { req }) => {
@@ -71,6 +72,9 @@ export default {
     signIn: async (parent, { email, password }, { req }) => {
       const user = await attemptSignIn(email, password)
 
+      console.log('signing in...')
+      console.log('[USER]:', user)
+
       if (!user) {
         throw new AuthenticationError('Invalid email or password')
       }
@@ -78,6 +82,8 @@ export default {
       // Set session variables from user.
       req.session.userId = user.id
       req.session.isAdmin = user.admin
+
+      console.log('session:', req.session)
 
       const token = jwt.sign(
         {
