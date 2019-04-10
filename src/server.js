@@ -6,6 +6,7 @@ import { express as voyagerMiddleware } from 'graphql-voyager/middleware'
 import jwt from 'jsonwebtoken'
 import mongoose from 'mongoose'
 import {
+  FRONTEND_URL,
   IN_PROD,
   PORT,
   REDIS_HOST,
@@ -29,7 +30,7 @@ const main = async () => {
     app.disable('x-powered-by')
 
     const corsOptions = {
-      origin: 'http://localhost:3000',
+      origin: FRONTEND_URL,
       credentials: true,
       optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
     }

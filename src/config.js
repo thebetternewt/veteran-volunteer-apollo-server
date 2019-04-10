@@ -10,4 +10,5 @@ export const {
   REDIS_HOST = 'localhost',
   REDIS_PORT = 6379,
   REDIS_PASSWORD = 'secret',
+  FRONTEND_URL = 'http://localhost:3000',
 } = process.env
