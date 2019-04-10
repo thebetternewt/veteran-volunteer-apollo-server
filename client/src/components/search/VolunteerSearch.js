@@ -9,7 +9,6 @@ import {
 import VolunteerCard from './VolunteerCard'
 
 const VolunteerSearch = props => {
-  console.log('search props:', props)
   const { needId } = props
 
   const loader = <Icon type="loading" style={{ fontSize: 24 }} spin />
@@ -25,7 +24,6 @@ const VolunteerSearch = props => {
 
           if (data && data.need) {
             const { need } = data
-            console.log('need:', need)
 
             const {
               needType,
@@ -45,7 +43,6 @@ const VolunteerSearch = props => {
 
                   if (data && data.volunteerProfilesForNeed) {
                     const { volunteerProfilesForNeed: profiles } = data
-                    console.log('profiles:', profiles)
 
                     return profiles.map(profile => (
                       <Mutation mutation={CREATE_REQUEST} key={profile.id}>

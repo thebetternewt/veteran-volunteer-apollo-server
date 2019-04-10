@@ -80,7 +80,6 @@ export default {
     createNeed: async (parent, args, { req }) => {
       const { userId } = req.session
       // TODO: Check if profile already exists for user
-      console.log('need args:', args)
 
       const {
         title,

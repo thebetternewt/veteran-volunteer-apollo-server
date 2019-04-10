@@ -41,7 +41,6 @@ const ContactSettings = styled.ul`
 `
 
 const VolunteerProfile = props => {
-  console.log(props)
   const { profile, toggleForm } = props
   return (
     <div>

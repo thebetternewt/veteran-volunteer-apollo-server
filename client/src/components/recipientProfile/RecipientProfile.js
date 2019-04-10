@@ -33,7 +33,6 @@ const ContactSettings = styled.ul`
 `
 
 const RecipientProfile = props => {
-  console.log(props)
   const { profile, toggleForm } = props
   return (
     <div>

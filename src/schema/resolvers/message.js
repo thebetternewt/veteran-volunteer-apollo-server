@@ -9,8 +9,6 @@ export default {
   Query: {
     messages: (_, { all }, { req }) => {
       const { userId } = req.session
-      console.log('getting messages...')
-      console.log('user:', userId)
 
       if (all) {
         // Return all messages (read or unread) belonging to current user.
@@ -24,13 +22,9 @@ export default {
   },
   Mutation: {
     createMessage: async (parent, args, { req }) => {
-      console.log('creating message...')
-      console.log(args)
       const { userId } = req.session
 
       const newMessage = await Message.create({ ...args, sender: userId })
-
-      console.log('newMessage:', newMessage)
 
       return newMessage
     },
@@ -40,7 +34,6 @@ export default {
         _id: messageId,
         recipient: userId,
       }).exec()
-      console.log(message)
 
       if (!message) {
         throw new Error('Message not found')

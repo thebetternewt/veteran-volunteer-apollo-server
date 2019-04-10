@@ -25,8 +25,6 @@ const VolunteerProfileForm = props => {
     const { validateFields } = form
 
     await validateFields(async (errors, values) => {
-      console.log('errors:', errors)
-      console.log('values:', values)
       if (!errors) {
         const variables = values
         variables.availability = {
@@ -38,7 +36,6 @@ const VolunteerProfileForm = props => {
         )
 
         if (serviceLocation) {
-          console.log('serviceLocation:', serviceLocation)
           variables.serviceLocation = {
             address: serviceLocation.address,
             lat: serviceLocation.location.y,
@@ -47,7 +44,6 @@ const VolunteerProfileForm = props => {
         }
 
         try {
-          console.log('variables:', variables)
           await submit({ variables, refetchQueries: ['Me'] })
           /**
            * Check if toggleForm exists before executing. In the case that
@@ -96,8 +92,6 @@ const VolunteerProfileForm = props => {
     }
     return skills
   }
-
-  console.log(toggleForm)
 
   const profileForm = ({ error, loading, submit }) => (
     <Form onSubmit={e => handleSubmit(e, submit)}>

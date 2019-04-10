@@ -25,11 +25,6 @@ const CreateService = ({ form }) => {
     e.preventDefault()
 
     await validateFields(async (errors, values) => {
-      console.log('errors:', errors)
-      // console.log('values:', values)
-
-      console.log('toLocation before vars:', serviceDetails.toLocation)
-
       if (!errors) {
         const serviceInput = {
           serviceType: serviceType && serviceType.toUpperCase(),
@@ -70,7 +65,6 @@ const CreateService = ({ form }) => {
             break
         }
 
-        console.log(serviceInput)
         try {
           await submit({
             variables: { service: serviceInput },
@@ -86,15 +80,7 @@ const CreateService = ({ form }) => {
   }
 
   // TODO: Tie into browser routing
-  const goToNextStep = () => {
-    console.log('')
-    console.log('')
-    console.log('FORM VALUES:', form.getFieldsValue())
-    console.log('STATE [baseLocation]:', baseLocation)
-    console.log('STATE [serviceType]:', serviceType)
-    console.log('STATE [serviceDetails]:', serviceDetails)
-    setCurrentStep(currentStep + 1)
-  }
+  const goToNextStep = () => setCurrentStep(currentStep + 1)
 
   const goToPrevStep = () => setCurrentStep(currentStep - 1)
 

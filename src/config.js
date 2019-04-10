@@ -11,5 +11,3 @@ export const {
   REDIS_PORT = 6379,
   REDIS_PASSWORD = 'secret',
 } = process.env
-
-console.log(process.env.REDIS_HOST)

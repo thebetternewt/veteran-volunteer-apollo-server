@@ -55,7 +55,6 @@ const UserNeeds = () => {
               if (loading) return <Icon type="loading" size={64} />
 
               if (data && data.me) {
-                console.log(data)
                 const { me } = data
                 const { requestedNeeds } = me
 
@@ -123,7 +122,6 @@ const UserNeeds = () => {
               if (loading) return <Icon type="loading" size={64} />
 
               if (data && data.requests) {
-                console.log(data)
                 const { requests } = data
 
                 const needCards = requests.map(request => (

@@ -15,7 +15,6 @@ export default {
   },
   Mutation: {
     createRecipientProfile: async (parent, { location, ...args }, { req }) => {
-      console.log(location, args)
       const { userId } = req.session
       const profile = await RecipientProfile.findOne({ user: userId })
 
@@ -33,7 +32,6 @@ export default {
     },
 
     updateRecipientProfile: async (parent, { location, ...args }, { req }) => {
-      console.log(location, args)
       const { userId } = req.session
       const updatedAttributes = { ...args }
 

@@ -1,11 +1,13 @@
-import { Button, Checkbox, Form } from 'antd';
-import React, { Component } from 'react';
-import { Mutation } from 'react-apollo';
-import { CREATE_RECIPIENT_PROFILE, UPDATE_RECIPIENT_PROFILE } from '../../apollo/mutations';
-import graphQlErrors from '../../util/graphqlErrors';
-import { hasErrors } from '../common/forms/helpers';
-import PlaceSearchField from '../common/forms/PlaceSearchField';
-
+import { Button, Checkbox, Form } from 'antd'
+import React, { Component } from 'react'
+import { Mutation } from 'react-apollo'
+import {
+  CREATE_RECIPIENT_PROFILE,
+  UPDATE_RECIPIENT_PROFILE,
+} from '../../apollo/mutations'
+import graphQlErrors from '../../util/graphqlErrors'
+import { hasErrors } from '../common/forms/helpers'
+import PlaceSearchField from '../common/forms/PlaceSearchField'
 
 const CheckboxGroup = Checkbox.Group
 
@@ -86,8 +88,8 @@ class RecipientProfileForm extends Component {
     const { validateFields } = this.props.form
 
     await validateFields(async (errors, values) => {
-      console.log('errors:', errors)
       const { selectedLocation } = this.state
+
       if (!errors) {
         const variables = {
           allowPhoneContact: values.preferredContact.includes('Phone'),
@@ -122,8 +124,6 @@ class RecipientProfileForm extends Component {
   render() {
     const { profile, toggleForm, form } = this.props
     const { getFieldDecorator, getFieldsError } = form
-
-    console.log(toggleForm)
 
     const profileForm = ({ error, loading, submit }) => (
       <Form onSubmit={e => this.handleSubmit(e, submit)}>

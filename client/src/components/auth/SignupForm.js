@@ -1,10 +1,10 @@
-import { navigate } from '@reach/router';
-import { Button, Divider, Form, Icon, Input, InputNumber, Select } from 'antd';
-import React, { Component } from 'react';
-import { Mutation } from 'react-apollo';
-import { UsaStates } from 'usa-states';
-import { SIGNUP } from '../../apollo/mutations';
-import graphQlErrors from '../../util/graphqlErrors';
+import { navigate } from '@reach/router'
+import { Button, Divider, Form, Icon, Input, InputNumber, Select } from 'antd'
+import React, { Component } from 'react'
+import { Mutation } from 'react-apollo'
+import { UsaStates } from 'usa-states'
+import { SIGNUP } from '../../apollo/mutations'
+import graphQlErrors from '../../util/graphqlErrors'
 
 function hasErrors(fieldsError) {
   const errors = {
@@ -12,7 +12,7 @@ function hasErrors(fieldsError) {
     ...fieldsError.address,
     address: null,
   }
-  // console.log(errors)
+
   return Object.keys(errors).some(field => errors[field])
 }
 
@@ -45,8 +45,6 @@ class SignupForm extends Component {
     const { validateFields } = this.props.form
 
     validateFields(async (errors, values) => {
-      // console.log('errors:', errors)
-      // console.log('values:', values)
       if (!errors) {
         const flattenedValues = {
           ...values,
@@ -63,7 +61,6 @@ class SignupForm extends Component {
     })
   }
   render() {
-    // console.log(this.props)
     const {
       getFieldDecorator,
       getFieldsError,

@@ -18,21 +18,15 @@ export default {
   },
   Mutation: {
     createRequest: async (_, args, { req }) => {
-      console.log(args)
       const { userId } = req.session
 
       const newRequest = await Request.create({ ...args, recipient: userId })
-
-      console.log('newRequest:', newRequest)
 
       return newRequest
     },
     updateRequestStatus: async (_, { id, status }, { req }) => {
       const { userId } = req.session
       const request = await Request.findById(id).exec()
-
-      console.log('[USERID]:', userId)
-      console.log('[REQUEST]:', request)
 
       if (!request) {
         throw new Error('Request not found.')

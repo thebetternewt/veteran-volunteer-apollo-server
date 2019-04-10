@@ -26,89 +26,86 @@ const StyledVolunteerCard = styled(Card)`
   }
 `
 
-const VolunteerCard = ({ profile, createRequest, loading, error }) => {
-  console.log(profile)
-  return (
-    <StyledVolunteerCard
-      key={profile.id}
-      style={{
-        maxWidth: 400,
-        marginBottom: 20,
-      }}
-      actions={[
-        <Button type="primary" ghost>{`Message ${
-          profile.user.firstName
-        }`}</Button>,
-        <Button
-          type="primary"
-          loading={loading}
-          onClick={() => createRequest(profile.user.id)}
-        >{`Book ${profile.user.firstName}`}</Button>,
-      ]}
-    >
-      <Meta
-        avatar={
-          <Avatar
-            icon="avatar"
-            size={64}
-            src={profile.user.avatar || 'http://i.pravatar.cc/300'}
-          />
-        }
-        title={profile.user.fullName}
-        description={
-          <div style={{ marginBottom: '1rem' }}>
-            <div className="services-provided">
-              {profile.servicesProvided.map(service => (
-                <Tag key={service} color="geekblue">
-                  {service}
-                </Tag>
-              ))}
-            </div>
+const VolunteerCard = ({ profile, createRequest, loading, error }) => (
+  <StyledVolunteerCard
+    key={profile.id}
+    style={{
+      maxWidth: 400,
+      marginBottom: 20,
+    }}
+    actions={[
+      <Button type="primary" ghost>{`Message ${
+        profile.user.firstName
+      }`}</Button>,
+      <Button
+        type="primary"
+        loading={loading}
+        onClick={() => createRequest(profile.user.id)}
+      >{`Book ${profile.user.firstName}`}</Button>,
+    ]}
+  >
+    <Meta
+      avatar={
+        <Avatar
+          icon="avatar"
+          size={64}
+          src={profile.user.avatar || 'http://i.pravatar.cc/300'}
+        />
+      }
+      title={profile.user.fullName}
+      description={
+        <div style={{ marginBottom: '1rem' }}>
+          <div className="services-provided">
+            {profile.servicesProvided.map(service => (
+              <Tag key={service} color="geekblue">
+                {service}
+              </Tag>
+            ))}
           </div>
-        }
-      />
-      <div className="profile-details">
-        <p>{profile.bio || 'Lorem ipsum dolor sit amet'}</p>
-        <h4>Availability</h4>
-        <ul>
-          <li
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            {profile.availability.weekdays && (
-              <>
-                <Icon
-                  type="check-circle"
-                  theme="twoTone"
-                  twoToneColor="#52c41a"
-                />
-                <span> Weekdays </span>
-              </>
-            )}
-          </li>
-          <li>
-            {profile.availability.weekends && (
-              <>
-                <Icon
-                  type="check-circle"
-                  theme="twoTone"
-                  twoToneColor="#52c41a"
-                />
-                <span> Weekends </span>
-              </>
-            )}
-          </li>
-        </ul>
-      </div>
-      {/* <Link to={`/volunteer-search/${profile.id}`}>
+        </div>
+      }
+    />
+    <div className="profile-details">
+      <p>{profile.bio || 'Lorem ipsum dolor sit amet'}</p>
+      <h4>Availability</h4>
+      <ul>
+        <li
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          {profile.availability.weekdays && (
+            <>
+              <Icon
+                type="check-circle"
+                theme="twoTone"
+                twoToneColor="#52c41a"
+              />
+              <span> Weekdays </span>
+            </>
+          )}
+        </li>
+        <li>
+          {profile.availability.weekends && (
+            <>
+              <Icon
+                type="check-circle"
+                theme="twoTone"
+                twoToneColor="#52c41a"
+              />
+              <span> Weekends </span>
+            </>
+          )}
+        </li>
+      </ul>
+    </div>
+    {/* <Link to={`/volunteer-search/${profile.id}`}>
         <Button type="primary">
           {`Request to book ${profile.user.firstName}`}
         </Button>
       </Link> */}
-    </StyledVolunteerCard>
-  )
-}
+  </StyledVolunteerCard>
+)
 
 export default VolunteerCard

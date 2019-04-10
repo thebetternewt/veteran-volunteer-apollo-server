@@ -94,20 +94,7 @@ const main = async () => {
           'request.credentials': 'include',
         },
       },
-      context: async ({ req, res }) => {
-        console.log('request...')
-        return { req, res }
-        // // get the user token from the headers
-        // const authorization = req.headers.authorization || '';
-        // const bearerLength = 'Bearer '.length;
-        // const token = authorization.slice(bearerLength);
-
-        // // try to retrieve a user with the token
-        // const user = await getUser(token);
-
-        // // add the user to the context
-        // return { user };
-      },
+      context: async ({ req, res }) => ({ req, res }),
     })
 
     server.applyMiddleware({ app, cors: corsOptions })
