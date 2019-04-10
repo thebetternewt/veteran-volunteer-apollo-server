@@ -1,19 +1,31 @@
-import { ApolloServer, makeExecutableSchema } from 'apollo-server-express';
-import connectRedis from 'connect-redis';
-import express from 'express';
-import session from 'express-session';
-import { express as voyagerMiddleware } from 'graphql-voyager/middleware';
-import Redis from 'ioredis';
-import jwt from 'jsonwebtoken';
-import mongoose from 'mongoose';
-import { FRONTEND_URL, IN_PROD, PORT, REDIS_HOST, REDIS_PASSWORD, REDIS_PORT, SESS_LIFETIME, SESS_NAME, SESS_SECRET } from './config';
-import { User } from './models';
-import { resolvers, typeDefs } from './schema';
-import schemaDirectives from './schema/directives';
+import { ApolloServer, makeExecutableSchema } from 'apollo-server-express'
+import connectRedis from 'connect-redis'
+import express from 'express'
+import session from 'express-session'
+import { express as voyagerMiddleware } from 'graphql-voyager/middleware'
+import Redis from 'ioredis'
+import jwt from 'jsonwebtoken'
+import mongoose from 'mongoose'
+import {
+  FRONTEND_URL,
+  IN_PROD,
+  MONGO_URI,
+  PORT,
+  REDIS_HOST,
+  REDIS_PASSWORD,
+  REDIS_PORT,
+  REDIS_URL,
+  SESS_LIFETIME,
+  SESS_NAME,
+  SESS_SECRET,
+} from './config'
+import { User } from './models'
+import { resolvers, typeDefs } from './schema'
+import schemaDirectives from './schema/directives'
 
 const main = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI, {
+    await mongoose.connect(MONGO_URI, {
       useNewUrlParser: true,
     })
 
@@ -27,7 +39,7 @@ const main = async () => {
     }
 
     const storeParams = IN_PROD
-      ? { client: new Redis(process.env.REDIS_URL) }
+      ? { client: new Redis(REDIS_URL) }
       : {
           host: REDIS_HOST,
           port: REDIS_PORT,
@@ -36,7 +48,7 @@ const main = async () => {
 
     // Connect Redis
     const RedisStore = connectRedis(session)
-    const store = new RedisStore({client: })
+    const store = new RedisStore(storeParams)
 
     app.use(
       session({
@@ -132,4 +144,4 @@ const getUser = async token => {
 
 main()
 
-export { mongoose };
+export { mongoose }

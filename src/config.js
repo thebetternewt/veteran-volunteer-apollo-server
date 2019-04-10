@@ -11,4 +11,6 @@ export const {
   REDIS_PORT = 6379,
   REDIS_PASSWORD = 'secret',
   FRONTEND_URL = 'http://localhost:3000',
+  MONGO_URI,
+  REDIS_URL,
 } = process.env
