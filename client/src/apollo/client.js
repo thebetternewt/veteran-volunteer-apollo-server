@@ -11,8 +11,7 @@ const defaultState = {
 }
 
 export const client = new ApolloClient({
-  // uri: `${process.env.REACT_APP_SERVER_URL}/graphql`,
-  uri: `http://localhost:5000/graphql`,
+  uri: `${process.env.REACT_APP_SERVER_URL}/graphql`,
   credentials: 'include',
   fetch,
   clientState: {
