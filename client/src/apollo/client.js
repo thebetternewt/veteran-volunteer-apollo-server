@@ -18,7 +18,7 @@ const uri =
 console.log('uri:', uri)
 
 export const client = new ApolloClient({
-  uri,
+  uri: '/graphql',
   credentials: 'include',
   fetch,
   clientState: {

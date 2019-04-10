@@ -6,8 +6,8 @@ import { express as voyagerMiddleware } from 'graphql-voyager/middleware'
 import Redis from 'ioredis'
 import jwt from 'jsonwebtoken'
 import mongoose from 'mongoose'
+import path from 'path'
 import {
-  FRONTEND_URL,
   IN_PROD,
   MONGO_URI,
   PORT,
@@ -33,7 +33,7 @@ const main = async () => {
     app.disable('x-powered-by')
 
     const corsOptions = {
-      origin: FRONTEND_URL,
+      // origin: FRONTEND_URL,
       credentials: true,
       optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
     }
@@ -69,7 +69,7 @@ const main = async () => {
     app.set('trust proxy', 1)
 
     // Serve static files from the React app
-    app.use(express.static(path.join(__dirname, 'client/build')))
+    app.use(express.static(path.join(__dirname, '..', 'client/build')))
 
     // Initialize GraphQL Voyager
     app.use(
@@ -82,7 +82,7 @@ const main = async () => {
     // The "catchall" handler: for any request that doesn't
     // match one above, send back React's index.html file.
     app.get('*', (req, res) => {
-      res.sendFile(path.join(__dirname + '/client/build/index.html'))
+      res.sendFile(path.join(__dirname, '..', 'client/build/index.html'))
     })
 
     // TODO: Disable playground in production (uncomment code below and update in server constructor)
