@@ -11,11 +11,11 @@ import {
   IN_PROD,
   MONGO_URI,
   PORT,
-  PROD_DOMAIN,
   REDIS_HOST,
   REDIS_PASSWORD,
   REDIS_PORT,
   REDIS_URL,
+  SESS_DOMAIN,
   SESS_LIFETIME,
   SESS_NAME,
   SESS_SECRET,
@@ -62,7 +62,7 @@ const main = async () => {
           maxAge: SESS_LIFETIME,
           sameSite: true,
           secure: IN_PROD,
-          path: IN_PROD ? PROD_DOMAIN : '/',
+          domain: SESS_DOMAIN,
         },
       })
     )
