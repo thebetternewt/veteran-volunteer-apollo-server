@@ -35,15 +35,17 @@ const main = async () => {
       optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
     }
 
-    // app.use(cors(corsOptions))
+    const storeParams = IN_PROD
+      ? { client: process.env.REDIS_URL }
+      : {
+          host: REDIS_HOST,
+          port: REDIS_PORT,
+          pass: REDIS_PASSWORD,
+        }
 
     // Connect Redis
     const RedisStore = connectRedis(session)
-    const store = new RedisStore({
-      host: REDIS_HOST,
-      port: REDIS_PORT,
-      pass: REDIS_PASSWORD,
-    })
+    const store = new RedisStore(storeParams)
 
     app.use(
       session({

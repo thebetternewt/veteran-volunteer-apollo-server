@@ -10,8 +10,15 @@ const defaultState = {
   redirectPath: null,
 }
 
+const uri =
+  process.env.NODE_ENV === 'production'
+    ? `${process.env.REACT_APP_GRAPHQL_ENDPOINT}`
+    : `/graphql`
+
+console.log('uri:', uri)
+
 export const client = new ApolloClient({
-  uri: `${process.env.REACT_APP_SERVER_URL}/graphql`,
+  uri,
   credentials: 'include',
   fetch,
   clientState: {

@@ -2,6 +2,7 @@ import { Link } from '@reach/router';
 import { Avatar, Badge, Button, Icon, Layout } from 'antd';
 import React, { useState } from 'react';
 import { Query } from 'react-apollo';
+import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { ME_QUERY } from '../../../apollo/queries';
 import ScrollToTop from '../../common/ScrollToTop';
@@ -52,6 +53,7 @@ const Dashboard = ({ children = defaultContent }) => {
 
   return (
     <ScrollToTop>
+      <Helmet><title>MFVS | Serving Military Family Members</title></Helmet>
       <Layout style={{ minHeight: '100vh' }}>
         <Sidebar collapsed={sidebarCollapsed} />
         <Layout
