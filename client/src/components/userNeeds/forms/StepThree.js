@@ -1,17 +1,17 @@
-import { Button, Form } from 'antd'
-import React from 'react'
-import ChildcareDetailsForm from './ChildcareDetails'
-import TravelDetailsForm from './TravelDetails'
+import { Button, Form } from 'antd';
+import React from 'react';
+import ChildcareDetailsForm from './ChildcareDetails';
+import TravelDetailsForm from './TravelDetails';
 
-const ServiceDetailsForm = props => {
-  const { nextStep, form, serviceDetails, setServiceDetails } = props
+const NeedDetailsForm = props => {
+  const { nextStep, form, needDetails, setNeedDetails } = props
 
   const { validateFields, getFieldValue, setFieldsValue } = form
 
   const checkFieldsForErrors = fieldnames => {
     let errorExists = false
 
-    if (!serviceDetails.toLocation) {
+    if (!needDetails.toLocation) {
       setFieldsValue({ 'details.toLocation': null })
     }
 
@@ -23,23 +23,23 @@ const ServiceDetailsForm = props => {
     return errorExists
   }
 
-  let serviceDetailsFields = null
-  switch (getFieldValue('serviceType')) {
+  let needDetailsFields = null
+  switch (getFieldValue('needType')) {
     case 'Travel':
-      serviceDetailsFields = (
+      needDetailsFields = (
         <TravelDetailsForm
           form={form}
-          serviceDetails={serviceDetails}
-          setServiceDetails={setServiceDetails}
+          needDetails={needDetails}
+          setNeedDetails={setNeedDetails}
         />
       )
       break
     case 'Childcare':
-      serviceDetailsFields = (
+      needDetailsFields = (
         <ChildcareDetailsForm
           form={form}
-          serviceDetails={serviceDetails}
-          setServiceDetails={setServiceDetails}
+          needDetails={needDetails}
+          setNeedDetails={setNeedDetails}
         />
       )
       break
@@ -49,7 +49,7 @@ const ServiceDetailsForm = props => {
 
   return (
     <>
-      {serviceDetailsFields}
+      {needDetailsFields}
       <Form.Item>
         <Button
           type="primary"
@@ -65,4 +65,4 @@ const ServiceDetailsForm = props => {
   )
 }
 
-export default ServiceDetailsForm
+export default NeedDetailsForm

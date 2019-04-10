@@ -1,8 +1,8 @@
-import { Button } from 'antd'
-import React from 'react'
-import styled from 'styled-components'
+import { Button } from 'antd';
+import React from 'react';
+import styled from 'styled-components';
 
-const serviceTypes = [
+const needTypes = [
   {
     name: 'Travel',
     icon: 'car',
@@ -17,7 +17,7 @@ const serviceTypes = [
   },
 ]
 
-const ServiceTypeOptionsWrapper = styled.div`
+const NeedTypeOptionsWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
 
@@ -26,11 +26,11 @@ const ServiceTypeOptionsWrapper = styled.div`
   }
 `
 
-const StepOne = ({ form, setServiceType, selectedServiceType, nextStep }) => {
+const StepOne = ({ form, setNeedType, selectedNeedType, nextStep }) => {
   const { getFieldDecorator, setFieldsValue } = form
 
   const setButtonType = selection => {
-    if (!selectedServiceType || selection === selectedServiceType) {
+    if (!selectedNeedType || selection === selectedNeedType) {
       return 'primary'
     }
 
@@ -39,10 +39,10 @@ const StepOne = ({ form, setServiceType, selectedServiceType, nextStep }) => {
 
   return (
     <>
-      <h2>Select Service Type</h2>
-      {getFieldDecorator('serviceType', { preserve: true })(
-        <ServiceTypeOptionsWrapper>
-          {serviceTypes.map(type => (
+      <h2>Select Need Type</h2>
+      {getFieldDecorator('needType', { preserve: true })(
+        <NeedTypeOptionsWrapper>
+          {needTypes.map(type => (
             <Button
               key={type.name}
               type={setButtonType(type.name)}
@@ -50,15 +50,15 @@ const StepOne = ({ form, setServiceType, selectedServiceType, nextStep }) => {
               size="large"
               // ghost={setButtonType(type.name) === 'primary'}
               onClick={() => {
-                setFieldsValue({ serviceType: type.name })
-                setServiceType(type.name)
+                setFieldsValue({ needType: type.name })
+                setNeedType(type.name)
                 nextStep()
               }}
             >
               {type.name}
             </Button>
           ))}
-        </ServiceTypeOptionsWrapper>
+        </NeedTypeOptionsWrapper>
       )}
     </>
   )

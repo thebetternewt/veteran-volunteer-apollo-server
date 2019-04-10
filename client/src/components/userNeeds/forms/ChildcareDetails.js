@@ -1,11 +1,11 @@
-import { Checkbox, Form } from 'antd';
-import React, { useState } from 'react';
+import { Checkbox, Form } from 'antd'
+import React, { useState } from 'react'
 
 const CheckboxGroup = Checkbox.Group
 
 const ageOptions = ['INFANT', 'TODDLER', 'CHILD', 'TEENAGER']
 
-const ChildcareDetailsForm = ({ form, serviceDetails, setServiceDetails }) => {
+const ChildcareDetailsForm = ({ form, needDetails, setServiceDetails }) => {
   const [indeterminate, setIndeterminate] = useState(false)
   const [checkAll, setCheckAll] = useState(false)
 

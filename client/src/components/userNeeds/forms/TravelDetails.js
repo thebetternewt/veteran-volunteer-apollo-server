@@ -1,13 +1,13 @@
 import React from 'react';
 import PlaceSearchField from '../../common/forms/PlaceSearchField';
 
-const TravelForm = ({ form, serviceDetails, setServiceDetails }) => (
+const TravelForm = ({ form, needDetails, setNeedDetails }) => (
     <PlaceSearchField
       form={form}
       fieldname="details.toLocation"
       label="Where are you going?"
       setLocationState={location =>
-        setServiceDetails({ ...serviceDetails, toLocation: location })
+        setNeedDetails({ ...needDetails, toLocation: location })
       }
     />
   )

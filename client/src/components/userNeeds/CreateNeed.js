@@ -2,7 +2,7 @@ import { navigate } from '@reach/router'
 import { Button, Form } from 'antd'
 import React, { useState } from 'react'
 import { Mutation } from 'react-apollo'
-import { CREATE_REQUEST } from '../../apollo/mutations'
+import { CREATE_NEED } from '../../apollo/mutations'
 import graphQlErrors from '../../util/graphqlErrors'
 import PrivateRoute from '../common/PrivateRoute'
 import StepOne from './forms/StepOne'
@@ -10,14 +10,14 @@ import StepThree from './forms/StepThree'
 import StepTwo from './forms/StepTwo'
 import Summary from './forms/Summary'
 
-const CreateService = ({ form }) => {
+const CreateNeed = ({ form }) => {
   const [currentStep, setCurrentStep] = useState(0)
-  const [serviceType, setServiceType] = useState()
+  const [needType, setNeedType] = useState()
   const [baseLocation, setBaseLocation] = useState()
-  const [serviceDetails, setServiceDetails] = useState({})
+  const [needDetails, setNeedDetails] = useState({})
 
-  // TODO: Handle clearing state for fields associated with a specific service
-  // when service type changes
+  // TODO: Handle clearing state for fields associated with a specific need
+  // when need type changes
 
   const { validateFields, getFieldValue } = form
 
@@ -25,16 +25,19 @@ const CreateService = ({ form }) => {
     e.preventDefault()
 
     await validateFields(async (errors, values) => {
+      console.log('values:', values)
       if (!errors) {
-        const serviceInput = {
-          serviceType: serviceType && serviceType.toUpperCase(),
+        const needInput = {
+          needType: needType && needType.toUpperCase(),
           title: getFieldValue('title'),
           date: getFieldValue('date').format(),
           notes: getFieldValue('notes'),
         }
 
+        console.log(needInput)
+
         if (baseLocation) {
-          serviceInput.location = {
+          needInput.location = {
             address: baseLocation.address,
             lat: baseLocation.location.y,
             lng: baseLocation.location.x,
@@ -42,24 +45,24 @@ const CreateService = ({ form }) => {
         }
 
         // Transform Travel location variables
-        switch (serviceType) {
+        switch (needType) {
           case 'Travel':
-            serviceInput.travelServiceDetails = {
-              ...serviceDetails,
+            needInput.travelNeedDetails = {
+              ...needDetails,
               fromLocation: {
                 address: baseLocation.address,
                 lat: baseLocation.location.y,
                 lng: baseLocation.location.x,
               },
               toLocation: {
-                address: serviceDetails.toLocation.address,
-                lat: serviceDetails.toLocation.location.y,
-                lng: serviceDetails.toLocation.location.x,
+                address: needDetails.toLocation.address,
+                lat: needDetails.toLocation.location.y,
+                lng: needDetails.toLocation.location.x,
               },
             }
             break
           case 'Childcare':
-            serviceInput.childcareServiceDetails = form.getFieldValue('details')
+            needInput.childcareNeedDetails = form.getFieldValue('details')
             break
           default:
             break
@@ -67,7 +70,7 @@ const CreateService = ({ form }) => {
 
         try {
           await submit({
-            variables: { service: serviceInput },
+            variables: needInput,
             refetchQueries: ['Me'],
           })
           navigate('/dashboard')
@@ -86,18 +89,18 @@ const CreateService = ({ form }) => {
 
   const steps = [
     {
-      title: 'Select Service Type',
+      title: 'Select Need Type',
       component: (
         <StepOne
           form={form}
-          setServiceType={setServiceType}
-          selectedServiceType={serviceType}
+          setNeedType={setNeedType}
+          selectedNeedType={needType}
           nextStep={goToNextStep}
         />
       ),
     },
     {
-      title: 'Service Details',
+      title: 'Need Details',
       component: (
         <StepTwo
           form={form}
@@ -108,14 +111,14 @@ const CreateService = ({ form }) => {
       ),
     },
     {
-      title: 'Service Type Details',
+      title: 'Need Type Details',
       component: (
         <StepThree
           form={form}
           nextStep={goToNextStep}
-          serviceType={serviceType}
-          serviceDetails={serviceDetails}
-          setServiceDetails={setServiceDetails}
+          needType={needType}
+          needDetails={needDetails}
+          setNeedDetails={setNeedDetails}
         />
       ),
     },
@@ -127,8 +130,8 @@ const CreateService = ({ form }) => {
 
   return (
     <>
-      <h3>Request Service</h3>
-      <Mutation mutation={CREATE_REQUEST}>
+      <h3>Request Need</h3>
+      <Mutation mutation={CREATE_NEED}>
         {(createRequest, { loading, error }) => {
           return (
             <Form
@@ -154,7 +157,7 @@ const CreateService = ({ form }) => {
                     loading={loading}
                     style={{ marginRight: '2rem' }}
                   >
-                    Request Service
+                    Request Need
                   </Button>
                 )}
                 <Button
@@ -174,7 +177,5 @@ const CreateService = ({ form }) => {
 }
 
 export default () => (
-  <PrivateRoute
-    component={Form.create({ name: 'createService' })(CreateService)}
-  />
+  <PrivateRoute component={Form.create({ name: 'createNeed' })(CreateNeed)} />
 )

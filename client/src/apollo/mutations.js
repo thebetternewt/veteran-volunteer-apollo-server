@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost'
+import { gql } from 'apollo-boost';
 
 export const SIGNUP = gql`
   mutation SignUp(
@@ -181,24 +181,24 @@ export const UPDATE_VOLUNTEER_PROFILE = gql`
   }
 `
 
-export const CREATE_SERVICE = gql`
-  mutation createService(
+export const CREATE_NEED = gql`
+  mutation CreateNeed(
     $title: String!
     $date: String!
-    $serviceType: ServiceType!
+    $needType: NeedType!
     $notes: String
     $location: LocationInput!
-    $travelServiceDetails: TravelServiceInput
-    $childcareServiceDetails: ChildcareServiceInput
+    $travelNeedDetails: TravelNeedInput
+    $childcareNeedDetails: ChildcareNeedInput
   ) {
-    createService(
+    createNeed(
       title: $title
       date: $date
-      serviceType: $serviceType
+      needType: $needType
       notes: $notes
       location: $location
-      travelServiceDetails: $travelServiceDetails
-      childcareServiceDetails: $childcareServiceDetails
+      travelNeedDetails: $travelNeedDetails
+      childcareNeedDetails: $childcareNeedDetails
     ) {
       id
     }

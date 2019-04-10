@@ -1,9 +1,9 @@
-import { Button, DatePicker, Form, Input } from 'antd'
-import moment from 'moment'
-import React from 'react'
-import PlaceSearchField from '../../common/forms/PlaceSearchField'
+import { Button, DatePicker, Form, Input } from 'antd';
+import moment from 'moment';
+import React from 'react';
+import PlaceSearchField from '../../common/forms/PlaceSearchField';
 
-const BaseServiceForm = props => {
+const BaseNeedForm = props => {
   const { nextStep, form, baseLocation, setBaseLocation } = props
   const { getFieldDecorator, validateFields, setFieldsValue } = form
 
@@ -87,4 +87,4 @@ const BaseServiceForm = props => {
   )
 }
 
-export default BaseServiceForm
+export default BaseNeedForm
