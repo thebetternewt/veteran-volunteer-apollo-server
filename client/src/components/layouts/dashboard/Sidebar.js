@@ -1,17 +1,28 @@
-import { Link } from '@reach/router';
-import { Icon, Layout, Menu } from 'antd';
-import React from 'react';
-import { Query } from 'react-apollo';
-import styled from 'styled-components';
-import { ME_QUERY } from '../../../apollo/queries';
+import { Link } from '@reach/router'
+import { Icon, Layout, Menu } from 'antd'
+import React from 'react'
+import { Query } from 'react-apollo'
+import styled from 'styled-components'
+import { ME_QUERY } from '../../../apollo/queries'
 
 const { Sider } = Layout
 
-const logoStyles = {
-  height: 40,
-  background: `rgba(255,255,255,.2)`,
-  margin: 16,
-}
+const Logo = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  background-color: rgba(255, 255, 255, 0.2);
+  margin: 16px;
+
+  h1 {
+    color: #fff;
+    font-weight: bold;
+    font-size: 2rem;
+    text-align: center;
+    margin: 0;
+  }
+`
 
 const FixedSider = styled(Sider)`
   overflow: auto;
@@ -21,10 +32,11 @@ const FixedSider = styled(Sider)`
 `
 
 const Sidebar = ({ collapsed = false }) => {
-
   return (
     <FixedSider trigger={null} collapsedWidth="0" collapsed={collapsed}>
-      <div className="logo" style={logoStyles} />
+      <Logo>
+        <h1>MFVS</h1>
+      </Logo>
       <Query query={ME_QUERY}>
         {({ data }) => {
           let user
