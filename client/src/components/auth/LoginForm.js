@@ -1,10 +1,10 @@
-import { Link } from '@reach/router';
-import { Button, Form, Icon, Input } from 'antd';
-import React from 'react';
-import { Mutation, Query } from 'react-apollo';
-import { SIGN_IN } from '../../apollo/mutations';
-import { ME_QUERY } from '../../apollo/queries';
-import graphQlErrors from '../../util/graphqlErrors';
+import { Link } from '@reach/router'
+import { Button, Form, Icon, Input } from 'antd'
+import React from 'react'
+import { Mutation, Query } from 'react-apollo'
+import { SIGN_IN } from '../../apollo/mutations'
+import { ME_QUERY } from '../../apollo/queries'
+import graphQlErrors from '../../util/graphqlErrors'
 
 const NormalLoginForm = props => {
   const { form, navigate } = props
@@ -34,6 +34,7 @@ const NormalLoginForm = props => {
       <Query query={ME_QUERY}>
         {({ data }) => {
           if (data && data.me) {
+            console.log('me:', data.me)
             navigate('/dashboard')
           }
 
