@@ -7,7 +7,8 @@
     "start": "node -r esm .",
     "server": "nodemon -r esm",
     "client": "cd client; yarn start",
-    "dev": "concurrently \"yarn server\" \"yarn client\""
+    "dev": "concurrently \"yarn server\" \"yarn client\"",
+    "heroku-postbuild": "cd client && yarn && yarn run build"
   },
   "dependencies": {
     "apollo-server-express": "^2.3.1",

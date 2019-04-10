@@ -15,7 +15,6 @@ import {
   REDIS_PASSWORD,
   REDIS_PORT,
   REDIS_URL,
-  SESS_DOMAIN,
   SESS_LIFETIME,
   SESS_NAME,
   SESS_SECRET,
@@ -62,12 +61,15 @@ const main = async () => {
           maxAge: SESS_LIFETIME,
           sameSite: true,
           secure: IN_PROD,
-          domain: SESS_DOMAIN,
+          // domain: SESS_DOMAIN,
         },
       })
     )
 
     app.set('trust proxy', 1)
+
+    // Serve static files from the React app
+    app.use(express.static(path.join(__dirname, 'client/build')))
 
     // Initialize GraphQL Voyager
     app.use(
@@ -76,6 +78,12 @@ const main = async () => {
         endpointUrl: '/graphql',
       })
     )
+
+    // The "catchall" handler: for any request that doesn't
+    // match one above, send back React's index.html file.
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(__dirname + '/client/build/index.html'))
+    })
 
     // TODO: Disable playground in production (uncomment code below and update in server constructor)
     // const playground = IN_PROD

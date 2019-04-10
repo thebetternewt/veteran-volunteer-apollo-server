@@ -13,5 +13,5 @@ export const {
   FRONTEND_URL = 'http://localhost:3000',
   MONGO_URI,
   REDIS_URL,
-  SESS_DOMAIN = 'localhost',
+  // SESS_DOMAIN = 'localhost',
 } = process.env
