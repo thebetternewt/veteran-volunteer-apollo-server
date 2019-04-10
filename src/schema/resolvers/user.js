@@ -1,8 +1,7 @@
-import { AuthenticationError } from 'apollo-server-core'
-import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
-import { attemptSignIn, signOut } from '../../auth'
-import { Need, RecipientProfile, User, VolunteerProfile } from '../../models'
+import { AuthenticationError } from 'apollo-server-core';
+import jwt from 'jsonwebtoken';
+import { attemptSignIn, signOut } from '../../auth';
+import { Need, RecipientProfile, User, VolunteerProfile } from '../../models';
 
 export default {
   User: {
@@ -48,7 +47,8 @@ export default {
   },
 
   Mutation: {
-    signUp: async (parent, { email, password, ...args }) => {
+    signUp: async (parent, { email,  ...args }) => {
+      console.log('args:', args)
       // Check for user with given email address.
       const user = await User.findOne({ email }).exec()
       if (user) {
@@ -57,12 +57,12 @@ export default {
 
       // TODO: Sanitize args input
 
-      const hashedPass = await bcrypt.hash(password, 10)
+      // const hashedPass = await bcrypt.hash(password, 10)
 
       const newUser = new User({
         ...args,
         email: email,
-        password: hashedPass,
+        // password: hashedPass,
       })
 
       await newUser.save()
