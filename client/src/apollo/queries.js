@@ -180,10 +180,16 @@ export const REQUESTS_QUERY = gql`
         needType
         date
         notes
-        recipient {
-          id
-          fullName
-        }
+      }
+      recipient {
+        id
+        fullName
+        avatar
+      }
+      volunteer {
+        id
+        fullName
+        avatar
       }
     }
   }

@@ -140,9 +140,8 @@ const UserNeeds = () => {
                         refetchQueries={['Requests']}
                       >
                         {(accept, { data, loading, error }) => {
-                          {
-                            /* TODO: Handle data, loading, and errors */
-                          }
+                          // TODO: Handle data, loading, and errors */
+
                           return (
                             <Button
                               type="primary"
@@ -167,7 +166,13 @@ const UserNeeds = () => {
                     />
                     <Meta
                       avatar={
-                        <Avatar size={64} src="http://i.pravatar.cc/300" />
+                        <Avatar
+                          size={64}
+                          src={
+                            request.recipient.avatar ||
+                            'http://i.pravatar.cc/300'
+                          }
+                        />
                       }
                       title={request.need.title}
                       description={

@@ -1,25 +1,23 @@
 import { ApolloServer, makeExecutableSchema } from 'apollo-server-express'
 import connectRedis from 'connect-redis'
-import dotenv from 'dotenv'
 import express from 'express'
 import session from 'express-session'
 import { express as voyagerMiddleware } from 'graphql-voyager/middleware'
 import jwt from 'jsonwebtoken'
 import mongoose from 'mongoose'
+import {
+  IN_PROD,
+  PORT,
+  REDIS_HOST,
+  REDIS_PASSWORD,
+  REDIS_PORT,
+  SESS_LIFETIME,
+  SESS_NAME,
+  SESS_SECRET,
+} from './config'
 import { User } from './models'
 import { resolvers, typeDefs } from './schema'
 import schemaDirectives from './schema/directives'
-
-dotenv.config()
-
-const PORT = process.env.PORT || 4000
-const IN_PROD = process.env.NODE_ENV === 'production'
-const SESS_NAME = 'sid'
-const SESS_SECRET = 'ssh!secret!'
-const SESS_LIFETIME = 1000 * 60 * 60 * 2 // 2 hours
-const REDIS_HOST = 'localhost'
-const REDIS_PORT = 6379
-const REDIS_PASSWORD = 'secret'
 
 const main = async () => {
   try {
@@ -43,7 +41,7 @@ const main = async () => {
     const store = new RedisStore({
       host: REDIS_HOST,
       port: REDIS_PORT,
-      // pass: REDIS_PASSWORD
+      pass: REDIS_PASSWORD,
     })
 
     app.use(

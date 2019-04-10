@@ -1,5 +1,8 @@
+import dotenv from 'dotenv'
+dotenv.config()
+
 export const {
-  PORT = process.env.PORT || 4000,
+  PORT = 4000,
   IN_PROD = process.env.NODE_ENV === 'production',
   SESS_NAME = 'sid',
   SESS_SECRET = 'ssh!secret!',
@@ -8,3 +11,5 @@ export const {
   REDIS_PORT = 6379,
   REDIS_PASSWORD = 'secret',
 } = process.env
+
+console.log(process.env.REDIS_HOST)
