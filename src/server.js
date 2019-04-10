@@ -61,7 +61,7 @@ const main = async () => {
           maxAge: SESS_LIFETIME,
           sameSite: true,
           secure: IN_PROD,
-          // path: IN_PROD ? PROD_DOMAIN : '/',
+          path: IN_PROD ? PROD_DOMAIN : '/',
         },
       })
     )
