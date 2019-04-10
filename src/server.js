@@ -11,7 +11,6 @@ import {
   IN_PROD,
   MONGO_URI,
   PORT,
-  PROD_DOMAIN,
   REDIS_HOST,
   REDIS_PASSWORD,
   REDIS_PORT,
@@ -62,10 +61,12 @@ const main = async () => {
           maxAge: SESS_LIFETIME,
           sameSite: true,
           secure: IN_PROD,
-          path: IN_PROD ? PROD_DOMAIN : '/',
+          // path: IN_PROD ? PROD_DOMAIN : '/',
         },
       })
     )
+
+    app.set('trust proxy', 1)
 
     // Initialize GraphQL Voyager
     app.use(
