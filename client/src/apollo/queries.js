@@ -170,8 +170,8 @@ export const VOLUNTEER_PROFILES_FOR_NEED_QUERY = gql`
 `
 
 export const REQUESTS_QUERY = gql`
-  query Requests($userId: ID) {
-    requests(userId: $userId) {
+  query Requests($userId: ID, $status: RequestStatus) {
+    requests(userId: $userId, status: $status) {
       id
       status
       need {

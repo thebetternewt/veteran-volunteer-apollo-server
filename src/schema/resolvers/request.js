@@ -7,12 +7,19 @@ export default {
     volunteer: parent => User.findById(parent.volunteer),
   },
   Query: {
-    requests: (parent, args, { req }) => {
+    requests: (parent, { status }, { req }) => {
       const { userId } = req.session
       // TODO: Allow admin users to view requests for any user
       // TODO: Allow volunteers to request to serve recipients
       //? TODO: Query requests for recipients
-      return Request.find({ volunteer: userId })
+
+      const searchParams = { volunteer: userId }
+
+      if (status) {
+        searchParams.status = status
+      }
+
+      return Request.find(searchParams)
     },
     request: (_, { id }) => Request.findById(id),
   },

@@ -114,17 +114,35 @@ const UserNeeds = () => {
       <Divider />
       <div>
         <NeedSectionHeader>
-          <h2>Requests</h2>
+          <h2>Pending Requests</h2>
         </NeedSectionHeader>
         <Row type="flex">
-          <Query query={REQUESTS_QUERY}>
+          <Query
+            query={REQUESTS_QUERY}
+            variables={{ status: 'PENDING' }}
+            fetchPolicy="network-only"
+          >
             {({ data, loading }) => {
               if (loading) return <Icon type="loading" size={64} />
 
               if (data && data.requests) {
                 const { requests } = data
 
-                const needCards = requests.map(request => (
+                const pendingRequests = requests.filter(
+                  req => req.status === 'PENDING'
+                )
+
+                if (pendingRequests.length === 0) {
+                  return (
+                    <Alert
+                      message="No pending requests."
+                      type="info"
+                      style={{ marginBottom: '1.1rem' }}
+                    />
+                  )
+                }
+
+                const needCards = pendingRequests.map(request => (
                   <NeedCard
                     key={request.id}
                     style={{ maxWidth: 400, marginBottom: 20 }}
@@ -141,14 +159,8 @@ const UserNeeds = () => {
                           // TODO: Handle data, loading, and errors */
 
                           return (
-                            <Button
-                              type="primary"
-                              onClick={accept}
-                              disabled={request.status === 'ACCEPTED'}
-                            >
-                              {request.status === 'ACCEPTED'
-                                ? 'Accepted'
-                                : 'Accept'}
+                            <Button type="primary" onClick={accept}>
+                              Accept
                             </Button>
                           )
                         }}
@@ -202,30 +214,82 @@ const UserNeeds = () => {
       <Divider />
       <div>
         <NeedSectionHeader>
-          <h2>Volunteered</h2>
+          <h2>Volunteered Requests</h2>
           <Button type="primary" icon="search">
             Browse Requested Needs
           </Button>
         </NeedSectionHeader>
         <Row type="flex">
-          <NeedCard
-            style={{ maxWidth: 400, marginBottom: 20 }}
-            actions={[<Icon type="info-circle" />, <Icon type="message" />]}
+          <Query
+            query={REQUESTS_QUERY}
+            variables={{ status: 'ACCEPTED' }}
+            fetchPolicy="network-only"
           >
-            <Meta
-              avatar={<Avatar size={64} src="http://i.pravatar.cc/300" />}
-              title="Leaky faucet"
-              description={
-                <div style={{ marginBottom: '1rem' }}>
-                  <div>Type: Home Repair</div>
-                  <div>When: Thursday, March 1st</div>
-                </div>
+            {({ data, loading }) => {
+              if (loading) return <Icon type="loading" size={64} />
+
+              if (data && data.requests) {
+                const { requests } = data
+
+                if (requests.length === 0) {
+                  return (
+                    <Alert
+                      message="No accepted requests."
+                      type="info"
+                      style={{ marginBottom: '1.1rem' }}
+                    />
+                  )
+                }
+
+                const needCards = requests.map(request => (
+                  <NeedCard
+                    key={request.id}
+                    style={{ maxWidth: 400, marginBottom: 20 }}
+                    actions={[
+                      <Button type="primary" ghost>
+                        Details
+                      </Button>,
+
+                      <Button type="primary" disabled={true}>
+                        Accepted
+                      </Button>,
+                    ]}
+                  >
+                    <Meta
+                      avatar={
+                        <Avatar
+                          size={64}
+                          src={
+                            request.recipient.avatar ||
+                            'http://i.pravatar.cc/300'
+                          }
+                        />
+                      }
+                      title={request.need.title}
+                      description={
+                        <div style={{ marginBottom: '1rem' }}>
+                          <div>
+                            Type:{' '}
+                            <Tag color="purple">{request.need.needType}</Tag>
+                          </div>
+                          <div>
+                            When: {moment(request.need.date, 'x').format('LLL')}
+                          </div>
+                        </div>
+                      }
+                    />
+                    <div>
+                      <p>{request.need.notes}</p>
+                    </div>
+                  </NeedCard>
+                ))
+
+                return needCards
               }
-            />
-            <div>
-              <p>Lorem ipsum dolor sit amet.</p>
-            </div>
-          </NeedCard>
+
+              return null
+            }}
+          </Query>
         </Row>
       </div>
     </>

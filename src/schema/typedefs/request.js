@@ -25,7 +25,7 @@ export default gql`
 
   extend type Query {
     request(id: ID!): Request
-    requests(userId: ID): [Request!]! # TODO: split into two queries for volunteers/recipients?
+    requests(userId: ID, status: RequestStatus): [Request!]! # TODO: split into two queries for volunteers/recipients?
   }
 
   extend type Mutation {
