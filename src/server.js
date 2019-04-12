@@ -22,6 +22,8 @@ import {
 import { User } from './models'
 import { resolvers, typeDefs } from './schema'
 import schemaDirectives from './schema/directives'
+import except from './middleware/except'
+import { onErrorResumeNext } from 'rxjs'
 
 const main = async () => {
   try {
@@ -80,10 +82,17 @@ const main = async () => {
     )
 
     // The "catchall" handler: for any request that doesn't
-    // match one above, send back React's index.html file.
-    app.get('*', (req, res) => {
-      res.sendFile(path.join(__dirname, '..', 'client/build/index.html'))
-    })
+    // match one above (or `/graphql`), send back React's index.html file.
+    app.use(
+      except(['/graphql'], (req, res, next) => {
+        if (req.method === 'GET') {
+          res.sendFile(path.join(__dirname, '..', 'client/build/index.html'))
+          return
+        }
+
+        next()
+      })
+    )
 
     // TODO: Disable playground in production (uncomment code below and update in server constructor)
     // const playground = IN_PROD
