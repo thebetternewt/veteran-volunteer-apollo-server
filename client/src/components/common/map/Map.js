@@ -22,6 +22,7 @@ const MapOverlay = styled.div`
   align-items: center;
   justify-content: center;
   color: #fff;
+  pointer-events: none;
 
   ${({ loading }) =>
     loading &&
@@ -38,7 +39,7 @@ const Map = ({ location }) => {
       <ArcGisMap
         viewProperties={{
           center: [location.lng, location.lat],
-          zoom: 14,
+          zoom: 11,
         }}
         onLoad={() => setLoading(false)}
       >

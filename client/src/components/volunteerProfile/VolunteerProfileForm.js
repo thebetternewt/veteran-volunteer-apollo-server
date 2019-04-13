@@ -1,5 +1,13 @@
-import { Button, Checkbox, Form, Input, InputNumber } from 'antd'
-import React, { useState } from 'react'
+import {
+  Button,
+  Checkbox,
+  Form,
+  Input,
+  InputNumber,
+  Radio,
+  TimePicker,
+} from 'antd'
+import React, { useState, useEffect } from 'react'
 import { Mutation } from 'react-apollo'
 import {
   CREATE_VOLUNTEER_PROFILE,
@@ -8,31 +16,49 @@ import {
 import { availabilityOptions, needTypes } from '../../constants'
 import graphQlErrors from '../../util/graphqlErrors'
 import PlaceSearchField from '../common/forms/PlaceSearchField'
+import styled from 'styled-components'
 
+const { TextArea } = Input
 const CheckboxGroup = Checkbox.Group
+const RadioButton = Radio.Button
+const RadioGroup = Radio.Group
+
+const StyledForm = styled(Form)`
+  label {
+    font-weight: 600;
+  }
+`
 
 function hasErrors(fieldsErrors) {
   return Object.keys(fieldsErrors).some(field => fieldsErrors[field])
 }
 
 const VolunteerProfileForm = props => {
-  const [serviceLocation, setServiceLocation] = useState()
-
   const { profile, form, toggleForm } = props
+  const { validateFields, getFieldValue } = form
+
+  const [serviceLocation, setServiceLocation] = useState()
+  const [selectedServiceOption, setSelectedServiceOption] = useState()
+
+  useEffect(() => {
+    return setSelectedServiceOption(getFieldValue('servicesProvided')[0])
+  }, [])
+
+  console.log('Profile:', profile)
 
   const handleSubmit = async (e, submit) => {
     e.preventDefault()
-    const { validateFields } = form
 
     await validateFields(async (errors, values) => {
       if (!errors) {
         const variables = values
         variables.availability = {
-          weekdays: values.availability.includes('Weekdays'),
-          weekends: values.availability.includes('Weekends'),
+          weekdays: values.availability.includes('WEEKDAYS'),
+          weekends: values.availability.includes('WEEKENDS'),
+          details: values.availabilityDetails,
         }
         variables.servicesProvided = values.servicesProvided.map(need =>
-          need.toUpperCase()
+          need.replace(' ', '_').toUpperCase()
         )
 
         if (serviceLocation) {
@@ -68,10 +94,10 @@ const VolunteerProfileForm = props => {
     let availability = []
     if (profile) {
       if (profile.availability.weekdays) {
-        availability.push('Weekdays')
+        availability.push('WEEKDAYS')
       }
       if (profile.availability.weekends) {
-        availability.push('Weekends')
+        availability.push('WEEKENDS')
       }
     }
     return availability
@@ -79,8 +105,8 @@ const VolunteerProfileForm = props => {
 
   const initServicesProvided = () => {
     return needTypes
-      .filter(type => profile && profile.servicesProvided.includes(type.option))
-      .map(type => type.name)
+      .filter(type => profile && profile.servicesProvided.includes(type.value))
+      .map(type => type.value)
   }
 
   const initServiceRadius = () => (profile ? profile.serviceRadius : 15)
@@ -93,8 +119,106 @@ const VolunteerProfileForm = props => {
     return skills
   }
 
+  const showSelectedServiceOptionFields = selectedService => {
+    console.log('selectedService', selectedService)
+    switch (selectedService) {
+      case 'TRAVEL':
+        return (
+          <Form.Item>
+            <div>
+              <strong>Can you provide a vehicle for transportation?</strong>{' '}
+              <Checkbox style={{ marginLeft: 5 }}>Yes</Checkbox>
+            </div>
+            <div style={{ display: 'flex' }}>
+              <strong>How many passengers can you carry?</strong>
+              <Input type="number" style={{ margin: '0 5px', width: 80 }} />
+            </div>
+          </Form.Item>
+        )
+      case 'CHILDCARE':
+        return (
+          <Form.Item>
+            <p style={{ margin: 0 }}>
+              I am comfortable with the following age groups:
+            </p>
+            <CheckboxGroup
+              options={['INFANT', 'TODDLER', 'CHILD', 'TEENAGER']}
+              style={{ marginBottom: 20 }}
+            />
+            <div style={{ display: 'flex' }}>
+              <div style={{ flexShrink: 0 }}>I am comfortable sitting</div>
+              <Input style={{ margin: '0 5px', width: 50 }} />
+              <div style={{ flexShrink: 0 }}>children at a time.</div>
+            </div>
+            <Checkbox>I can prep and serve a meal.</Checkbox>
+          </Form.Item>
+        )
+
+      case 'LAWNCARE':
+        return (
+          <Form.Item>
+            <Checkbox>I have my own equipment.</Checkbox>
+            <p style={{ margin: 0 }}>
+              I can provide the following types of lawncare:
+            </p>
+            <CheckboxGroup
+              options={[
+                'Mow lawn',
+                'Trim shrubs',
+                'Plant/weed garden',
+                'Clean gutters',
+                'Other',
+              ]}
+              style={{ marginBottom: 20 }}
+            />
+            <p style={{ margin: 0 }}>If "Other", please describe:</p>
+            <TextArea autosize />
+          </Form.Item>
+        )
+
+      case 'HOME_MAINTENANCE':
+        return (
+          <Form.Item>
+            <Checkbox>I have my own equipment.</Checkbox>
+            <p style={{ margin: 0 }}>
+              I can provide the following types of maintenance:
+            </p>
+            <CheckboxGroup
+              options={[
+                'Electrical',
+                'Plumbing',
+                'Woodwork/construction',
+                'Small jobs',
+                'Cleaning',
+                'Other',
+              ]}
+              style={{ marginBottom: 20 }}
+            />
+            <p style={{ margin: 0 }}>If "Other", please describe:</p>
+            <TextArea autosize />
+          </Form.Item>
+        )
+
+      case 'OTHER':
+        return (
+          <Form.Item>
+            <p style={{ margin: 0 }}>
+              Please describe the service you can provide:
+            </p>
+            <TextArea autosize />
+          </Form.Item>
+        )
+
+      default:
+        return null
+    }
+  }
+
   const profileForm = ({ error, loading, submit }) => (
-    <Form onSubmit={e => handleSubmit(e, submit)}>
+    <StyledForm
+      onSubmit={e => handleSubmit(e, submit)}
+      style={{ maxWidth: 500 }}
+    >
       <Form.Item>{error && graphQlErrors(error)}</Form.Item>
 
       <Form.Item label="Bio">
@@ -109,12 +233,11 @@ const VolunteerProfileForm = props => {
                 'Please enter a short description of yourself between 100 and 500 characters.',
             },
           ],
-        })(<Input.TextArea autosize />)}
+        })(<TextArea autosize />)}
       </Form.Item>
 
       <Form.Item label="Availability">
         <hr />
-
         {getFieldDecorator('availability', {
           initialValue: initAvailability(),
           rules: [
@@ -124,8 +247,19 @@ const VolunteerProfileForm = props => {
             },
           ],
         })(
-          <CheckboxGroup options={availabilityOptions.map(opt => opt.name)} />
+          <CheckboxGroup
+            options={availabilityOptions.map(opt => ({
+              label: opt.label,
+              value: opt.value,
+            }))}
+          />
         )}
+        <div>
+          From:
+          <TimePicker use12Hours format="h:mm A" style={{ margin: '0 5px' }} />
+          To:
+          <TimePicker use12Hours format="h:mm A" style={{ margin: '0 5px' }} />
+        </div>
       </Form.Item>
       <Form.Item label="Details">
         {getFieldDecorator('availabilityDetails', {
@@ -133,7 +267,7 @@ const VolunteerProfileForm = props => {
         })(<Input />)}
       </Form.Item>
 
-      <Form.Item label="What types of needs can you provide?">
+      <Form.Item label="What types of services can you provide?">
         <hr />
 
         {getFieldDecorator('servicesProvided', {
@@ -144,15 +278,39 @@ const VolunteerProfileForm = props => {
               message: 'Please choose at least one need type.',
             },
           ],
-        })(<CheckboxGroup options={needTypes.map(opt => opt.name)} />)}
+        })(
+          <CheckboxGroup
+            options={needTypes.map(opt => ({
+              label: opt.label,
+              value: opt.value,
+            }))}
+          />
+        )}
       </Form.Item>
-      <Form.Item label="Skills">
+
+      {/* Need Type Fields  */}
+      <Form.Item label="Details">
+        <RadioGroup
+          onChange={e => setSelectedServiceOption(e.target.value)}
+          defaultValue={getFieldValue('servicesProvided')[0]}
+        >
+          {getFieldValue('servicesProvided').map(opt => (
+            <RadioButton key={opt} value={opt}>
+              {opt}
+            </RadioButton>
+          ))}
+        </RadioGroup>
+      </Form.Item>
+
+      {showSelectedServiceOptionFields(selectedServiceOption)}
+
+      {/* <Form.Item label="Skills">
         <p>
           In regard to these needs, what types of skills do you posess? (Enter
           values separated by commas, e.g. "Plumbing, Electrical".
         </p>
         {getFieldDecorator('skills', { initialValue: initSkills() })(<Input />)}
-      </Form.Item>
+      </Form.Item> */}
 
       {
         <PlaceSearchField
@@ -186,7 +344,7 @@ const VolunteerProfileForm = props => {
           </Button>
         )}
       </Form.Item>
-    </Form>
+    </StyledForm>
   )
 
   return (
