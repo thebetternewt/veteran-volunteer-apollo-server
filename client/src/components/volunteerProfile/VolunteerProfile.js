@@ -21,7 +21,17 @@ const Identity = styled.div`
 `
 
 const ServiceTagList = styled.ul`
+  list-style: none;
+  display: flex;
   padding: 0;
+
+  li {
+    margin-right: 1rem;
+
+    div {
+      margin: 0;
+    }
+  }
 `
 
 const ContactSettings = styled.ul`
@@ -72,9 +82,9 @@ const VolunteerProfile = props => {
           <p>Services Provided</p>
           <ServiceTagList>
             {profile.servicesProvided.map(service => (
-              <Tag key={service} color="geekblue">
-                {service}
-              </Tag>
+              <li key={service}>
+                <Tag color="geekblue">{service.replace('_', ' ')}</Tag>
+              </li>
             ))}
           </ServiceTagList>
         </div>

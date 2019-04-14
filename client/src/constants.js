@@ -1,28 +1,38 @@
 export const needTypes = [
   {
-    option: 'TRAVEL',
-    name: 'Travel',
+    value: 'TRAVEL',
+    label: 'Travel',
     icon: 'car',
   },
   {
-    option: 'CHILDCARE',
-    name: 'Childcare',
+    value: 'CHILDCARE',
+    label: 'Childcare',
     icon: 'smile',
   },
   {
-    option: 'LAWNCARE',
-    name: 'Lawncare',
+    value: 'LAWNCARE',
+    label: 'Lawncare',
     icon: 'home',
+  },
+  {
+    value: 'HOME_MAINTENANCE',
+    label: 'Home Maintenance',
+    icon: 'schedule',
+  },
+  {
+    value: 'OTHER',
+    label: 'Other',
+    icon: 'question-circle',
   },
 ]
 
 export const availabilityOptions = [
   {
-    option: 'WEEKDAYS',
-    name: 'Weekdays',
+    value: 'WEEKDAYS',
+    label: 'Weekdays',
   },
   {
-    option: 'WEEKENDS',
-    name: 'Weekends',
+    value: 'WEEKENDS',
+    label: 'Weekends',
   },
 ]

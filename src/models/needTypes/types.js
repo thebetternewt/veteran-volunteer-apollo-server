@@ -1,1 +1,1 @@
-export default ['TRAVEL', 'LAWNCARE', 'CHILDCARE', 'HOME_MAINTENANCE'];
+export default ['TRAVEL', 'LAWNCARE', 'CHILDCARE', 'HOME_MAINTENANCE', 'OTHER']

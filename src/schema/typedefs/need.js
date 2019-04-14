@@ -4,10 +4,11 @@ export default gql`
   union NeedDetails = TravelNeed | LawncareNeed | ChildcareNeed
 
   enum NeedType {
-    # TRAVEL
+    TRAVEL
     LAWNCARE
     CHILDCARE
-    # HOME_MAINTENANCE
+    HOME_MAINTENANCE
+    OTHER
   }
 
   type Need {
