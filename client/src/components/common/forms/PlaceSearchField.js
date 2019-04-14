@@ -1,7 +1,7 @@
-import { AutoComplete, Button, Form, Icon } from 'antd';
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import { AutoComplete, Button, Form, Icon } from 'antd'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+import styled from 'styled-components'
 
 const ARCGIS_SUGGEST_BASE_URL =
   'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest'
@@ -35,7 +35,6 @@ const PlaceSearchField = ({
    * Update selectedLocation state from form field value on component mount
    */
   useEffect(() => {
-
     const magicKey = getFieldValue(fieldname)
     if (magicKey && !selectedLocation) {
       const location = handleLocationSearchSelect(magicKey)

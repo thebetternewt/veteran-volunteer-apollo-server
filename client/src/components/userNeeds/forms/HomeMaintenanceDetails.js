@@ -1,12 +1,16 @@
-import { Checkbox, Form, Input } from 'antd'
+import { Checkbox, Form, Input, Select } from 'antd'
 import React, { useState } from 'react'
 
-const CheckboxGroup = Checkbox.Group
+const Option = Select.Option
 const { TextArea } = Input
 
 const ageOptions = ['INFANT', 'TODDLER', 'CHILD', 'TEENAGER']
 
-const ChildcareDetailsForm = ({ form, needDetails, setServiceDetails }) => {
+const HomeMaintenanceDetailsForm = ({
+  form,
+  needDetails,
+  setServiceDetails,
+}) => {
   const [indeterminate, setIndeterminate] = useState(false)
   const [checkAll, setCheckAll] = useState(false)
 
@@ -43,21 +47,24 @@ const ChildcareDetailsForm = ({ form, needDetails, setServiceDetails }) => {
 
         <hr />
 
-        {getFieldDecorator('details.age', {
+        {getFieldDecorator('details.maintenanceType', {
           preserve: true,
+          initialValue: 'electrical',
           rules: [
             {
-              validator: (rule, value, cb) =>
-                value.length > 0 ? cb() : cb(true),
-              type: 'array',
-              message: 'Please choose at least one age.',
+              message: 'Please choose at least one maintenance type.',
             },
           ],
         })(
-          <CheckboxGroup
-            options={ageOptions}
-            onChange={handleChecklistChange}
-          />
+          <Select
+            style={{ width: 120 }}
+            // onChange={handleChange}
+          >
+            <Option value="electrical">Electrical</Option>
+            <Option value="plumbing">Plumbing</Option>
+            <Option value="lightbulb">Lightbulb</Option>
+            <Option value="other">Other</Option>
+          </Select>
         )}
       </Form.Item>
 
@@ -69,7 +76,7 @@ const ChildcareDetailsForm = ({ form, needDetails, setServiceDetails }) => {
               required: true,
               type: 'string',
               message:
-                'Please give a short description about your childcare need.',
+                'Please give a short description about your home maintenance need.',
             },
           ],
         })(<TextArea autosize />)}
@@ -78,4 +85,4 @@ const ChildcareDetailsForm = ({ form, needDetails, setServiceDetails }) => {
   )
 }
 
-export default ChildcareDetailsForm
+export default HomeMaintenanceDetailsForm

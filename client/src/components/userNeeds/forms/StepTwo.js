@@ -1,9 +1,11 @@
-import { Button, DatePicker, Form, Input } from 'antd';
-import moment from 'moment';
-import React from 'react';
-import PlaceSearchField from '../../common/forms/PlaceSearchField';
+import { Button, DatePicker, Form, Input, Checkbox } from 'antd'
+import moment from 'moment'
+import React from 'react'
+import PlaceSearchField from '../../common/forms/PlaceSearchField'
+import { useState } from 'react'
 
 const BaseNeedForm = props => {
+  const [atHome, setAtHome] = useState(false)
   const { nextStep, form, baseLocation, setBaseLocation } = props
   const { getFieldDecorator, validateFields, setFieldsValue } = form
 
@@ -64,12 +66,22 @@ const BaseNeedForm = props => {
         )}
       </Form.Item>
 
-      <PlaceSearchField
-        form={form}
-        fieldname="baseLocation"
-        label="Where are you located?"
-        setLocationState={location => setBaseLocation(location)}
-      />
+      <Form.Item>
+        <p style={{ margin: '1rem 0 0' }}>
+          <Checkbox checked={atHome} onChange={() => setAtHome(!atHome)} /> This
+          need is at my home address.
+        </p>
+
+        {!atHome && (
+          <PlaceSearchField
+            form={form}
+            fieldname="baseLocation"
+            label="Where are you located?"
+            setLocationState={location => setBaseLocation(location)}
+            atHome={atHome}
+          />
+        )}
+      </Form.Item>
 
       <Form.Item>
         <Button

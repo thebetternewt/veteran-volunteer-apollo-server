@@ -1,7 +1,8 @@
-import { Button, Form } from 'antd';
-import React from 'react';
-import ChildcareDetailsForm from './ChildcareDetails';
-import TravelDetailsForm from './TravelDetails';
+import { Button, Form } from 'antd'
+import React from 'react'
+import ChildcareDetailsForm from './ChildcareDetails'
+import TravelDetailsForm from './TravelDetails'
+import HomeMaintenanceDetailsForm from './HomeMaintenanceDetails'
 
 const NeedDetailsForm = props => {
   const { nextStep, form, needDetails, setNeedDetails } = props
@@ -37,6 +38,15 @@ const NeedDetailsForm = props => {
     case 'Childcare':
       needDetailsFields = (
         <ChildcareDetailsForm
+          form={form}
+          needDetails={needDetails}
+          setNeedDetails={setNeedDetails}
+        />
+      )
+      break
+    case 'HomeMaintenance':
+      needDetailsFields = (
+        <HomeMaintenanceDetailsForm
           form={form}
           needDetails={needDetails}
           setNeedDetails={setNeedDetails}

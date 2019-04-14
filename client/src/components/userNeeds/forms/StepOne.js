@@ -1,6 +1,6 @@
-import { Button } from 'antd';
-import React from 'react';
-import styled from 'styled-components';
+import { Button } from 'antd'
+import React from 'react'
+import styled from 'styled-components'
 
 const needTypes = [
   {
@@ -14,6 +14,14 @@ const needTypes = [
   {
     name: 'Lawncare',
     icon: 'home',
+  },
+  {
+    name: 'HomeMaintenance',
+    icon: 'schedule',
+  },
+  {
+    name: 'Tutoring',
+    icon: 'read',
   },
 ]
 
@@ -48,7 +56,6 @@ const StepOne = ({ form, setNeedType, selectedNeedType, nextStep }) => {
               type={setButtonType(type.name)}
               icon={type.icon}
               size="large"
-              // ghost={setButtonType(type.name) === 'primary'}
               onClick={() => {
                 setFieldsValue({ needType: type.name })
                 setNeedType(type.name)
