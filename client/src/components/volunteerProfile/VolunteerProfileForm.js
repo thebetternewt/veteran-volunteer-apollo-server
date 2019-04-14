@@ -34,11 +34,11 @@ function hasErrors(fieldsErrors) {
 }
 
 const VolunteerProfileForm = props => {
-  const { profile, form, toggleForm } = props
-  const { validateFields, getFieldValue } = form
-
   const [serviceLocation, setServiceLocation] = useState()
   const [selectedServiceOption, setSelectedServiceOption] = useState()
+
+  const { profile, form, toggleForm } = props
+  const { validateFields, getFieldValue } = form
 
   useEffect(() => {
     return setSelectedServiceOption(getFieldValue('servicesProvided')[0])

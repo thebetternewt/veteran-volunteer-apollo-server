@@ -73,12 +73,16 @@ const RecipientProfile = props => {
         </li>
       </ContactSettings>
       <p>
+        <strong> Location: </strong> <br />
+        {profile.location.address}.
+      </p>
+      {/* <p>
         <strong>Location:</strong>
         <br />
         latitude: {profile.location.lat}
         <br />
         longitude: {profile.location.lng}
-      </p>
+      </p> */}
       <Map location={profile.location} />
 
       <Button type="primary" onClick={toggleForm} style={{ marginTop: '2rem' }}>
