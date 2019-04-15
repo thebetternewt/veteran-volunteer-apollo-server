@@ -1,10 +1,10 @@
 import React from 'react'
 
-const Summary = ({ form, location }) => {
+const Summary = ({ form, location, needType }) => {
   const { getFieldsValue } = form
 
   const fields = getFieldsValue()
-  const { needType, title, details } = fields
+  const { title, details } = fields
 
   const getKeys = obj =>
     Object.keys(obj).filter(key => typeof fields[key] !== 'object')
@@ -15,7 +15,7 @@ const Summary = ({ form, location }) => {
     <div>
       <h2>Summary</h2>
       <p>
-        <strong>Need Type:</strong> {needType}
+        <strong>Need Type:</strong> {needType.label}
       </p>
       <p>
         <strong>Title:</strong> {title}

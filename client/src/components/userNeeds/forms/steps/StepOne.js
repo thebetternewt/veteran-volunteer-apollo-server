@@ -36,7 +36,7 @@ const StepOne = ({ form, setNeedType, selectedNeedType, nextStep }) => {
               size="large"
               onClick={() => {
                 setFieldsValue({ needType: type.value })
-                setNeedType(type.value)
+                setNeedType(type)
                 nextStep()
               }}
             >

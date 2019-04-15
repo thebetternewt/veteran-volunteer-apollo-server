@@ -1,38 +1,21 @@
 import { Button, DatePicker, Form, Input, Checkbox } from 'antd'
 import moment from 'moment'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import PlaceSearchField from '../../../common/forms/PlaceSearchField'
-import { useState } from 'react'
 
 const BaseNeedForm = props => {
   const [atHome, setAtHome] = useState(false)
-  const { nextStep, form, baseLocation, setBaseLocation } = props
-  const { getFieldDecorator, validateFields, setFieldsValue } = form
+  const { form, setBaseLocation } = props
+  const { getFieldDecorator } = form
 
   const disabledDate = current => {
     // Can not select days before today
     return current < moment().endOf('day')
   }
 
-  // Check specified field for errors and reset state for any absent
-  // location values.
-  const checkFieldsForErrors = fieldnames => {
-    let errorExists = false
-
-    if (!baseLocation) {
-      setFieldsValue({ baseLocation: null })
-    }
-
-    validateFields(fieldnames, {}, errors => {
-      console.log('errors:', errors)
-      errorExists = !!errors
-    })
-
-    return errorExists
-  }
-
   return (
     <>
+      <h2>General Details</h2>
       <Form.Item
         label="Title"
         help="Enter a descriptive title for your request."
@@ -81,19 +64,6 @@ const BaseNeedForm = props => {
             atHome={atHome}
           />
         )}
-      </Form.Item>
-
-      <Form.Item>
-        <Button
-          type="primary"
-          style={{ marginRight: '2rem' }}
-          onClick={() => {
-            if (!checkFieldsForErrors(['title', 'date', 'baseLocation']))
-              nextStep()
-          }}
-        >
-          Next
-        </Button>
       </Form.Item>
     </>
   )

@@ -1,6 +1,7 @@
 import { navigate } from '@reach/router'
 import { Button, Form } from 'antd'
 import React, { useState } from 'react'
+import styled from 'styled-components'
 import { Mutation } from 'react-apollo'
 import { CREATE_NEED } from '../../apollo/mutations'
 import graphQlErrors from '../../util/graphqlErrors'
@@ -10,16 +11,38 @@ import StepThree from './forms/steps/StepThree'
 import StepTwo from './forms/steps/StepTwo'
 import Summary from './forms/steps/Summary'
 
+const Muted = styled.span`
+  opacity: 0.5;
+`
+
 const CreateNeed = ({ form }) => {
   const [currentStep, setCurrentStep] = useState(0)
   const [needType, setNeedType] = useState()
   const [baseLocation, setBaseLocation] = useState()
   const [needDetails, setNeedDetails] = useState({})
+  const [hasErrors, setHasErrors] = useState(false)
 
   // TODO: Handle clearing state for fields associated with a specific need
   // when need type changes
 
-  const { validateFields, getFieldValue } = form
+  const { validateFields, getFieldValue, setFieldsValue } = form
+
+  // Check specified field for errors and reset state for any absent
+  // location values.
+  const checkFieldsForErrors = fieldnames => {
+    let errorExists = false
+
+    if (!baseLocation) {
+      setFieldsValue({ baseLocation: null })
+    }
+
+    validateFields(fieldnames, {}, errors => {
+      console.log('errors:', errors)
+      errorExists = !!errors
+    })
+
+    return errorExists
+  }
 
   const handleSubmit = async (e, submit) => {
     e.preventDefault()
@@ -28,7 +51,7 @@ const CreateNeed = ({ form }) => {
       console.log('values:', values)
       if (!errors) {
         const needInput = {
-          needType: needType && needType.toUpperCase(),
+          needType: needType.value,
           title: getFieldValue('title'),
           date: getFieldValue('date').format(),
           notes: getFieldValue('notes'),
@@ -71,11 +94,11 @@ const CreateNeed = ({ form }) => {
         }
 
         try {
-          // await submit({
-          //   variables: needInput,
-          //   refetchQueries: ['Me'],
-          // })
-          // navigate('/dashboard')
+          await submit({
+            variables: needInput,
+            refetchQueries: ['Me'],
+          })
+          navigate('/dashboard')
         } catch (err) {
           console.error(err)
         }
@@ -100,6 +123,7 @@ const CreateNeed = ({ form }) => {
           nextStep={goToNextStep}
         />
       ),
+      errorFields: [],
     },
     {
       title: 'Need Details',
@@ -109,8 +133,10 @@ const CreateNeed = ({ form }) => {
           nextStep={goToNextStep}
           baseLocation={baseLocation}
           setBaseLocation={setBaseLocation}
+          setHasErrors={setHasErrors}
         />
       ),
+      errorFields: ['title', 'date', 'baseLocation'],
     },
     {
       title: 'Need Type Details',
@@ -121,30 +147,43 @@ const CreateNeed = ({ form }) => {
           needType={needType}
           needDetails={needDetails}
           setNeedDetails={setNeedDetails}
+          setHasErrors={setHasErrors}
         />
       ),
+      errorFields: ['details'],
     },
     {
       title: 'Summary',
       component: (
-        <Summary form={form} nextStep={goToNextStep} location={baseLocation} />
+        <Summary
+          form={form}
+          nextStep={goToNextStep}
+          location={baseLocation}
+          needType={needType}
+        />
       ),
+      errorFields: [],
     },
   ]
 
   return (
     <>
-      <h3>Request Need</h3>
+      <h3>
+        Request Need{' '}
+        <Muted>
+          (step {currentStep + 1}/{steps.length})
+        </Muted>{' '}
+      </h3>
       <Mutation mutation={CREATE_NEED}>
-        {(createRequest, { loading, error }) => {
+        {(createNeed, { loading, error }) => {
           return (
             <Form
-              onSubmit={e => handleSubmit(e, createRequest)}
+              onSubmit={e => handleSubmit(e, createNeed)}
               style={{ maxWidth: 500 }}
             >
               {steps[currentStep].component}
               <Form.Item>{error && graphQlErrors(error)}</Form.Item>
-              <Form.Item>
+              <Form.Item style={{ display: 'flex' }}>
                 {currentStep > 0 && (
                   <Button
                     type="primary"
@@ -154,7 +193,7 @@ const CreateNeed = ({ form }) => {
                     Prev
                   </Button>
                 )}
-                {currentStep === steps.length - 1 && (
+                {currentStep === steps.length - 1 ? (
                   <Button
                     type="primary"
                     htmlType="submit"
@@ -163,6 +202,26 @@ const CreateNeed = ({ form }) => {
                   >
                     Request Need
                   </Button>
+                ) : (
+                  <>
+                    {currentStep > 0 && (
+                      <Button
+                        type="primary"
+                        icon="right-circle"
+                        style={{ margin: '0 2rem' }}
+                        onClick={() => {
+                          if (
+                            !checkFieldsForErrors(
+                              steps[currentStep].errorFields
+                            )
+                          )
+                            goToNextStep()
+                        }}
+                      >
+                        Next
+                      </Button>
+                    )}
+                  </>
                 )}
                 <Button
                   type="secondary"
