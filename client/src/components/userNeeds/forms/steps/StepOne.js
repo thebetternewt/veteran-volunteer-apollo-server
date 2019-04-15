@@ -1,29 +1,7 @@
 import { Button } from 'antd'
 import React from 'react'
 import styled from 'styled-components'
-
-const needTypes = [
-  {
-    name: 'Travel',
-    icon: 'car',
-  },
-  {
-    name: 'Childcare',
-    icon: 'smile',
-  },
-  {
-    name: 'Lawncare',
-    icon: 'home',
-  },
-  {
-    name: 'HomeMaintenance',
-    icon: 'schedule',
-  },
-  {
-    name: 'Tutoring',
-    icon: 'read',
-  },
-]
+import { needTypes } from '../../../../constants'
 
 const NeedTypeOptionsWrapper = styled.div`
   display: flex;
@@ -52,17 +30,17 @@ const StepOne = ({ form, setNeedType, selectedNeedType, nextStep }) => {
         <NeedTypeOptionsWrapper>
           {needTypes.map(type => (
             <Button
-              key={type.name}
-              type={setButtonType(type.name)}
+              key={type.value}
+              type={setButtonType(type.value)}
               icon={type.icon}
               size="large"
               onClick={() => {
-                setFieldsValue({ needType: type.name })
-                setNeedType(type.name)
+                setFieldsValue({ needType: type.value })
+                setNeedType(type.value)
                 nextStep()
               }}
             >
-              {type.name}
+              {type.label}
             </Button>
           ))}
         </NeedTypeOptionsWrapper>

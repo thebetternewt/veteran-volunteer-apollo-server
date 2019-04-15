@@ -5,10 +5,10 @@ import { Mutation } from 'react-apollo'
 import { CREATE_NEED } from '../../apollo/mutations'
 import graphQlErrors from '../../util/graphqlErrors'
 import PrivateRoute from '../common/PrivateRoute'
-import StepOne from './forms/StepOne'
-import StepThree from './forms/StepThree'
-import StepTwo from './forms/StepTwo'
-import Summary from './forms/Summary'
+import StepOne from './forms/steps/StepOne'
+import StepThree from './forms/steps/StepThree'
+import StepTwo from './forms/steps/StepTwo'
+import Summary from './forms/steps/Summary'
 
 const CreateNeed = ({ form }) => {
   const [currentStep, setCurrentStep] = useState(0)
@@ -36,6 +36,8 @@ const CreateNeed = ({ form }) => {
 
         console.log(needInput)
 
+        console.log('baselocation:', baseLocation)
+
         if (baseLocation) {
           needInput.location = {
             address: baseLocation.address,
@@ -46,7 +48,7 @@ const CreateNeed = ({ form }) => {
 
         // Transform Travel location variables
         switch (needType) {
-          case 'Travel':
+          case 'TRAVEL':
             needInput.travelNeedDetails = {
               ...needDetails,
               fromLocation: {
@@ -61,7 +63,7 @@ const CreateNeed = ({ form }) => {
               },
             }
             break
-          case 'Childcare':
+          case 'CHILDCARE':
             needInput.childcareNeedDetails = form.getFieldValue('details')
             break
           default:
@@ -69,11 +71,11 @@ const CreateNeed = ({ form }) => {
         }
 
         try {
-          await submit({
-            variables: needInput,
-            refetchQueries: ['Me'],
-          })
-          navigate('/dashboard')
+          // await submit({
+          //   variables: needInput,
+          //   refetchQueries: ['Me'],
+          // })
+          // navigate('/dashboard')
         } catch (err) {
           console.error(err)
         }
@@ -124,7 +126,9 @@ const CreateNeed = ({ form }) => {
     },
     {
       title: 'Summary',
-      component: <Summary form={form} nextStep={goToNextStep} />,
+      component: (
+        <Summary form={form} nextStep={goToNextStep} location={baseLocation} />
+      ),
     },
   ]
 
