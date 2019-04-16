@@ -111,13 +111,13 @@ const VolunteerProfileForm = props => {
 
   const initServiceRadius = () => (profile ? profile.serviceRadius : 15)
 
-  const initSkills = () => {
-    let skills = ''
-    if (profile) {
-      skills = profile.skills.join(', ')
-    }
-    return skills
-  }
+  // const initSkills = () => {
+  //   let skills = ''
+  //   if (profile) {
+  //     skills = profile.skills.join(', ')
+  //   }
+  //   return skills
+  // }
 
   const showSelectedServiceOptionFields = selectedService => {
     console.log('selectedService', selectedService)

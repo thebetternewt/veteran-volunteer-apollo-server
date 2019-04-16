@@ -1,4 +1,4 @@
-import { gql } from "apollo-server-express";
+import { gql } from 'apollo-server-express'
 
 export default gql`
   enum AgeOptions {
@@ -11,9 +11,11 @@ export default gql`
   type ChildcareNeed {
     id: ID!
     age: [String!]!
+    description: String!
   }
 
   input ChildcareNeedInput {
     age: [AgeOptions!]!
+    description: String! = ""
   }
-`;
+`

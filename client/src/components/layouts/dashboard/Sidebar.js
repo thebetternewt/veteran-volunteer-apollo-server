@@ -1,4 +1,4 @@
-import { Link } from '@reach/router'
+import { Link, Location } from '@reach/router'
 import { Icon, Layout, Menu } from 'antd'
 import React from 'react'
 import { Query } from 'react-apollo'
@@ -37,50 +37,59 @@ const Sidebar = ({ collapsed = false }) => {
       <Logo>
         <h1>MFVS</h1>
       </Logo>
-      <Query query={ME_QUERY}>
-        {({ data }) => {
-          let user
-          if (data && data.me) {
-            user = data.me
-          }
+      <Location>
+        {({ location }) => (
+          <Query query={ME_QUERY}>
+            {({ data }) => {
+              let user
+              if (data && data.me) {
+                user = data.me
+              }
 
-          return (
-            <>
-              {user && (
-                <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-                  <Menu.Item key="1">
-                    <Link to="/dashboard">
-                      <Icon type="thunderbolt" />
-                      <span className="nav-text">Dashboard</span>
-                    </Link>
-                  </Menu.Item>
+              return (
+                <>
+                  {user && (
+                    <Menu
+                      theme="dark"
+                      mode="inline"
+                      defaultSelectedKeys={[location.pathname]}
+                      selectedKeys={[location.pathname]}
+                    >
+                      <Menu.Item key="/dashboard">
+                        <Link to="/dashboard">
+                          <Icon type="thunderbolt" />
+                          <span className="nav-text">Dashboard</span>
+                        </Link>
+                      </Menu.Item>
 
-                  <Menu.Item key="2">
-                    <Link to="/recipient-profile">
-                      <Icon type="video-camera" />
-                      <span className="nav-text">Recipient Profile</span>
-                    </Link>
-                  </Menu.Item>
+                      <Menu.Item key="/recipient-profile">
+                        <Link to="/recipient-profile">
+                          <Icon type="video-camera" />
+                          <span className="nav-text">Recipient Profile</span>
+                        </Link>
+                      </Menu.Item>
 
-                  <Menu.Item key="3">
-                    <Link to="/volunteer-profile">
-                      <Icon type="user" />
-                      <span className="nav-text">Volunteer Profile</span>
-                    </Link>
-                  </Menu.Item>
+                      <Menu.Item key="/volunteer-profile">
+                        <Link to="/volunteer-profile">
+                          <Icon type="user" />
+                          <span className="nav-text">Volunteer Profile</span>
+                        </Link>
+                      </Menu.Item>
 
-                  <Menu.Item key="4">
-                    <Link to="/signout">
-                      <Icon type="logout" />
-                      <span className="nav-text">Sign Out</span>
-                    </Link>
-                  </Menu.Item>
-                </Menu>
-              )}
-            </>
-          )
-        }}
-      </Query>
+                      <Menu.Item key="/signout">
+                        <Link to="/signout">
+                          <Icon type="logout" />
+                          <span className="nav-text">Sign Out</span>
+                        </Link>
+                      </Menu.Item>
+                    </Menu>
+                  )}
+                </>
+              )
+            }}
+          </Query>
+        )}
+      </Location>
     </FixedSider>
   )
 }

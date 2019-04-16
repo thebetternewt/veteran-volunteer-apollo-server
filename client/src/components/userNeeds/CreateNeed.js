@@ -69,8 +69,8 @@ const CreateNeed = ({ form }) => {
           }
         }
 
-        // Transform Travel location variables
-        switch (needType) {
+        switch (needType.value) {
+          // Transform Travel location variables
           case 'TRAVEL':
             needInput.travelNeedDetails = {
               ...needDetails,
@@ -88,6 +88,14 @@ const CreateNeed = ({ form }) => {
             break
           case 'CHILDCARE':
             needInput.childcareNeedDetails = form.getFieldValue('details')
+            break
+          case 'HOME_MAINTENANCE':
+            needInput.homeMaintenanceNeedDetails = form.getFieldValue('details')
+            break
+          case 'OTHER':
+            console.log('OTHER!')
+            console.log(form.getFieldValue('details'))
+            needInput.otherNeedDetails = form.getFieldValue('details')
             break
           default:
             break

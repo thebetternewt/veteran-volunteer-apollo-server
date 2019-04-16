@@ -5,8 +5,9 @@ import React from 'react'
 import { Mutation, Query } from 'react-apollo'
 import styled from 'styled-components'
 import { ACCEPT_REQUEST } from '../../apollo/mutations'
-import { ME_QUERY, REQUESTS_QUERY } from '../../apollo/queries'
+import { REQUESTS_QUERY, NEEDS_QUERY, ME_QUERY } from '../../apollo/queries'
 import PrivateRoute from '../common/PrivateRoute'
+import { needTypes } from '../../constants'
 
 const { Meta } = Card
 
@@ -43,22 +44,40 @@ const UserNeeds = () => {
       <div>
         <NeedSectionHeader>
           <h2>My Needs</h2>
-          <Link to="/request-need">
-            <Button type="primary" icon="plus-circle">
-              Request New Need
-            </Button>
-          </Link>
+          <Query query={ME_QUERY}>
+            {({ data }) => {
+              if (data && data.me) {
+                if (data.me.recipientProfile) {
+                  return (
+                    <Link to="/request-need">
+                      <Button type="primary" icon="plus-circle">
+                        Request New Need
+                      </Button>
+                    </Link>
+                  )
+                }
+
+                return (
+                  <Link to="/recipient-profile">
+                    <Button type="primary">
+                      Create Recipient Profile <Icon type="right-circle" />
+                    </Button>
+                  </Link>
+                )
+              }
+              return null
+            }}
+          </Query>
         </NeedSectionHeader>
         <Row type="flex">
-          <Query query={ME_QUERY}>
+          <Query query={NEEDS_QUERY} variables={{ currentUser: true }}>
             {({ data, loading }) => {
               if (loading) return <Icon type="loading" size={64} />
 
-              if (data && data.me) {
-                const { me } = data
-                const { requestedNeeds } = me
+              if (data && data.needs) {
+                const { needs } = data
 
-                const needCards = requestedNeeds.map(need => (
+                const needCards = needs.map(need => (
                   <NeedCard
                     key={need.id}
                     style={{
@@ -76,13 +95,22 @@ const UserNeeds = () => {
                   >
                     <Meta
                       avatar={
-                        <Avatar icon="avatar" size={64} src={me.avatar} />
+                        <Avatar
+                          icon="avatar"
+                          size={64}
+                          src={need.recipient.avatar}
+                        />
                       }
                       title={need.title}
                       description={
                         <div style={{ marginBottom: '1rem' }}>
                           <div className="need-details">
-                            Type: {need.needType.toLowerCase()}
+                            Type:{' '}
+                            {
+                              needTypes.find(
+                                type => type.value === need.needType
+                              ).label
+                            }
                           </div>
                           {need.date && (
                             <div className="need-details">
@@ -93,7 +121,7 @@ const UserNeeds = () => {
                       }
                     />
                     <div>
-                      <p>{need.notes || 'Lorem ipsum dolor sit amet'}</p>
+                      <p>{need.notes || need.needDetails.description}</p>
                     </div>
                     {/* <Link to={`/volunteer-search/${need.id}`}>
                       <Button type="primary" ghost>

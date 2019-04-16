@@ -6,7 +6,7 @@ const { TextArea } = Input
 
 const ageOptions = ['INFANT', 'TODDLER', 'CHILD', 'TEENAGER']
 
-const ChildcareDetailsForm = ({ form, needDetails, setServiceDetails }) => {
+const ChildcareDetailsForm = ({ form }) => {
   const [indeterminate, setIndeterminate] = useState(false)
   const [checkAll, setCheckAll] = useState(false)
 
@@ -61,15 +61,16 @@ const ChildcareDetailsForm = ({ form, needDetails, setServiceDetails }) => {
         )}
       </Form.Item>
 
-      <Form.Item label="Notes">
-        {getFieldDecorator('details.notes', {
+      <Form.Item label="Describe your need in detail.">
+        {getFieldDecorator('details.description', {
           preserve: true,
+          validateTrigger: 'onBlur',
           rules: [
             {
               required: true,
               type: 'string',
-              message:
-                'Please give a short description about your childcare need.',
+              min: 10,
+              message: 'Must be at least 10 characters.',
             },
           ],
         })(<TextArea autosize />)}

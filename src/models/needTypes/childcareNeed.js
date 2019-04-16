@@ -1,32 +1,33 @@
-import mongoose from 'mongoose';
-import 'mongoose-geojson-schema';
+import mongoose from 'mongoose'
+import 'mongoose-geojson-schema'
 
-const ages = ['INFANT', 'TODDLER', 'CHILD', 'TEENAGER'];
+const ages = ['INFANT', 'TODDLER', 'CHILD', 'TEENAGER']
 
 const {
   Schema,
-  Types: { ObjectId, Point }
-} = mongoose;
+  Types: { ObjectId, Point },
+} = mongoose
 
 const schema = new Schema(
   {
     needType: {
       type: String,
-      default: 'CHILDCARE'
+      default: 'CHILDCARE',
     },
     age: {
       type: [String],
-      required: true
+      required: true,
     },
     need: {
       type: ObjectId,
       ref: 'Need',
-      required: true
-    }
+      required: true,
+    },
+    description: { type: String },
   },
   {
-    timestamps: true
+    timestamps: true,
   }
-);
+)
 
-export default mongoose.model('ChildcareNeed', schema);
+export default mongoose.model('ChildcareNeed', schema)

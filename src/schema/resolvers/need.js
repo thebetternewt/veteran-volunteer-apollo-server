@@ -1,10 +1,12 @@
 import Joi from 'joi'
 import {
-  ChildcareNeed,
-  LawncareNeed,
-  Need,
-  TravelNeed,
   User,
+  Need,
+  ChildcareNeed,
+  HomeMaintenanceNeed,
+  LawncareNeed,
+  TravelNeed,
+  OtherNeed,
 } from '../../models'
 import { mongoose as db } from '../../server'
 import {
@@ -18,21 +20,25 @@ const METERS_PER_MILE = 1609.34
 
 export default {
   NeedDetails: {
-    __resolveType: (parent, ctx, info) => {
+    __resolveType: parent => {
       switch (parent.needType) {
         case 'TRAVEL':
           return 'TravelNeed'
         case 'LAWNCARE':
           return 'LawncareNeed'
+        case 'HOME_MAINTENANCE':
+          return 'HomeMaintenanceNeed'
         case 'CHILDCARE':
           return 'ChildcareNeed'
+        case 'OTHER':
+          return 'OtherNeed'
         default:
           return null
       }
     },
   },
   Need: {
-    needDetails: async (parent, args, { user }) => {
+    needDetails: async parent => {
       switch (parent.needType) {
         case 'TRAVEL':
           return TravelNeed.findOne({ need: parent })
@@ -40,6 +46,10 @@ export default {
           return LawncareNeed.findOne({ need: parent })
         case 'CHILDCARE':
           return ChildcareNeed.findOne({ need: parent })
+        case 'HOME_MAINTENANCE':
+          return HomeMaintenanceNeed.findOne({ need: parent })
+        case 'OTHER':
+          return OtherNeed.findOne({ need: parent })
         default:
           return null
       }
@@ -50,10 +60,14 @@ export default {
   },
   Query: {
     need: async (_, { id }) => Need.findById(id),
-    needs: async (parent, args) => {
-      const { needType, location, range } = args
+    needs: async (parent, args, { req }) => {
+      const { currentUser, needType, location, range } = args
 
       let queryParams = {}
+
+      if (currentUser) {
+        queryParams.recipient = req.session.userId
+      }
 
       if (needType) {
         queryParams.needType = needType
@@ -85,70 +99,92 @@ export default {
         title,
         date,
         needType,
-        needDetailsId,
         notes,
         location,
         travelNeedDetails,
         childcareNeedDetails,
+        homeMaintenanceNeedDetails,
+        otherNeedDetails,
       } = args
 
-      const session = await db.startSession()
+      console.log('OTHER:', otherNeedDetails)
 
-      console.log('starting transaction...')
-      session.startTransaction()
+      try {
+        const session = await db.startSession()
 
-      // Create need
-      const [newNeed] = await Need.create(
-        [
-          {
-            title,
-            date: new Date(date),
-            needType,
-            notes,
-            recipient: userId,
-            location: formatLocationInput(location),
-          },
-        ],
-        { session }
-      )
+        console.log('starting transaction...')
+        session.startTransaction()
 
-      // Check for needType and Details
-
-      if (needType === 'TRAVEL') {
-        const [newNeedDetails] = await TravelNeed.create(
+        // Create need
+        const [newNeed] = await Need.create(
           [
             {
-              ...travelNeedDetails,
-              fromLocation: formatLocationInput(travelNeedDetails.fromLocation),
-              toLocation: formatLocationInput(travelNeedDetails.toLocation),
-              need: newNeed,
+              title,
+              date: new Date(date),
+              needType,
+              notes,
+              recipient: userId,
+              location: formatLocationInput(location),
             },
           ],
           { session }
         )
 
-        // await assert.ok(newNeedDetails)
-      } else if (needType === 'CHILDCARE') {
-        const errors = await Joi.validate(
-          childcareNeedDetails,
-          childcareNeedSchema,
-          {
-            abortEarly: false,
-          }
-        )
+        // Create Need Details based on needType
+        switch (needType) {
+          case 'TRAVEL':
+            await TravelNeed.create(
+              [
+                {
+                  ...travelNeedDetails,
+                  fromLocation: formatLocationInput(
+                    travelNeedDetails.fromLocation
+                  ),
+                  toLocation: formatLocationInput(travelNeedDetails.toLocation),
+                  need: newNeed,
+                },
+              ],
+              { session }
+            )
+            break
+          case 'CHILDCARE':
+            const errors = await Joi.validate(
+              childcareNeedDetails,
+              childcareNeedSchema,
+              {
+                abortEarly: false,
+              }
+            )
 
-        const [newNeedDetails] = await ChildcareNeed.create(
-          [{ ...childcareNeedDetails, need: newNeed }],
-          { session }
-        )
-      } else {
-        // Abort transaction if no need details created.
-        session.abortTransaction()
+            await ChildcareNeed.create(
+              [{ ...childcareNeedDetails, need: newNeed }],
+              { session }
+            )
+            break
+          case 'HOME_MAINTENANCE':
+            await HomeMaintenanceNeed.create(
+              [{ ...homeMaintenanceNeedDetails, need: newNeed }],
+              { session }
+            )
+            break
+          case 'OTHER':
+            await OtherNeed.create([{ ...otherNeedDetails, need: newNeed }], {
+              session,
+            })
+            break
+          default:
+            // Abort transaction if no need details created.
+            session.abortTransaction()
+            throw new Error('Something went wrong.')
+        }
+
+        await session.commitTransaction()
+
+        return newNeed
+      } catch (err) {
+        console.log(err)
+        throw new Error(err)
       }
-
-      await session.commitTransaction()
-
-      return newNeed
     },
 
     assignVolunteer: async (_, { needId, volunteerId }, { user }) => {

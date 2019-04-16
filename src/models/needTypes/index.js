@@ -1,5 +1,6 @@
-import ChildcareNeed from './childcareNeed';
-import LawncareNeed from './lawncareNeed';
-import TravelNeed from './travelNeed';
+import ChildcareNeed from './ChildcareNeed'
+import LawncareNeed from './LawncareNeed'
+import TravelNeed from './TravelNeed'
+import HomeMaintenanceNeed from './HomeMaintenanceNeed'
 
-export default { ChildcareNeed, LawncareNeed, TravelNeed };
+export default { ChildcareNeed, LawncareNeed, TravelNeed, HomeMaintenanceNeed }

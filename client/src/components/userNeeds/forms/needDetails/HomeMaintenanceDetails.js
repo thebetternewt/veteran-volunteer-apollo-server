@@ -1,4 +1,4 @@
-import { Form, Input, Select } from 'antd'
+import { Form, Input, Select, Checkbox } from 'antd'
 import React from 'react'
 
 const Option = Select.Option
@@ -9,7 +9,7 @@ const HomeMaintenanceDetailsForm = ({ form }) => {
 
   return (
     <>
-      <Form.Item label="Select what type of maintenance you require:">
+      <Form.Item label="Select what type of maintenance you require.">
         {getFieldDecorator('details.maintenanceType', {
           preserve: true,
           rules: [
@@ -29,9 +29,8 @@ const HomeMaintenanceDetailsForm = ({ form }) => {
           </Select>
         )}
       </Form.Item>
-
       <Form.Item label="Describe your need in detail.">
-        {getFieldDecorator('details.notes', {
+        {getFieldDecorator('details.description', {
           preserve: true,
           validateTrigger: 'onBlur',
           rules: [
@@ -43,6 +42,14 @@ const HomeMaintenanceDetailsForm = ({ form }) => {
             },
           ],
         })(<TextArea autosize />)}
+      </Form.Item>
+      <Form.Item label="Do you have the parts for the job?">
+        {getFieldDecorator('details.partsProvided')(<Checkbox>Yes</Checkbox>)}
+      </Form.Item>
+      <Form.Item label="Do you have the tools required for the job?">
+        {getFieldDecorator('details.equipmentProvided')(
+          <Checkbox>Yes</Checkbox>
+        )}
       </Form.Item>
     </>
   )

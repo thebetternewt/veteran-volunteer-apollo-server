@@ -67,42 +67,45 @@ export const ME_QUERY = gql`
   }
 `
 export const NEEDS_QUERY = gql`
-  query NeedsQuery {
-    needs {
+  query NeedsQuery($currentUser: Boolean) {
+    needs(currentUser: $currentUser) {
       id
       title
       date
       location {
+        address
         lat
         lng
+      }
+      recipient {
+        id
+        fullName
+        avatar
       }
       needType
       needDetails {
         ... on ChildcareNeed {
+          id
           age
+          description
         }
-        # ... on LawncareService {
-        #   description
-        #   id
-        #   equipmentNeeded
-        # }
-        # ... on TravelService {
-        #   id
-        #   fromName
-        #   fromLocation {
-        #     lat
-        #     lng
-        #   }
-        #   toName
-        #   toLocation {
-        #     lat
-        #     lng
-        #   }
-        # }
+        ... on LawncareNeed {
+          id
+          equipmentNeeded
+          description
+        }
+        ... on HomeMaintenanceNeed {
+          id
+          equipmentSupplied
+          partsSupplied
+          maintenanceType
+          description
+        }
+        ... on OtherNeed {
+          id
+          description
+        }
       }
-    }
-    recipient {
-      id
     }
   }
 `

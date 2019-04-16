@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost';
+import { gql } from 'apollo-boost'
 
 export const SIGNUP = gql`
   mutation SignUp(
@@ -190,6 +190,8 @@ export const CREATE_NEED = gql`
     $location: LocationInput!
     $travelNeedDetails: TravelNeedInput
     $childcareNeedDetails: ChildcareNeedInput
+    $homeMaintenanceNeedDetails: HomeMaintenanceNeedInput
+    $otherNeedDetails: OtherNeedInput
   ) {
     createNeed(
       title: $title
@@ -199,6 +201,8 @@ export const CREATE_NEED = gql`
       location: $location
       travelNeedDetails: $travelNeedDetails
       childcareNeedDetails: $childcareNeedDetails
+      homeMaintenanceNeedDetails: $homeMaintenanceNeedDetails
+      otherNeedDetails: $otherNeedDetails
     ) {
       id
     }

@@ -1,7 +1,12 @@
 import { gql } from 'apollo-server-express'
 
 export default gql`
-  union NeedDetails = TravelNeed | LawncareNeed | ChildcareNeed
+  union NeedDetails =
+      TravelNeed
+    | LawncareNeed
+    | ChildcareNeed
+    | HomeMaintenanceNeed
+    | OtherNeed
 
   enum NeedType {
     TRAVEL
@@ -29,6 +34,7 @@ export default gql`
   extend type Query {
     need(id: ID!): Need @auth
     needs(
+      currentUser: Boolean
       needType: NeedType
       location: LocationInput
       """
@@ -47,6 +53,8 @@ export default gql`
       location: LocationInput!
       travelNeedDetails: TravelNeedInput
       childcareNeedDetails: ChildcareNeedInput
+      homeMaintenanceNeedDetails: HomeMaintenanceNeedInput
+      otherNeedDetails: OtherNeedInput
     ): Need @auth
     assignVolunteer(needId: ID!, volunteerId: ID!): Need @auth
   }

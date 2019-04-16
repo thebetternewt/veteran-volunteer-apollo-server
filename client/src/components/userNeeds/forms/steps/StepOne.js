@@ -16,7 +16,7 @@ const StepOne = ({ form, setNeedType, selectedNeedType, nextStep }) => {
   const { getFieldDecorator, setFieldsValue } = form
 
   const setButtonType = selection => {
-    if (!selectedNeedType || selection === selectedNeedType) {
+    if (!selectedNeedType || selection === selectedNeedType.value) {
       return 'primary'
     }
 

@@ -24,9 +24,9 @@ export const client = new ApolloClient({
   clientState: {
     defaults: defaultState,
   },
-  request: operation => {
-    console.log('operation:', operation)
-  },
+  // request: operation => {
+  // console.log('operation:', operation)
+  // },
   onError: ({ graphQLErrors, networkError, response }) => {
     if (graphQlErrors) {
       console.log('ApolloClient graphQLErrors')

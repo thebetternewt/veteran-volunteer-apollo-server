@@ -19,71 +19,47 @@ const contactOptions = ['Phone', 'Email']
 
 const RecipientProfileForm = props => {
   const [selectedLocation, setSelectedLocation] = useState()
-  const [searchResults, setSearchResults] = useState([])
   const [checkAll, setCheckAll] = useState(false)
   const [indeterminate, setIndeterminate] = useState(false)
-  const [checkedList, setCheckedList] = useState([])
-
-  // state = {
-  //   indeterminate: false,
-  //   checkAll: false,
-  //   location: {
-  //     lat: null,
-  //     lng: null,
-  //   },
-  //   searchResults: [],
-  //   selectedLocation: null,
-  // }
 
   const { profile, form, toggleForm } = props
-  console.log('Profile:', profile)
   const {
     setFieldsValue,
+    getFieldValue,
     validateFields,
     getFieldDecorator,
     getFieldsError,
   } = form
 
-  // const getInitState = () => {
-  //   const checkedList = []
-  //   if (profile) {
-  //     if (profile.allowEmailContact) {
-  //       checkedList.push('Email')
-  //     }
-  //     if (profile.allowPhoneContact) {
-  //       checkedList.push('Phone')
-  //     }
+  console.log('Profile:', profile)
 
-  //     if (profile.location) {
-  //       setSelectedLocation({
-  //         lat: profile.location[1],
-  //         lng: profile.location[0],
-  //       })
-  //     }
+  // Update preferredContact checkAll on component mount
+  useEffect(() => {
+    if (!profile) return
+    const preferredContact = getFieldValue('preferredContact')
+    console.log(preferredContact)
+    return handleChecklistChange(preferredContact)
+  }, [])
 
-  //     form.setFieldsValue({ preferredContact: checkedList })
-  //     handleChecklistChange(checkedList)
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   getInitState()
-  // }, [])
-
-  //! TODO: Set initial values for fields with functions (ref VolunteerProfileForm.js)
+  const initPreferredContact = () => {
+    const { allowPhoneContact, allowEmailContact } = profile
+    let preferredContact = []
+    if (profile) {
+      if (allowPhoneContact) {
+        preferredContact.push('Phone')
+      }
+      if (allowEmailContact) {
+        preferredContact.push('Email')
+      }
+    }
+    return preferredContact
+  }
 
   const handleChecklistChange = checkedList => {
-    setCheckedList(checkedList)
     setIndeterminate(
       !!checkedList.length && checkedList.length < contactOptions.length
     )
     setCheckAll(checkedList.length === contactOptions.length)
-    // this.setState({
-    //   checkedList,
-    //   indeterminate:
-    //     !!checkedList.length && checkedList.length < contactOptions.length,
-    //   checkAll: checkedList.length === contactOptions.length,
-    // })
   }
 
   const onCheckAllChange = e => {
@@ -119,6 +95,7 @@ const RecipientProfileForm = props => {
 
         try {
           await submit({ variables, refetchQueries: ['Me'] })
+          // ? toggleForm...
           /**
            * Check if toggleForm exists before executing. In the case that
            * createProfile (not updateProfile) succeeds, the "Me" query
@@ -151,6 +128,7 @@ const RecipientProfileForm = props => {
         <hr />
 
         {getFieldDecorator('preferredContact', {
+          initialValue: profile && initPreferredContact(),
           rules: [
             {
               required: true,
@@ -165,15 +143,13 @@ const RecipientProfileForm = props => {
         )}
       </Form.Item>
 
-      {profile && (
-        <PlaceSearchField
-          fieldname="location"
-          label="Where are you located?"
-          form={form}
-          setLocationState={handleLocationSelect}
-          initialValue={profile && profile.location}
-        />
-      )}
+      <PlaceSearchField
+        fieldname="location"
+        label="Where are you located?"
+        form={form}
+        setLocationState={handleLocationSelect}
+        initialValue={profile && profile.location}
+      />
 
       <Form.Item>
         <Button

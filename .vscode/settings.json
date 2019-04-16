@@ -4,7 +4,6 @@
   "editor.fontSize": 14,
   "editor.fontLigatures": true,
   "editor.rulers": [80],
-  "editor.snippetSuggestions": "bottom",
   "editor.codeActionsOnSave": {
     "source.organizeImports": false
   },

@@ -1,6 +1,6 @@
-import { Button, DatePicker, Form, Input, Checkbox } from 'antd'
+import { DatePicker, Form, Input, Checkbox } from 'antd'
 import moment from 'moment'
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import PlaceSearchField from '../../../common/forms/PlaceSearchField'
 
 const BaseNeedForm = props => {
