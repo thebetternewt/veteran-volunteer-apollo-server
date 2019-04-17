@@ -106,6 +106,20 @@ export const NEEDS_QUERY = gql`
           description
         }
       }
+      requests {
+        id
+        status
+        recipient {
+          id
+          fullName
+          avatar
+        }
+        volunteer {
+          id
+          fullName
+          avatar
+        }
+      }
     }
   }
 `
@@ -124,26 +138,26 @@ export const NEED_QUERY = gql`
       needType
       needDetails {
         ... on ChildcareNeed {
+          id
           age
+          description
         }
-        # ... on LawncareService {
-        #   description
-        #   id
-        #   equipmentNeeded
-        # }
-        # ... on TravelService {
-        #   id
-        #   fromName
-        #   fromLocation {
-        #     lat
-        #     lng
-        #   }
-        #   toName
-        #   toLocation {
-        #     lat
-        #     lng
-        #   }
-        # }
+        ... on LawncareNeed {
+          id
+          equipmentNeeded
+          description
+        }
+        ... on HomeMaintenanceNeed {
+          id
+          equipmentSupplied
+          partsSupplied
+          maintenanceType
+          description
+        }
+        ... on OtherNeed {
+          id
+          description
+        }
       }
     }
   }

@@ -29,10 +29,10 @@ const StyledVolunteerCard = styled(Card)`
 const VolunteerCard = ({ profile, createRequest, loading, error }) => (
   <StyledVolunteerCard
     key={profile.id}
-    style={{
+    /* style={{
       maxWidth: 400,
       marginBottom: 20,
-    }}
+    }} */
     actions={[
       <Button type="primary" ghost>{`Message ${
         profile.user.firstName

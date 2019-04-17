@@ -7,6 +7,7 @@ import {
   LawncareNeed,
   TravelNeed,
   OtherNeed,
+  Request,
 } from '../../models'
 import { mongoose as db } from '../../server'
 import {
@@ -57,9 +58,19 @@ export default {
     location: parent => formatLocationOutput(parent.location),
     recipient: parent => User.findById(parent.recipient),
     volunteer: parent => User.findById(parent.volunteer),
+    requests: parent =>
+      Request.find({
+        need: parent,
+        $or: [{ volunteer: parent.volunteer }, { recipient: parent.recipient }],
+      }),
   },
   Query: {
-    need: async (_, { id }) => Need.findById(id),
+    need: async (parent, { id }) => {
+      const need = await Need.findById(id)
+      console.log(need)
+
+      return need
+    },
     needs: async (parent, args, { req }) => {
       const { currentUser, needType, location, range } = args
 

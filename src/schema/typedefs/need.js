@@ -26,7 +26,7 @@ export default gql`
     location: Location!
     recipient: User!
     volunteer: User
-    request: Request!
+    requests: [Request!]
     createdAt: String!
     updatedAt: String!
   }

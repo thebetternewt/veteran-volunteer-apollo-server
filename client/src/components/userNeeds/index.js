@@ -25,6 +25,7 @@ const NeedCard = styled(Card)`
   width: 400px;
   max-width: 100%;
   margin: 0 1rem 1rem 0;
+  height: 100%;
 
   .need-details {
     text-transform: capitalize;
@@ -77,6 +78,8 @@ const UserNeeds = () => {
               if (data && data.needs) {
                 const { needs } = data
 
+                console.log('needs:', needs)
+
                 const needCards = needs.map(need => (
                   <NeedCard
                     key={need.id}
@@ -88,9 +91,20 @@ const UserNeeds = () => {
                       <Button type="primary" ghost>
                         Edit Need
                       </Button>,
-                      <Link to={`/volunteer-search/${need.id}`}>
-                        <Button type="primary">Find a Volunteer</Button>
-                      </Link>,
+                      <>
+                        {need.requests.filter(
+                          req =>
+                            !['CANCELLED', 'COMPLETED'].includes(req.status)
+                        ).length === 0 ? (
+                          <Link to={`/volunteer-search/${need.id}`}>
+                            <Button type="primary">Find a Volunteer</Button>
+                          </Link>
+                        ) : (
+                          <Button type="danger" ghost>
+                            Cancel Request
+                          </Button>
+                        )}
+                      </>,
                     ]}
                   >
                     <Meta
@@ -117,17 +131,24 @@ const UserNeeds = () => {
                               When: {moment(need.date, 'x').format('LLL')}
                             </div>
                           )}
+                          {need.requests[0] && (
+                            <Tag
+                              color={
+                                need.requests[0].status === 'PENDING'
+                                  ? 'gold'
+                                  : 'green'
+                              }
+                              style={{ marginTop: 8 }}
+                            >
+                              {need.requests[0].status}
+                            </Tag>
+                          )}
                         </div>
                       }
                     />
                     <div>
                       <p>{need.notes || need.needDetails.description}</p>
                     </div>
-                    {/* <Link to={`/volunteer-search/${need.id}`}>
-                      <Button type="primary" ghost>
-                        Find a Volunteer!
-                      </Button>
-                    </Link> */}
                   </NeedCard>
                 ))
 
@@ -195,13 +216,6 @@ const UserNeeds = () => {
                       </Mutation>,
                     ]}
                   >
-                    <Alert
-                      message={request.status}
-                      type={
-                        request.status === 'PENDING' ? 'warning' : 'success'
-                      }
-                      style={{ marginBottom: '1.1rem' }}
-                    />
                     <Meta
                       avatar={
                         <Avatar
@@ -222,6 +236,13 @@ const UserNeeds = () => {
                           <div>
                             When: {moment(request.need.date, 'x').format('LLL')}
                           </div>
+                          <Tag
+                            color={
+                              request.status === 'PENDING' ? 'gold' : 'green'
+                            }
+                          >
+                            {request.status}
+                          </Tag>
                         </div>
                       }
                     />
@@ -243,9 +264,33 @@ const UserNeeds = () => {
       <div>
         <NeedSectionHeader>
           <h2>Volunteered Requests</h2>
-          <Button type="primary" icon="search">
+          {/* <Button type="primary" icon="search">
             Browse Requested Needs
-          </Button>
+          </Button> */}
+          <Query query={ME_QUERY}>
+            {({ data }) => {
+              if (data && data.me) {
+                if (data.me.volunteerProfile) {
+                  return (
+                    <Link to="/needs">
+                      <Button type="primary" icon="plus-circle">
+                        Browse Requested Needs
+                      </Button>
+                    </Link>
+                  )
+                }
+
+                return (
+                  <Link to="/volunteer-profile">
+                    <Button type="primary">
+                      Create Volunteer Profile <Icon type="right-circle" />
+                    </Button>
+                  </Link>
+                )
+              }
+              return null
+            }}
+          </Query>
         </NeedSectionHeader>
         <Row type="flex">
           <Query
