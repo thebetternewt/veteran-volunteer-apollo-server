@@ -10,7 +10,6 @@ const StyledVolunteerCard = styled(Card)`
   margin: 0 1rem 1rem 0;
 
   .profile-details {
-    text-transform: capitalize;
     word-wrap: none;
     margin: 1rem 0;
 

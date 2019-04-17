@@ -1,12 +1,12 @@
-import { Link } from '@reach/router';
-import { Avatar, Badge, Button, Icon, Layout } from 'antd';
-import React, { useState } from 'react';
-import { Query } from 'react-apollo';
-import Helmet from 'react-helmet';
-import styled from 'styled-components';
-import { ME_QUERY } from '../../../apollo/queries';
-import ScrollToTop from '../../common/ScrollToTop';
-import Sidebar from './Sidebar';
+import { Link } from '@reach/router'
+import { Avatar, Badge, Button, Icon, Layout } from 'antd'
+import React, { useState } from 'react'
+import { Query } from 'react-apollo'
+import Helmet from 'react-helmet'
+import styled from 'styled-components'
+import { ME_QUERY } from '../../../apollo/queries'
+import ScrollToTop from '../../common/ScrollToTop'
+import Sidebar from './Sidebar'
 
 const { Header, Content, Footer } = Layout
 
@@ -48,12 +48,13 @@ const Dashboard = ({ children = defaultContent }) => {
     initSidebarCollapsed()
   )
 
-
   // TODO: set inital sidebarCollapse state based on window size
 
   return (
     <ScrollToTop>
-      <Helmet><title>MFVS | Serving Military Family Members</title></Helmet>
+      <Helmet>
+        <title>MFVS | Serving Military Family Members</title>
+      </Helmet>
       <Layout style={{ minHeight: '100vh' }}>
         <Sidebar collapsed={sidebarCollapsed} />
         <Layout
@@ -64,12 +65,30 @@ const Dashboard = ({ children = defaultContent }) => {
           }}
         >
           <StickyHeader>
-            <Icon
-              className="trigger"
-              type={sidebarCollapsed ? 'menu-unfold' : 'menu-fold'}
-              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              style={{ fontSize: 20 }}
-            />
+            <div>
+              <Icon
+                className="trigger"
+                type={sidebarCollapsed ? 'menu-unfold' : 'menu-fold'}
+                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                style={{ fontSize: 20 }}
+              />
+              <Query query={ME_QUERY}>
+                {({ data }) => {
+                  let message = ''
+                  if (data && data.me) {
+                    console.log(data.me)
+                    message = `Hi, ${data.me.firstName}!`
+                  }
+                  return (
+                    <>
+                      <span style={{ marginLeft: 20, fontSize: '1.2rem' }}>
+                        {message}
+                      </span>
+                    </>
+                  )
+                }}
+              </Query>
+            </div>
             <Query query={ME_QUERY}>
               {({ data }) => {
                 let user
