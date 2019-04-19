@@ -52,7 +52,8 @@ const UserNeeds = () => {
                     <h2>My Needs</h2>
                     <div>
                       <p>
-                        Create your recipient profile post and request needs.
+                        Create your recipient profile to post needs and request
+                        services.
                       </p>
                       <Link to="/recipient-profile">
                         <Button type="primary">
@@ -194,8 +195,8 @@ const UserNeeds = () => {
                     <h2>Volunteered Services</h2>
                     <div>
                       <p>
-                        Create your volunteer profile to search and provide
-                        needs to other users.
+                        Create your volunteer profile to browse needs and
+                        provide services to other users.
                       </p>
                       <Link to="/volunteer-profile">
                         <Button type="primary">
