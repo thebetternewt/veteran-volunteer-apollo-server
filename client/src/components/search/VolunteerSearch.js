@@ -1,4 +1,4 @@
-import { Icon, notification, Alert } from 'antd'
+import { notification, Alert } from 'antd'
 import React from 'react'
 import { Mutation, Query } from 'react-apollo'
 import { CREATE_REQUEST } from '../../apollo/mutations'
@@ -7,8 +7,7 @@ import {
   VOLUNTEER_PROFILES_FOR_NEED_QUERY,
 } from '../../apollo/queries'
 import VolunteerCard from './VolunteerCard'
-
-const Loader = () => <Icon type="loading" style={{ fontSize: 24 }} spin />
+import Loader from '../common/Loader'
 
 const VolunteerSearch = props => {
   const { needId, navigate } = props

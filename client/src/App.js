@@ -9,6 +9,7 @@ import VolunteerSearch from './components/search/VolunteerSearch'
 import UserNeeds from './components/userNeeds'
 import CreateNeed from './components/userNeeds/CreateNeed'
 import VolunteerProfile from './components/volunteerProfile/index'
+import NeedSearch from './components/search/NeedSearch'
 
 const App = () => (
   <Router primary={false}>
@@ -20,6 +21,7 @@ const App = () => (
       <RecipientProfile path="recipient-profile" />
       <CreateNeed path="request-need" />
       <VolunteerSearch path="volunteer-search/:needId" />
+      <NeedSearch path="needs" />
       <SignOut path="signout" />
     </Dashboard>
   </Router>

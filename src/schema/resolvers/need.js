@@ -72,7 +72,7 @@ export default {
       return need
     },
     needs: async (parent, args, { req }) => {
-      const { currentUser, needType, location, range } = args
+      const { currentUser, needType, location, range, all } = args
 
       let queryParams = {}
 
@@ -94,6 +94,10 @@ export default {
             $maxDistance: range * METERS_PER_MILE,
           },
         }
+      }
+
+      if (!all) {
+        // TODO: Allow to filter out needs based on request status
       }
 
       // TODO: Filter out needs that belong to current user.

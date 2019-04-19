@@ -37,6 +37,7 @@ export default gql`
       currentUser: Boolean
       needType: NeedType
       location: LocationInput
+      all: Boolean = false
       """
       Radius in miles
       """
