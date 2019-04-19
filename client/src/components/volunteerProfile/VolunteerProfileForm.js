@@ -6,6 +6,8 @@ import {
   InputNumber,
   Radio,
   TimePicker,
+  Row,
+  Col,
 } from 'antd'
 import React, { useState, useEffect } from 'react'
 import { Mutation } from 'react-apollo'
@@ -24,8 +26,16 @@ const RadioButton = Radio.Button
 const RadioGroup = Radio.Group
 
 const StyledForm = styled(Form)`
-  label {
+  width: 500px;
+  max-width: 90vw;
+  & input,
+  & textarea {
+    width: 100%;
+  }
+
+  label:not(.ant-radio-button-wrapper) {
     font-weight: 600;
+    width: 100%;
   }
 `
 
@@ -87,7 +97,6 @@ const VolunteerProfileForm = props => {
     })
   }
 
-  // const { profile, toggleForm, form } = this.props
   const { getFieldDecorator, getFieldsError } = form
 
   const initAvailability = () => {
@@ -111,14 +120,6 @@ const VolunteerProfileForm = props => {
 
   const initServiceRadius = () => (profile ? profile.serviceRadius : 15)
 
-  // const initSkills = () => {
-  //   let skills = ''
-  //   if (profile) {
-  //     skills = profile.skills.join(', ')
-  //   }
-  //   return skills
-  // }
-
   const showSelectedServiceOptionFields = selectedService => {
     console.log('selectedService', selectedService)
     switch (selectedService) {
@@ -141,10 +142,17 @@ const VolunteerProfileForm = props => {
             <p style={{ margin: 0 }}>
               I am comfortable with the following age groups:
             </p>
-            <CheckboxGroup
-              options={['INFANT', 'TODDLER', 'CHILD', 'TEENAGER']}
-              style={{ marginBottom: 20 }}
-            />
+            <CheckboxGroup style={{ marginBottom: 20 }}>
+              {['Infant', 'Toddler', 'Child', 'Teenager'].map(opt => (
+                <Checkbox
+                  key={opt}
+                  value={opt.toUpperCase()}
+                  style={{ margin: 0 }}
+                >
+                  {opt}
+                </Checkbox>
+              ))}
+            </CheckboxGroup>
             <div style={{ display: 'flex' }}>
               <div style={{ flexShrink: 0 }}>I am comfortable sitting</div>
               <Input style={{ margin: '0 5px', width: 50 }} />
@@ -215,10 +223,7 @@ const VolunteerProfileForm = props => {
   }
 
   const profileForm = ({ error, loading, submit }) => (
-    <StyledForm
-      onSubmit={e => handleSubmit(e, submit)}
-      style={{ maxWidth: 500 }}
-    >
+    <StyledForm onSubmit={e => handleSubmit(e, submit)}>
       <Form.Item>{error && graphQlErrors(error)}</Form.Item>
 
       <Form.Item label="Bio">
@@ -256,9 +261,19 @@ const VolunteerProfileForm = props => {
         )}
         <div>
           From:
-          <TimePicker use12Hours format="h:mm A" style={{ margin: '0 5px' }} />
+          <TimePicker
+            use12Hours
+            format="h:mm A"
+            style={{ margin: '0 5px' }}
+            minuteStep={15}
+          />
           To:
-          <TimePicker use12Hours format="h:mm A" style={{ margin: '0 5px' }} />
+          <TimePicker
+            use12Hours
+            format="h:mm A"
+            style={{ margin: '0 5px' }}
+            minuteStep={15}
+          />
         </div>
       </Form.Item>
       <Form.Item label="Details">
@@ -267,7 +282,7 @@ const VolunteerProfileForm = props => {
         })(<Input />)}
       </Form.Item>
 
-      <Form.Item label="What types of services can you provide?">
+      <Form.Item label="What types of services can you provide?" colon={false}>
         <hr />
 
         {getFieldDecorator('servicesProvided', {
@@ -279,12 +294,15 @@ const VolunteerProfileForm = props => {
             },
           ],
         })(
-          <CheckboxGroup
-            options={needTypes.map(opt => ({
-              label: opt.label,
-              value: opt.value,
-            }))}
-          />
+          <CheckboxGroup style={{ width: '100%' }}>
+            <Row>
+              {needTypes.map(opt => (
+                <Col span={24} key={opt.value}>
+                  <Checkbox value={opt.value}>{opt.label}</Checkbox>
+                </Col>
+              ))}
+            </Row>
+          </CheckboxGroup>
         )}
       </Form.Item>
 
@@ -294,23 +312,19 @@ const VolunteerProfileForm = props => {
           onChange={e => setSelectedServiceOption(e.target.value)}
           defaultValue={getFieldValue('servicesProvided')[0]}
         >
-          {getFieldValue('servicesProvided').map(opt => (
-            <RadioButton key={opt} value={opt}>
-              {opt}
-            </RadioButton>
-          ))}
+          {needTypes
+            .filter(type =>
+              getFieldValue('servicesProvided').includes(type.value)
+            )
+            .map(opt => (
+              <RadioButton key={opt.value} value={opt.value} size="small">
+                {opt.label}
+              </RadioButton>
+            ))}
         </RadioGroup>
       </Form.Item>
 
       {showSelectedServiceOptionFields(selectedServiceOption)}
-
-      {/* <Form.Item label="Skills">
-        <p>
-          In regard to these needs, what types of skills do you posess? (Enter
-          values separated by commas, e.g. "Plumbing, Electrical".
-        </p>
-        {getFieldDecorator('skills', { initialValue: initSkills() })(<Input />)}
-      </Form.Item> */}
 
       {
         <PlaceSearchField

@@ -20,6 +20,11 @@ export const needTypes = [
     icon: 'schedule',
   },
   {
+    value: 'TUTORING',
+    label: 'Tutoring',
+    icon: 'profile',
+  },
+  {
     value: 'OTHER',
     label: 'Other',
     icon: 'question-circle',

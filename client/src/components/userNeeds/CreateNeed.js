@@ -206,7 +206,7 @@ const CreateNeed = ({ form }) => {
                     type="primary"
                     htmlType="submit"
                     loading={loading}
-                    style={{ marginRight: '2rem' }}
+                    style={{ margin: '0 2rem' }}
                   >
                     Request Need
                   </Button>
