@@ -43,10 +43,9 @@ This is a mono repo containing the the back end API and front end application fo
 
 #### ✅ ToDo's
 
-⚠️= Critical for launch 🚀
-❗= Important Feature (for best user experience)
+⚠️= Critical for launch 🚀,
+❗= Important Feature (for best user experience),
 ✨= Feature (not as important, but beneficial)
-
 
 - **⚠️ Admin area:** Enable admins to...
   - Manage users: approve, activate, and deactivate.
