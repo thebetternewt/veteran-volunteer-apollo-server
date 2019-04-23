@@ -23,7 +23,6 @@ import { User } from './models'
 import { resolvers, typeDefs } from './schema'
 import schemaDirectives from './schema/directives'
 import except from './middleware/except'
-import { onErrorResumeNext } from 'rxjs'
 
 const main = async () => {
   try {
