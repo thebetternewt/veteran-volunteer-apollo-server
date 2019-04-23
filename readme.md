@@ -43,14 +43,19 @@ This is a mono repo containing the the back end API and front end application fo
 
 #### ✅ ToDo's
 
-- **⚠️Admin area:** Enable admins to...
+⚠️= Critical for launch 🚀
+❗= Important Feature (for best user experience)
+✨= Feature (not as important, but beneficial)
+
+
+- **⚠️ Admin area:** Enable admins to...
   - Manage users: approve, activate, and deactivate.
   - Create needs for users.
   - Create matches between recipients and volunteers.
-- **⚠️Authorization:** Make sure users (admin/volunteer/recipient) can only access data they should be able to. 
-- **Email notifications:** Implement [nodemailer](https://nodemailer.com/about/) with email service for email verification and other application notifications.
-- **Messaging system:** An in-app messaging system for volunteers and recipients to communicate safely without exposing user contact information.
-- **GraphQL subscriptions:** Enable real-time in-app notifications through implementation of GraphQL subscriptions and websockets.
+- **⚠️ Authorization:** Make sure users (admin/volunteer/recipient) can only access data they should be able to. 
+- **⚠️ Email notifications:** Implement [nodemailer](https://nodemailer.com/about/) with email service for email verification and other application notifications.
+- **❗Messaging system:** An in-app messaging system for volunteers and recipients to communicate safely without exposing user contact information.
+- **❗GraphQL subscriptions:** Enable real-time in-app notifications through implementation of GraphQL subscriptions and websockets.
 - **Improved search functionality:**
   - Service details.
   - Specified location/drive time.
