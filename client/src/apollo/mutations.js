@@ -243,3 +243,15 @@ export const ACCEPT_REQUEST = gql`
     }
   }
 `
+
+export const ACTIVATE_USER = gql`
+  mutation ActivateUser($userId: ID!) {
+    activateUser(id: $userId)
+  }
+`
+
+export const DEACTIVATE_USER = gql`
+  mutation DeactivateUser($userId: ID!) {
+    deactivateUser(id: $userId)
+  }
+`

@@ -76,6 +76,15 @@ const Sidebar = ({ collapsed = false }) => {
                         </Link>
                       </Menu.Item>
 
+                      {user.admin && (
+                        <Menu.Item key="/manage-users">
+                          <Link to="/manage-users">
+                            <Icon type="usergroup-add" />
+                            <span className="nav-text">Manage Users</span>
+                          </Link>
+                        </Menu.Item>
+                      )}
+
                       <Menu.Item key="/signout">
                         <Link to="/signout">
                           <Icon type="logout" />

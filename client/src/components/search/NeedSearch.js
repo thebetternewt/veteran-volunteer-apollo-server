@@ -39,8 +39,8 @@ const NeedSearch = () => {
               return <Loader />
             }
 
-            {
-              error && graphQlErrors(error)
+            if (error) {
+              return graphQlErrors(error)
             }
 
             if (data && data.needs) {
@@ -54,7 +54,6 @@ const NeedSearch = () => {
                   ).length === 0
               )
 
-              console.log('available:', availableNeeds)
               return availableNeeds.map(need => (
                 <NeedCard
                   key={need.id}

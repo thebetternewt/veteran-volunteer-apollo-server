@@ -1,4 +1,4 @@
-import { notification, Alert } from 'antd'
+import { notification, Alert, Row, Col } from 'antd'
 import React from 'react'
 import { Mutation, Query } from 'react-apollo'
 import { CREATE_REQUEST } from '../../apollo/mutations'
@@ -21,121 +21,131 @@ const VolunteerSearch = props => {
   }
 
   return (
-    <div>
+    <>
       <h1>Volunteer Search...</h1>
-      <Query
-        query={NEED_QUERY}
-        variables={{ id: needId }}
-        fetchPolicy="no-cache"
-      >
-        {({ data: needData, loading: needLoading, error }) => {
-          console.log('needData:', needData)
-          console.log('needLoading:', needLoading)
-          if (needLoading) {
-            return <Loader />
-          }
+      <Row gutter={5} type="flex">
+        <Query
+          query={NEED_QUERY}
+          variables={{ id: needId }}
+          fetchPolicy="no-cache"
+        >
+          {({ data: needData, loading: needLoading, error }) => {
+            console.log('needData:', needData)
+            console.log('needLoading:', needLoading)
+            if (needLoading) {
+              return <Loader />
+            }
 
-          if (needData && needData.need) {
-            const { need } = needData
+            if (needData && needData.need) {
+              const { need } = needData
 
-            console.log('need:', need)
+              console.log('need:', need)
 
-            const {
-              needType,
-              location: { __typename, ...location }, // strip __typename field from location
-            } = need
+              const {
+                needType,
+                location: { __typename, ...location }, // strip __typename field from location
+              } = need
 
-            return (
-              <Query
-                query={VOLUNTEER_PROFILES_FOR_NEED_QUERY}
-                variables={{ needType, location }}
-                fetchPolicy="no-cache"
-              >
-                {({
-                  data: profilesData,
-                  loading: volunteersLoading,
-                  error,
-                }) => {
-                  if (volunteersLoading) {
-                    return <Loader />
-                  }
-
-                  if (profilesData && profilesData.volunteerProfilesForNeed) {
-                    const { volunteerProfilesForNeed: profiles } = profilesData
-
-                    console.log('searchData:', profilesData)
-
-                    if (profiles.length === 0) {
-                      return (
-                        <Alert
-                          message="No profiles found."
-                          type="info"
-                          style={{ marginBottom: '1.1rem', maxWidth: 500 }}
-                        />
-                      )
+              return (
+                <Query
+                  query={VOLUNTEER_PROFILES_FOR_NEED_QUERY}
+                  variables={{ needType, location }}
+                  fetchPolicy="no-cache"
+                >
+                  {({
+                    data: profilesData,
+                    loading: volunteersLoading,
+                    error,
+                  }) => {
+                    if (volunteersLoading) {
+                      return <Loader />
                     }
 
-                    return profiles.map(profile => (
-                      <Mutation mutation={CREATE_REQUEST} key={profile.id}>
-                        {(
-                          createRequest,
-                          { data: requestData, loading: requestLoading, error }
-                        ) => {
-                          console.log('requestData:', requestData)
-                          console.log('requestLoading:', requestLoading)
+                    if (profilesData && profilesData.volunteerProfilesForNeed) {
+                      const {
+                        volunteerProfilesForNeed: profiles,
+                      } = profilesData
 
-                          if (error) console.log(error)
-                          const handleCreateRequest = async volunteerId => {
-                            const variables = {
-                              volunteer: volunteerId,
-                              need: needId,
+                      console.log('searchData:', profilesData)
+
+                      if (profiles.length === 0) {
+                        return (
+                          <Alert
+                            message="No profiles found."
+                            type="info"
+                            style={{ marginBottom: '1.1rem', maxWidth: 500 }}
+                          />
+                        )
+                      }
+
+                      return profiles.map(profile => (
+                        <Mutation mutation={CREATE_REQUEST} key={profile.id}>
+                          {(
+                            createRequest,
+                            {
+                              data: requestData,
+                              loading: requestLoading,
+                              error,
                             }
-                            try {
-                              const result = await createRequest({ variables })
-                              console.log('result:', result)
+                          ) => {
+                            console.log('requestData:', requestData)
+                            console.log('requestLoading:', requestLoading)
 
-                              // Notify user if success
-                              openNotificationWithIcon({
-                                type: 'success',
-                                message: 'Request sent!',
-                                description: `We will notify ${
-                                  profile.user.firstName
-                                } of your request.`,
-                              })
+                            if (error) console.log(error)
+                            const handleCreateRequest = async volunteerId => {
+                              const variables = {
+                                volunteer: volunteerId,
+                                need: needId,
+                              }
+                              try {
+                                const result = await createRequest({
+                                  variables,
+                                })
+                                console.log('result:', result)
 
-                              navigate('/dashboard')
-                            } catch (err) {
-                              openNotificationWithIcon({
-                                type: 'error',
-                                message: 'Error',
-                                description: err,
-                              })
-                              console.log('error:', err)
+                                // Notify user if success
+                                openNotificationWithIcon({
+                                  type: 'success',
+                                  message: 'Request sent!',
+                                  description: `We will notify ${
+                                    profile.user.firstName
+                                  } of your request.`,
+                                })
+
+                                navigate('/dashboard')
+                              } catch (err) {
+                                openNotificationWithIcon({
+                                  type: 'error',
+                                  message: 'Error',
+                                  description: err,
+                                })
+                                console.log('error:', err)
+                              }
                             }
-                          }
-                          return (
-                            <VolunteerCard
-                              profile={profile}
-                              createRequest={handleCreateRequest}
-                              loading={requestLoading}
-                              error={error}
-                            />
-                          )
-                        }}
-                      </Mutation>
-                    ))
-                  }
+                            return (
+                              <VolunteerCard
+                                profile={profile}
+                                createRequest={handleCreateRequest}
+                                loading={requestLoading}
+                                error={error}
+                              />
+                            )
+                          }}
+                        </Mutation>
+                      ))
+                    }
 
-                  return null
-                }}
-              </Query>
-            )
-          }
+                    return null
+                  }}
+                </Query>
+              )
+            }
 
-          return null
-        }}
-      </Query>
-    </div>
+            return null
+          }}
+        </Query>
+      </Row>
+    </>
   )
 }
 

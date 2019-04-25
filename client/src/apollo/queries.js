@@ -24,6 +24,24 @@ export const REDIRECT_QUERY = gql`
   }
 `
 
+export const USERS_QUERY = gql`
+  query Users {
+    users {
+      id
+      fullName
+      email
+      active
+      admin
+      recipientProfile {
+        id
+      }
+      volunteerProfile {
+        id
+      }
+    }
+  }
+`
+
 export const ME_QUERY = gql`
   query Me {
     me {
@@ -31,6 +49,7 @@ export const ME_QUERY = gql`
       firstName
       fullName
       avatar
+      admin
       recipientProfile {
         id
         allowPhoneContact

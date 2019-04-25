@@ -30,6 +30,8 @@ export default gql`
     avatar: String
     createdAt: String
     updatedAt: String
+    admin: Boolean
+    active: Boolean
     recipientProfile: RecipientProfile
     volunteerProfile: VolunteerProfile
     requestedNeeds: [Need!]!

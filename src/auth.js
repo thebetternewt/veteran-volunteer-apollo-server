@@ -39,7 +39,7 @@ export const signOut = (req, res) =>
     })
   })
 
-const isAdmin = req => req.session.admin
+const isAdmin = req => req.session.isAdmin
 
 export const ensureAdmin = req => {
   if (!signedIn(req) || !isAdmin(req)) {

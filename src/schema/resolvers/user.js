@@ -1,7 +1,7 @@
-import { AuthenticationError } from 'apollo-server-core';
-import jwt from 'jsonwebtoken';
-import { attemptSignIn, signOut } from '../../auth';
-import { Need, RecipientProfile, User, VolunteerProfile } from '../../models';
+import { AuthenticationError } from 'apollo-server-core'
+import jwt from 'jsonwebtoken'
+import { attemptSignIn, signOut } from '../../auth'
+import { Need, RecipientProfile, User, VolunteerProfile } from '../../models'
 
 export default {
   User: {
@@ -47,7 +47,7 @@ export default {
   },
 
   Mutation: {
-    signUp: async (parent, { email,  ...args }) => {
+    signUp: async (parent, { email, ...args }) => {
       console.log('args:', args)
       // Check for user with given email address.
       const user = await User.findOne({ email }).exec()
@@ -135,6 +135,7 @@ export default {
       return true
     },
     activateUser: async (_, { id }) => {
+      console.log(`activating ${id}`)
       const user = await User.findById(id).exec()
 
       user.set({ active: true })
